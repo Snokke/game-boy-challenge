@@ -1,1 +1,1 @@
-# game-boy
+# Game Boy challenge

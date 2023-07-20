@@ -1,0 +1,26 @@
+{
+  "name": "game-boy-challenge",
+  "version": "0.1.0",
+  "description": "Andrii Babintsev Game Boy - Three.js Journey Challenge",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "three-webgl-stats": "^1.0.5",
+    "vite": "^4.1.0",
+    "vite-plugin-glsl": "^1.1.2"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.0.1",
+    "black-engine": "^0.5.16",
+    "ismobilejs": "^1.1.1",
+    "three": "^0.150.0",
+    "tweakpane": "^3.1.7",
+    "vercel": "^28.17.0"
+  }
+}
