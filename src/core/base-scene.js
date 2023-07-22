@@ -136,7 +136,7 @@ export default class BaseScene {
     const camera = this._camera = new THREE.PerspectiveCamera(50, this._windowSizes.width / this._windowSizes.height, 1, 50);
     this._scene.add(camera);
 
-    camera.position.set(0, 0, 5);
+    camera.position.set(0, 0, 8);
   }
 
   _initLights() {
@@ -144,6 +144,10 @@ export default class BaseScene {
       const ambientLight = new THREE.AmbientLight(GLOBAL_LIGHT_CONFIG.ambient.color, GLOBAL_LIGHT_CONFIG.ambient.intensity);
       this._scene.add(ambientLight);
     }
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(0, 5, 5);
+    this._scene.add(directionalLight);
   }
 
   _initMaterials() {

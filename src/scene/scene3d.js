@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import RaycasterController from './raycaster-controller';
 import { MessageDispatcher } from 'black-engine';
-import GameBoy from './game-boy/game-boy';
+import GameBoyScene from './game-boy-scene/game-boy-scene';
 
 export default class Scene3D extends THREE.Group {
   constructor(data) {
@@ -53,7 +53,7 @@ export default class Scene3D extends THREE.Group {
   }
 
   _initGameBoy() {
-    const gameBoy = this._gameBoy = new GameBoy(this._data, this._raycasterController);
+    const gameBoy = this._gameBoy = new GameBoyScene(this._data, this._raycasterController);
     this.add(gameBoy);
   }
 }
