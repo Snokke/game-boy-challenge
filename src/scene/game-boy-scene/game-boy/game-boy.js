@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS } from './data/game-boy-data';
+import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS } from './data/game-boy-data';
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 
@@ -9,6 +9,8 @@ export default class GameBoy extends THREE.Group {
 
     this._parts = [];
     this._allMeshes = [];
+    this._crossMeshes = [];
+
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
     this._init();
@@ -24,9 +26,20 @@ export default class GameBoy extends THREE.Group {
     return this._allMeshes;
   }
 
+  getOutlineMeshes(object) {
+    const partType = object.userData['partType'];
+
+    if (GAME_BOY_CROSS_PARTS.includes(partType)) {
+      return this._crossMeshes;
+    }
+
+    return [object];
+  }
+
   _init() {
     this._initGameBoyParts();
     this._addMaterials();
+    this._initCrossMeshes();
   }
 
   _initGameBoyParts() {
@@ -72,5 +85,15 @@ export default class GameBoy extends THREE.Group {
     });
 
     screen.material = material;
+  }
+
+  _initCrossMeshes() {
+    this._allMeshes.forEach(mesh => {
+      const type = mesh.userData['partType'];
+
+      if (GAME_BOY_CROSS_PARTS.includes(type)) {
+        this._crossMeshes.push(mesh);
+      }
+    });
   }
 }

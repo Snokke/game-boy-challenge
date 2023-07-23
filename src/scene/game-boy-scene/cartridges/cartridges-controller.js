@@ -27,10 +27,15 @@ export default class CartridgesController extends THREE.Group {
     console.log(objectPartType);
   }
 
+  getOutlineMeshes(object) {
+    return [object];
+  }
+
   _init() {
     const cartridgesTypes = [
       CARTRIDGE_TYPE.Tetris,
       CARTRIDGE_TYPE.Zelda,
+      CARTRIDGE_TYPE.DuckTales,
     ];
 
     for (let i = 0; i < cartridgesTypes.length; i++) {

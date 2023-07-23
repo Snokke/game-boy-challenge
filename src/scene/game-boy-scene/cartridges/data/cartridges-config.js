@@ -8,14 +8,18 @@ const CARTRIDGES_CONFIG = {
 const CARTRIDGE_TYPE = {
   Tetris: 'TETRIS',
   Zelda: 'ZELDA',
+  DuckTales: 'DUCK_TALES',
 }
 
 const CARTRIDGES_BY_TYPE_CONFIG = {
   [CARTRIDGE_TYPE.Tetris]: {
-    textureName: 'cartridge-tetris',
+    textureName: 'baked-cartridge-tetris',
   },
   [CARTRIDGE_TYPE.Zelda]: {
-    textureName: 'cartridge-tetris',
+    textureName: 'baked-cartridge-zelda',
+  },
+  [CARTRIDGE_TYPE.DuckTales]: {
+    textureName: 'baked-cartridge-ducktales',
   },
 }
 

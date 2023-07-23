@@ -46,7 +46,10 @@ export default class GameBoyController {
     if (object.userData.isActive) {
       Black.engine.containerElement.style.cursor = 'pointer';
 
-      this._setGlow([object]);
+      const sceneObjectType = object.userData.sceneObjectType;
+      const meshes = this._activeObjects[sceneObjectType].getOutlineMeshes(object);
+
+      this._setGlow(meshes);
     }
   }
 

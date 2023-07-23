@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Loader from '../../../core/loader';
-import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGES_CONFIG } from './data/cartridges-config';
+import { CARTRIDGES_BY_TYPE_CONFIG } from './data/cartridges-config';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 
 export default class Cartridge extends THREE.Group {

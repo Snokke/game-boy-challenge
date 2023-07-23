@@ -3,8 +3,10 @@ import { AssetManager, GameObject, MessageDispatcher } from 'black-engine';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
 
 const textures = [
-  'cartridge-tetris.jpg',
   'baked-game-boy.jpg',
+  'baked-cartridge-tetris.jpg',
+  'baked-cartridge-zelda.jpg',
+  'baked-cartridge-ducktales.jpg',
 ];
 
 const models = [
