@@ -1,6 +1,7 @@
 import { Black } from 'black-engine';
 import * as THREE from 'three';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
+import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 
 export default class GameBoyController {
   constructor(data) {
@@ -12,9 +13,12 @@ export default class GameBoyController {
     this._outlinePass = data.outlinePass;
     this._raycasterController = data.raycasterController;
     this._activeObjects = data.activeObjects;
+    this._games = data.games;
 
     this._pointerPosition = new THREE.Vector2();
     this._pointerPositionOnDown = new THREE.Vector2();
+
+    this._init();
   }
 
   update(dt) {
@@ -30,6 +34,44 @@ export default class GameBoyController {
     }
 
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
+  }
+
+  onPointerMove(x, y) {
+    this._pointerPosition.set(x, y);
+  }
+
+  onPointerDown(x, y) {
+    this._pointerPositionOnDown.set(x, y);
+  }
+
+  onPointerUp(x, y) {
+    const pixelsError = 2;
+    const isCursorMoved = Math.abs(Math.round(this._pointerPositionOnDown.x) - Math.round(x)) <= pixelsError
+      && Math.abs(Math.round(this._pointerPositionOnDown.y) - Math.round(y)) <= pixelsError;
+
+    if (isCursorMoved) {
+      this._onPointerClick(x, y);
+    }
+  }
+
+  onWheelScroll(delta) {
+
+  }
+
+  _onPointerClick(x, y) {
+    const intersect = this._raycasterController.checkIntersection(x, y);
+
+    if (!intersect) {
+      return;
+    }
+
+    const intersectObject = intersect.object;
+
+    if (intersectObject && intersectObject.userData.isActive) {
+      const sceneObjectType = intersectObject.userData.sceneObjectType;
+
+      this._activeObjects[sceneObjectType].onClick(intersectObject);
+    }
   }
 
   _checkToGlow(intersect) {
@@ -60,41 +102,28 @@ export default class GameBoyController {
     this._outlinePass.selectedObjects = meshes;
   }
 
-  onPointerMove(x, y) {
-    this._pointerPosition.set(x, y);
+  _powerOn() {
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].powerOn();
   }
 
-  onPointerDown(x, y) {
-    this._pointerPositionOnDown.set(x, y);
+  _init() {
+    this._initSignals();
+    this._initStartPowerState();
   }
 
-  onPointerUp(x, y) {
-    const pixelsError = 2;
-    const isCursorMoved = Math.abs(Math.round(this._pointerPositionOnDown.x) - Math.round(x)) <= pixelsError
-      && Math.abs(Math.round(this._pointerPositionOnDown.y) - Math.round(y)) <= pixelsError;
-
-    if (isCursorMoved) {
-      this._onPointerClick(x, y);
+  _initStartPowerState() {
+    if (GAME_BOY_CONFIG.powerOn) {
+      this._powerOn();
     }
   }
 
-  _onPointerClick(x, y) {
-    const intersect = this._raycasterController.checkIntersection(x, y);
-
-    if (!intersect) {
-      return;
-    }
-
-    const intersectObject = intersect.object;
-
-    if (intersectObject && intersectObject.userData.isActive) {
-      const sceneObjectType = intersectObject.userData.sceneObjectType;
-
-      this._activeObjects[sceneObjectType].onClick(intersectObject);
-    }
+  _initSignals() {
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onPowerOn', () => this._games.onPowerOn());
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onPowerOff', () => this._games.onPowerOff());
   }
 
-  onWheelScroll(delta) {
-
+  _onButtonPress(buttonType) {
+    this._games.onButtonPress(buttonType);
   }
 }

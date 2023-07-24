@@ -17,7 +17,7 @@ import Materials from './materials';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLOBAL_LIGHT_CONFIG } from './configs/global-light-config';
 import isMobile from 'ismobilejs';
-import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/games/data/games-config';
+import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/game-boy/data/game-boy-config';
 
 export default class BaseScene {
   constructor() {

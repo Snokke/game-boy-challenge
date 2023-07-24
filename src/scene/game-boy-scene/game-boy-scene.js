@@ -85,6 +85,7 @@ export default class GameBoyScene extends THREE.Group {
 
   _initGameBoyController() {
     this._data.activeObjects = this._activeObjects;
+    this._data.games = this._games;
 
     this._gameBoyController = new GameBoyController(this._data);
   }

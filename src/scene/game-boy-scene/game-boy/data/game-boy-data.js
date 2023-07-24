@@ -9,6 +9,7 @@ const GAME_BOY_PART_TYPE = {
   ButtonSelect: 'button-select',
   ButtonStart: 'button-start',
   PowerButton: 'power-button',
+  PowerButtonFrame: 'power-button-frame',
   PowerIndicator: 'power-indicator',
   Screen: 'screen',
   VolumeControl: 'volume-control',
@@ -24,6 +25,7 @@ const GAME_BOY_ACTIVE_PARTS = [
   GAME_BOY_PART_TYPE.ButtonSelect,
   GAME_BOY_PART_TYPE.ButtonStart,
   GAME_BOY_PART_TYPE.PowerButton,
+  GAME_BOY_PART_TYPE.PowerButtonFrame,
   GAME_BOY_PART_TYPE.VolumeControl,
 ]
 
@@ -34,4 +36,16 @@ const GAME_BOY_CROSS_PARTS = [
   GAME_BOY_PART_TYPE.ButtonCrossDown,
 ]
 
-export { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS };
+const BUTTON_TYPE = {
+  A: 'A',
+  B: 'B',
+  Start: 'START',
+  Select: 'SELECT',
+}
+
+export {
+  GAME_BOY_PART_TYPE,
+  GAME_BOY_ACTIVE_PARTS,
+  GAME_BOY_CROSS_PARTS,
+  BUTTON_TYPE,
+};

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as PIXI from 'pixi.js';
 import { AssetManager, GameObject, MessageDispatcher } from 'black-engine';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
 
@@ -7,6 +8,7 @@ const textures = [
   'baked-cartridge-tetris.jpg',
   'baked-cartridge-zelda.jpg',
   'baked-cartridge-ducktales.jpg',
+  'baked-power-indicator.jpg',
 ];
 
 const models = [
@@ -18,6 +20,10 @@ const images = [
   'overlay.png',
   'sound-icon.png',
   'sound-icon-mute.png',
+];
+
+const pixiImages = [
+  'ui_assets/nintendo-logo-screen.png'
 ];
 
 const sounds = [
@@ -68,7 +74,28 @@ export default class Loader extends GameObject {
 
   _onBlackAssetsLoaded() {
     this.removeFromParent();
-    this._loadThreeJSAssets();
+    this._loadPixiAssets();
+  }
+
+  _loadPixiAssets() {
+    const texturesNames = [];
+
+    pixiImages.forEach((textureFilename) => {
+      const textureName = textureFilename.replace(/\.[^/.]+$/, "");
+      PIXI.Assets.add(textureName, textureFilename);
+
+      texturesNames.push(textureName);
+    });
+
+    const texturesPromise = PIXI.Assets.load(texturesNames);
+
+    texturesPromise.then((textures) => {
+      texturesNames.forEach((name) => {
+        this._onAssetLoad(textures[name], name);
+      });
+
+      this._loadThreeJSAssets();
+    });
   }
 
   _loadThreeJSAssets() {
