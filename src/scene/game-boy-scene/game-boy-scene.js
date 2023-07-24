@@ -3,6 +3,7 @@ import GameBoyController from './game-boy-scene-controller';
 import GameBoy from './game-boy/game-boy';
 import CartridgesController from './cartridges/cartridges-controller';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
+import Games from './games/games';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {
@@ -12,13 +13,19 @@ export default class GameBoyScene extends THREE.Group {
     this._data.raycasterController = raycasterController;
 
     this._gameBoyController = null;
+    this._games = null;
     this._activeObjects = {};
 
     this._init();
   }
 
   update(dt) {
+    if (dt > 0.1) {
+      dt = 0.1;
+    }
+
     this._gameBoyController.update(dt);
+    this._games.update(dt);
   }
 
   onPointerMove(x, y) {
@@ -40,12 +47,15 @@ export default class GameBoyScene extends THREE.Group {
   _init() {
     this._initGameBoy();
     this._initCartridgesController();
+    this._initGames();
     this._configureRaycaster();
     this._initGameBoyController();
   }
 
   _initGameBoy() {
-    const gameBoy = new GameBoy();
+    const pixiCanvas = this._data.pixiApplication.view;
+
+    const gameBoy = new GameBoy(pixiCanvas);
     this.add(gameBoy);
 
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy] = gameBoy;
@@ -56,6 +66,10 @@ export default class GameBoyScene extends THREE.Group {
     this.add(cartridgesController);
 
     this._activeObjects[SCENE_OBJECT_TYPE.Cartridges] = cartridgesController;
+  }
+
+  _initGames() {
+    this._games = new Games(this._data.pixiApplication);
   }
 
   _configureRaycaster() {

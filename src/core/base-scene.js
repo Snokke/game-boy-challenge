@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as PIXI from 'pixi.js';
 import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
@@ -16,6 +17,7 @@ import Materials from './materials';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLOBAL_LIGHT_CONFIG } from './configs/global-light-config';
 import isMobile from 'ismobilejs';
+import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/games/data/games-config';
 
 export default class BaseScene {
   constructor() {
@@ -30,6 +32,7 @@ export default class BaseScene {
     this._orbitControls = null;
     this._audioListener = null;
     this._renderPass = null;
+    this._pixiApplication = null;
 
     this._windowSizes = {};
     this._isAssetsLoaded = false;
@@ -49,6 +52,7 @@ export default class BaseScene {
       orbitControls: this._orbitControls,
       outlinePass: this._outlinePass,
       audioListener: this._audioListener,
+      pixiApplication: this._pixiApplication,
     };
 
     this._mainScene = new MainScene(data);
@@ -76,6 +80,7 @@ export default class BaseScene {
   _init() {
     this._initBlack();
     this._initThreeJS();
+    this._initPixiJS();
     this._initUpdate();
   }
 
@@ -88,6 +93,21 @@ export default class BaseScene {
 
     engine.stage.setSize(640, 960);
     engine.stage.scaleMode = StageScaleMode.LETTERBOX;
+  }
+
+  _initPixiJS() {
+    const canvas = document.createElement('canvas');
+    canvas.width = GAME_BOY_CONFIG.screen.width;
+    canvas.height = GAME_BOY_CONFIG.screen.height;
+
+    const view = canvas.transferControlToOffscreen();
+
+    this._pixiApplication = new PIXI.Application({
+      view: view,
+      width: GAME_BOY_CONFIG.screen.width,
+      height: GAME_BOY_CONFIG.screen.height,
+      background: GAME_BOY_CONFIG.screen.backgroundColor,
+    });
   }
 
   _initThreeJS() {
@@ -145,9 +165,9 @@ export default class BaseScene {
       this._scene.add(ambientLight);
     }
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 5, 5);
-    this._scene.add(directionalLight);
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    // directionalLight.position.set(0, 5, 5);
+    // this._scene.add(directionalLight);
   }
 
   _initMaterials() {

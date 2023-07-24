@@ -4,8 +4,10 @@ import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 
 export default class GameBoy extends THREE.Group {
-  constructor() {
+  constructor(pixiCanvas) {
     super();
+
+    this._pixiCanvas = pixiCanvas;
 
     this._parts = [];
     this._allMeshes = [];
@@ -14,6 +16,11 @@ export default class GameBoy extends THREE.Group {
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
     this._init();
+  }
+
+  update(dt) {
+    // todo if game is active
+    this._parts[GAME_BOY_PART_TYPE.Screen].material.map.needsUpdate = true;
   }
 
   onClick(object) {
@@ -78,12 +85,14 @@ export default class GameBoy extends THREE.Group {
   }
 
   _addScreenMaterial() {
-    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
+    const texture = new THREE.Texture(this._pixiCanvas);
+    texture.flipY = false;
 
     const material = new THREE.MeshBasicMaterial({
-      color: 0xaaffaa,
+      map: texture,
     });
 
+    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
     screen.material = material;
   }
 

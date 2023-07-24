@@ -1,6 +1,6 @@
 const GLOBAL_LIGHT_CONFIG = {
   ambient: {
-    enabled: true,
+    enabled: false,
     color: 0xFFEFE4,
     intensity: 2,
   },

@@ -1,5 +1,6 @@
 import { Black } from 'black-engine';
 import * as THREE from 'three';
+import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 
 export default class GameBoyController {
   constructor(data) {
@@ -17,10 +18,6 @@ export default class GameBoyController {
   }
 
   update(dt) {
-    if (dt > 0.1) {
-      dt = 0.1;
-    }
-
     const intersect = this._raycasterController.checkIntersection(this._pointerPosition.x, this._pointerPosition.y);
 
     if (intersect === null) {
@@ -31,6 +28,8 @@ export default class GameBoyController {
     if (intersect && intersect.object) {
       this._checkToGlow(intersect);
     }
+
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
   }
 
   _checkToGlow(intersect) {
