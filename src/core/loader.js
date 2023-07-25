@@ -9,6 +9,8 @@ const textures = [
   'baked-cartridge-zelda.jpg',
   'baked-cartridge-ducktales.jpg',
   'baked-power-indicator.jpg',
+  'baked-screen.jpg',
+  'baked-screen-shadow.png',
 ];
 
 const models = [

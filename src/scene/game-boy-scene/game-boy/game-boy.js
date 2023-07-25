@@ -7,6 +7,8 @@ import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_PART_BY_TYPE } from 
 import { MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
+import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
+import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas) {
@@ -30,7 +32,9 @@ export default class GameBoy extends THREE.Group {
 
   update(dt) {
     // todo if game is active
-    this._parts[GAME_BOY_PART_TYPE.Screen].material.map.needsUpdate = true;
+    // this._parts[GAME_BOY_PART_TYPE.Screen].material.map.needsUpdate = true;
+
+    this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
   }
 
   onClick(object) {
@@ -261,11 +265,20 @@ export default class GameBoy extends THREE.Group {
   }
 
   _addScreenMaterial() {
-    const texture = new THREE.Texture(this._pixiCanvas);
-    texture.flipY = false;
+    const canvasTexture = new THREE.Texture(this._pixiCanvas);
+    canvasTexture.flipY = false;
 
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
+    const bakedTexture = Loader.assets['baked-screen'];
+    bakedTexture.flipY = false;
+
+    const material = new THREE.ShaderMaterial({
+      uniforms:
+      {
+        uTexture: { value: bakedTexture },
+        uBitmapTexture: { value: canvasTexture },
+      },
+      vertexShader: mixTextureBitmapVertexShader,
+      fragmentShader: mixTextureBitmapFragmentShader,
     });
 
     const screen = this._parts[GAME_BOY_PART_TYPE.Screen];

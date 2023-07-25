@@ -5,7 +5,6 @@ const GAME_BOY_CONFIG = {
   screen: {
     width: 160,
     height: 144,
-    backgroundColor: '#8d9e58',
   },
   powerButton: {
     moveDistance: 0.114,
