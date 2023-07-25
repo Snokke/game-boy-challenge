@@ -17,11 +17,22 @@ export default class GameBoyController {
 
     this._pointerPosition = new THREE.Vector2();
     this._pointerPositionOnDown = new THREE.Vector2();
+    this._dragPointerDownPosition = new THREE.Vector2();
+    this._draggingObject = null;
+
+    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
 
     this._init();
   }
 
   update(dt) {
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
+    this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].update(dt);
+
+    if (this._isIntroActive) {
+      return;
+    }
+
     const intersect = this._raycasterController.checkIntersection(this._pointerPosition.x, this._pointerPosition.y);
 
     if (intersect === null) {
@@ -29,19 +40,39 @@ export default class GameBoyController {
       this._resetGlow();
     }
 
-    if (intersect && intersect.object) {
+    if (intersect && intersect.object && !this._draggingObject) {
       this._checkToGlow(intersect);
     }
-
-    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
   }
 
   onPointerMove(x, y) {
     this._pointerPosition.set(x, y);
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onPointerMove(x, y);
+
+    if (this._draggingObject) {
+      const deltaX = this._dragPointerDownPosition.x - x;
+      const deltaY = this._dragPointerDownPosition.y - y;
+      this._draggingObject.onPointerDragMove(deltaX, deltaY);
+    }
   }
 
   onPointerDown(x, y) {
     this._pointerPositionOnDown.set(x, y);
+
+    const intersect = this._raycasterController.checkIntersection(x, y);
+
+    if (!intersect) {
+      return;
+    }
+
+    const intersectObject = intersect.object;
+
+    if (intersectObject && intersectObject.userData.isDraggable) {
+      this._dragPointerDownPosition.set(x, y);
+      const sceneObjectType = intersectObject.userData.sceneObjectType;
+      this._draggingObject = this._activeObjects[sceneObjectType];
+      this._draggingObject.onPointerDragDown();
+    }
   }
 
   onPointerUp(x, y) {
@@ -49,8 +80,13 @@ export default class GameBoyController {
     const isCursorMoved = Math.abs(Math.round(this._pointerPositionOnDown.x) - Math.round(x)) <= pixelsError
       && Math.abs(Math.round(this._pointerPositionOnDown.y) - Math.round(y)) <= pixelsError;
 
-    if (isCursorMoved) {
+    if (this._draggingObject === null && isCursorMoved) {
       this._onPointerClick(x, y);
+    }
+
+    if (this._draggingObject) {
+      this._draggingObject.onPointerUp();
+      this._draggingObject = null;
     }
   }
 
@@ -89,6 +125,7 @@ export default class GameBoyController {
 
       const sceneObjectType = object.userData.sceneObjectType;
       const meshes = this._activeObjects[sceneObjectType].getOutlineMeshes(object);
+      this._activeObjects[sceneObjectType].onPointerOver(object);
 
       this._setGlow(meshes);
     }
@@ -118,9 +155,24 @@ export default class GameBoyController {
   }
 
   _initSignals() {
-    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
-    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onPowerOn', () => this._games.onPowerOn());
-    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].events.on('onPowerOff', () => this._games.onPowerOff());
+    this._initIntroSignal();
+
+    const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
+    const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
+
+    gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
+    gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
+    gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
+    // cartridges.events.on('onCartridgeInsert', (msg, gameType) => gameBoy.onCartridgeInsert(gameType));
+  }
+
+  _initIntroSignal() {
+    window.addEventListener('pointerdown', () => {
+      if (this._isIntroActive) {
+        this._isIntroActive = false;
+        this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableIntro();
+      }
+    });
   }
 
   _onButtonPress(buttonType) {

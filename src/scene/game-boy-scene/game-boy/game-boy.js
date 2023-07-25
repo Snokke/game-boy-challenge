@@ -1,14 +1,15 @@
 import * as THREE from 'three';
 import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
-import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON_TYPE } from './data/game-boy-data';
+import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON_TYPE, GAME_BOY_DRAGGABLE_PARTS } from './data/game-boy-data';
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
-import { MessageDispatcher } from 'black-engine';
+import { Black, MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
+import Delayed from '../../../core/helpers/delayed-call';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas) {
@@ -17,6 +18,7 @@ export default class GameBoy extends THREE.Group {
     this.events = new MessageDispatcher();
 
     this._pixiCanvas = pixiCanvas;
+    this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
     this._parts = [];
     this._allMeshes = [];
@@ -27,14 +29,30 @@ export default class GameBoy extends THREE.Group {
     this._powerIndicatorTween = null;
     this._crossButtonsGroup = null;
 
-    this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
+    this._rotationObject = new THREE.Object3D();
+    this._rotationQuaternion = new THREE.Quaternion();
+    this._pointerPosition = new THREE.Vector2();
+    this._isDefaultRotation = true;
+    this._returnRotationTimer = null;
+    this._isRotationDragEnabled = true;
+    this._isRotationCursorEnabled = true;
+
+    this._isDragging = false;
+    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
+    this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.standardLerpSpeed;
 
     this._init();
   }
 
   update(dt) {
     // todo if game is active
-    // this._parts[GAME_BOY_PART_TYPE.Screen].material.map.needsUpdate = true;
+
+    if (this._isIntroActive) {
+      this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dt * 60 * GAME_BOY_CONFIG.intro.speed * 0.001);
+    } else {
+      this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.1);
+      this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
+    }
 
     this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
   }
@@ -50,21 +68,91 @@ export default class GameBoy extends THREE.Group {
       }
     }
 
-    // for (const buttonPart in GAME_BOY_CROSS_PART_BY_TYPE) {
-    //   const buttonType = GAME_BOY_CROSS_PART_BY_TYPE[buttonPart];
-
-    //   if (objectPartType === buttonPart) {
-    //     this._pressDownCrossButton(buttonType);
-    //   }
-    // }
-
     if (objectPartType === GAME_BOY_PART_TYPE.PowerButton || objectPartType === GAME_BOY_PART_TYPE.PowerButtonFrame) {
       this._powerButtonSwitch();
+      this._resetReturnRotationTimer();
     }
   }
 
+  onPointerMove(x, y) {
+    this._pointerPosition.set(x, y);
+
+    if (this._isDragging || !this._isDefaultRotation || !this._isRotationCursorEnabled) {
+      return;
+    }
+
+    const percentX = x / window.innerWidth * 2 - 1;
+    const percentY = y / window.innerHeight * 2 - 1;
+
+    this._rotationObject.quaternion.copy(this._rotationQuaternion);
+    this._rotationObject.rotateOnAxis(new THREE.Vector3(0, 1, 0), (percentX) * GAME_BOY_CONFIG.rotation.cursorRotationSpeed);
+    this._rotationObject.rotateOnAxis(new THREE.Vector3(1, 0, 0), (percentY) * GAME_BOY_CONFIG.rotation.cursorRotationSpeed);
+  }
+
+  onPointerDragMove(dragX, dragY) {
+    if (!this._isRotationDragEnabled) {
+      return;
+    }
+
+    this._rotationObject.quaternion.copy(this._rotationQuaternion);
+    this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+    this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+  }
+
+  onPointerDragDown() {
+    if (!this._isRotationDragEnabled) {
+      return;
+    }
+
+    this._rotationQuaternion.copy(this.quaternion);
+
+    this._isDragging = true;
+    this._isDefaultRotation = false;
+
+    this._stopReturnRotationTimer();
+  }
+
+  onPointerUp() {
+    if (!this._isRotationDragEnabled) {
+      return;
+    }
+
+    this._isDragging = false;
+
+    this._resetReturnRotationTimer();
+  }
+
+  onPointerOver(object) { }
+
   powerOn() {
     this._powerButtonOn();
+  }
+
+  disableIntro() {
+    this._isIntroActive = false;
+  }
+
+  disableDragRotation() {
+    this._isRotationDragEnabled = false;
+  }
+
+  disableCursorRotation() {
+    this._isRotationCursorEnabled = false;
+  }
+
+  enableDragRotation() {
+    this._isRotationDragEnabled = true;
+  }
+
+  enableCursorRotation() {
+    this._isRotationCursorEnabled = true;
+  }
+
+  resetRotation() {
+    this._rotationObject.quaternion.copy(new THREE.Quaternion());
+    this._rotationQuaternion.copy(new THREE.Quaternion());
+    this._isDefaultRotation = true;
+    this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.slowLerpSpeed;
   }
 
   getAllMeshes() {
@@ -84,6 +172,31 @@ export default class GameBoy extends THREE.Group {
     }
 
     return [object];
+  }
+
+  _onReturnRotation() {
+    this._rotationObject.quaternion.copy(new THREE.Quaternion());
+    this._rotationQuaternion.copy(new THREE.Quaternion());
+    this._isDefaultRotation = true;
+    this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.slowLerpSpeed;
+
+    this.onPointerMove(this._pointerPosition.x, this._pointerPosition.y);
+  }
+
+  _stopReturnRotationTimer() {
+    if (this._returnRotationTimer) {
+      this._returnRotationTimer.stop();
+      this._returnRotationTimer = null;
+    }
+  }
+
+  _setReturnRotationTimer() {
+    this._returnRotationTimer = Delayed.call(GAME_BOY_CONFIG.rotation.returnTime, () => this._onReturnRotation());
+  }
+
+  _resetReturnRotationTimer() {
+    this._stopReturnRotationTimer();
+    this._setReturnRotationTimer();
   }
 
   _pressDownCrossButton(buttonType, autoPressUp = true) {
@@ -252,6 +365,7 @@ export default class GameBoy extends THREE.Group {
     this._initCrossGroup();
     this._addMaterials();
     this._initCrossMeshes();
+    this._initInitialRotation();
     this._initKeyboardEvents();
   }
 
@@ -265,6 +379,7 @@ export default class GameBoy extends THREE.Group {
       part.userData['partType'] = partType;
       part.userData['sceneObjectType'] = this._sceneObjectType;
       part.userData['isActive'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
+      part.userData['isDraggable'] = GAME_BOY_DRAGGABLE_PARTS.includes(partType);
       part.userData['startPosition'] = part.position.clone();
 
       this._parts[partType] = part;
@@ -364,6 +479,12 @@ export default class GameBoy extends THREE.Group {
     });
   }
 
+  _initInitialRotation() {
+    if (GAME_BOY_CONFIG.intro.enabled) {
+      this.rotation.x = GAME_BOY_CONFIG.intro.rotationX * THREE.MathUtils.DEG2RAD;
+    }
+  }
+
   _initKeyboardEvents() {
     this._onPressDownSignal = this._onPressDownSignal.bind(this);
     this._onPressUpSignal = this._onPressUpSignal.bind(this);
@@ -400,5 +521,9 @@ export default class GameBoy extends THREE.Group {
         this._pressUpButton(buttonType, false);
       }
     }
+  }
+
+  _lerp(from, to, t) {
+    return from + (to - from) * t;
   }
 }

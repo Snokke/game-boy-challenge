@@ -20,11 +20,15 @@ export default class Cartridge extends THREE.Group {
     return this._mesh;
   }
 
+  getType() {
+    return this._type;
+  }
+
   _init() {
     const model = Loader.assets['game-boy-cartridge'].scene.clone();
     this.add(model);
 
-    const texture = Loader.assets[this._config.textureName];
+    const texture = Loader.assets[this._config.labelTexture];
     texture.flipY = false;
 
     const material = new THREE.MeshBasicMaterial({

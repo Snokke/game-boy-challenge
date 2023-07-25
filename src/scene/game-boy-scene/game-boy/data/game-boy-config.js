@@ -1,7 +1,7 @@
 import { BUTTON_TYPE, GAME_BOY_PART_TYPE } from "./game-boy-data";
 
 const GAME_BOY_CONFIG = {
-  powerOn: true,
+  powerOn: false,
   screen: {
     width: 160,
     height: 144,
@@ -10,6 +10,18 @@ const GAME_BOY_CONFIG = {
     moveDistance: 0.114,
     moveSpeed: 1.3,
     powerIndicatorColor: 0xff0000,
+  },
+  rotation: {
+    returnTime: 2500,
+    cursorRotationSpeed: 0.2,
+    dragRotationSpeed: 3,
+    standardLerpSpeed: 0.05,
+    slowLerpSpeed: 0.01,
+  },
+  intro: {
+    enabled: false,
+    speed: 5,
+    rotationX: -20,
   }
 }
 

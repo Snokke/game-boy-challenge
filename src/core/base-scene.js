@@ -157,7 +157,7 @@ export default class BaseScene {
     const camera = this._camera = new THREE.PerspectiveCamera(50, this._windowSizes.width / this._windowSizes.height, 1, 50);
     this._scene.add(camera);
 
-    camera.position.set(0, 0, 8);
+    camera.position.set(0, 0, 6);
   }
 
   _initLights() {

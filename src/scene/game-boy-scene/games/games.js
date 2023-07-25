@@ -48,14 +48,6 @@ export default class Games {
   _init() {
     this._initRootContainer();
     this._initLoadingScreen();
-
-    // const graphics = new PIXI.Graphics();
-
-    // graphics.beginFill(0xffffff);
-    // graphics.drawRect(0, 0, GAME_BOY_CONFIG.screen.width, GAME_BOY_CONFIG.screen.height);
-    // graphics.endFill();
-
-    // this._container.addChild(graphics);
   }
 
   _initRootContainer() {
