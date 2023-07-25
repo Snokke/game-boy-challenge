@@ -3,7 +3,7 @@ import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js
 import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON_TYPE } from './data/game-boy-data';
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
-import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_PART_BY_TYPE } from './data/game-boy-config';
+import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
 import { MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
@@ -24,6 +24,8 @@ export default class GameBoy extends THREE.Group {
     this._buttons = {};
     this._buttonTween = {};
     this._powerButtonTween = null;
+    this._powerIndicatorTween = null;
+    this._crossButtonsGroup = null;
 
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
@@ -40,13 +42,21 @@ export default class GameBoy extends THREE.Group {
   onClick(object) {
     const objectPartType = object.userData['partType'];
 
-    for (const buttonPart in GAME_BOY_PART_BY_TYPE) {
-      const buttonType = GAME_BOY_PART_BY_TYPE[buttonPart];
+    for (const buttonPart in GAME_BOY_BUTTON_PART_BY_TYPE) {
+      const buttonType = GAME_BOY_BUTTON_PART_BY_TYPE[buttonPart];
 
       if (objectPartType === buttonPart) {
         this._pressDownButton(buttonType);
       }
     }
+
+    // for (const buttonPart in GAME_BOY_CROSS_PART_BY_TYPE) {
+    //   const buttonType = GAME_BOY_CROSS_PART_BY_TYPE[buttonPart];
+
+    //   if (objectPartType === buttonPart) {
+    //     this._pressDownCrossButton(buttonType);
+    //   }
+    // }
 
     if (objectPartType === GAME_BOY_PART_TYPE.PowerButton || objectPartType === GAME_BOY_PART_TYPE.PowerButtonFrame) {
       this._powerButtonSwitch();
@@ -76,8 +86,44 @@ export default class GameBoy extends THREE.Group {
     return [object];
   }
 
+  _pressDownCrossButton(buttonType, autoPressUp = true) {
+    const config = GAME_BOY_BUTTONS_CONFIG[buttonType];
+    this._stopButtonTween(buttonType);
+
+    const endAngle = config.rotateAngle * THREE.MathUtils.DEG2RAD;
+    const time = Math.abs(this._crossButtonsGroup.rotation[config.rotateAxis] - endAngle) / (config.moveSpeed * 0.001);
+
+    this._buttonTween[buttonType] = new TWEEN.Tween(this._crossButtonsGroup.rotation)
+      .to({ [config.rotateAxis]: endAngle }, time)
+      .easing(TWEEN.Easing.Sinusoidal.Out)
+      .start()
+      .onComplete(() => {
+        if (autoPressUp) {
+          this._pressUpCrossButton(buttonType);
+        }
+      });
+  }
+
+  _pressUpCrossButton(buttonType) {
+    const config = GAME_BOY_BUTTONS_CONFIG[buttonType];
+    this._stopButtonTween(buttonType);
+
+    const time = Math.abs(this._crossButtonsGroup.rotation[config.rotateAxis]) / (config.moveSpeed * 0.001);
+
+    this._buttonTween[buttonType] = new TWEEN.Tween(this._crossButtonsGroup.rotation)
+      .to({ [config.rotateAxis]: 0 }, time)
+      .easing(TWEEN.Easing.Sinusoidal.Out)
+      .start();
+  }
+
   _pressDownButton(buttonType, autoPressUp = true) {
     this.events.post('onButtonPress', buttonType);
+
+    if (CROSS_BUTTONS.includes(buttonType)) {
+      this._pressDownCrossButton(buttonType, autoPressUp);
+
+      return;
+    }
 
     const button = this._buttons[buttonType];
     this._stopButtonTween(buttonType);
@@ -99,6 +145,12 @@ export default class GameBoy extends THREE.Group {
   }
 
   _pressUpButton(buttonType) {
+    if (CROSS_BUTTONS.includes(buttonType)) {
+      this._pressUpCrossButton(buttonType);
+
+      return;
+    }
+
     const button = this._buttons[buttonType];
     this._stopButtonTween(buttonType);
 
@@ -197,6 +249,7 @@ export default class GameBoy extends THREE.Group {
   _init() {
     this._initGameBoyParts();
     this._initButtons();
+    this._initCrossGroup();
     this._addMaterials();
     this._initCrossMeshes();
     this._initKeyboardEvents();
@@ -225,6 +278,25 @@ export default class GameBoy extends THREE.Group {
     this._buttons[BUTTON_TYPE.B] = this._parts[GAME_BOY_PART_TYPE.ButtonB];
     this._buttons[BUTTON_TYPE.Select] = this._parts[GAME_BOY_PART_TYPE.ButtonSelect];
     this._buttons[BUTTON_TYPE.Start] = this._parts[GAME_BOY_PART_TYPE.ButtonStart];
+    this._buttons[BUTTON_TYPE.CrossLeft] = this._parts[GAME_BOY_PART_TYPE.ButtonCrossLeft];
+    this._buttons[BUTTON_TYPE.CrossRight] = this._parts[GAME_BOY_PART_TYPE.ButtonCrossRight];
+    this._buttons[BUTTON_TYPE.CrossUp] = this._parts[GAME_BOY_PART_TYPE.ButtonCrossUp];
+    this._buttons[BUTTON_TYPE.CrossDown] = this._parts[GAME_BOY_PART_TYPE.ButtonCrossDown];
+  }
+
+  _initCrossGroup() {
+    const crossButtonsGroup = this._crossButtonsGroup = new THREE.Group();
+    this.add(crossButtonsGroup);
+
+    const startPosition = this._buttons[BUTTON_TYPE.CrossLeft].userData.startPosition;
+    crossButtonsGroup.position.copy(startPosition);
+
+    CROSS_BUTTONS.forEach(buttonType => {
+      const button = this._buttons[buttonType];
+      crossButtonsGroup.add(button);
+
+      button.position.set(0, 0, 0);
+    });
   }
 
   _addMaterials() {
@@ -286,12 +358,9 @@ export default class GameBoy extends THREE.Group {
   }
 
   _initCrossMeshes() {
-    this._allMeshes.forEach(mesh => {
-      const type = mesh.userData['partType'];
-
-      if (GAME_BOY_CROSS_PARTS.includes(type)) {
-        this._crossMeshes.push(mesh);
-      }
+    CROSS_BUTTONS.forEach(buttonType => {
+      const button = this._buttons[buttonType];
+      this._crossMeshes.push(button);
     });
   }
 

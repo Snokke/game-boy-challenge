@@ -41,6 +41,10 @@ const BUTTON_TYPE = {
   B: 'B',
   Start: 'START',
   Select: 'SELECT',
+  CrossLeft: 'CROSS_LEFT',
+  CrossRight: 'CROSS_RIGHT',
+  CrossUp: 'CROSS_UP',
+  CrossDown: 'CROSS_DOWN',
 }
 
 export {

@@ -32,13 +32,53 @@ const GAME_BOY_BUTTONS_CONFIG = {
     moveDistance: 0.039,
     moveSpeed: 0.5,
   },
+  [BUTTON_TYPE.CrossLeft]: {
+    rotateAxis: 'y',
+    rotateAngle: -8,
+    moveSpeed: 1,
+    keyCode: ['ArrowLeft'],
+  },
+  [BUTTON_TYPE.CrossRight]: {
+    rotateAxis: 'y',
+    rotateAngle: 8,
+    moveSpeed: 1,
+    keyCode: ['ArrowRight'],
+  },
+  [BUTTON_TYPE.CrossUp]: {
+    rotateAxis: 'x',
+    rotateAngle: -8,
+    moveSpeed: 1,
+    keyCode: ['ArrowUp'],
+  },
+  [BUTTON_TYPE.CrossDown]: {
+    rotateAxis: 'x',
+    rotateAngle: 8,
+    moveSpeed: 1,
+    keyCode: ['ArrowDown'],
+  },
 }
 
-const GAME_BOY_PART_BY_TYPE = {
+const GAME_BOY_BUTTON_PART_BY_TYPE = {
   [GAME_BOY_PART_TYPE.ButtonA]: BUTTON_TYPE.A,
   [GAME_BOY_PART_TYPE.ButtonB]: BUTTON_TYPE.B,
   [GAME_BOY_PART_TYPE.ButtonStart]: BUTTON_TYPE.Start,
   [GAME_BOY_PART_TYPE.ButtonSelect]: BUTTON_TYPE.Select,
+  [GAME_BOY_PART_TYPE.ButtonCrossLeft]: BUTTON_TYPE.CrossLeft,
+  [GAME_BOY_PART_TYPE.ButtonCrossRight]: BUTTON_TYPE.CrossRight,
+  [GAME_BOY_PART_TYPE.ButtonCrossUp]: BUTTON_TYPE.CrossUp,
+  [GAME_BOY_PART_TYPE.ButtonCrossDown]: BUTTON_TYPE.CrossDown,
 }
 
-export { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_PART_BY_TYPE };
+const CROSS_BUTTONS = [
+  BUTTON_TYPE.CrossLeft,
+  BUTTON_TYPE.CrossRight,
+  BUTTON_TYPE.CrossUp,
+  BUTTON_TYPE.CrossDown,
+]
+
+export {
+  GAME_BOY_BUTTONS_CONFIG,
+  GAME_BOY_CONFIG,
+  GAME_BOY_BUTTON_PART_BY_TYPE,
+  CROSS_BUTTONS,
+};
