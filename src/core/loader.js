@@ -24,9 +24,10 @@ const images = [
   'sound-icon-mute.png',
 ];
 
-const pixiImages = [
+const pixiAssets = [
   'ui_assets/nintendo-logo-screen.png',
   'ui_assets/tetris/title-screen.png',
+  'fonts/tetris.ttf',
 ];
 
 const sounds = [
@@ -83,7 +84,7 @@ export default class Loader extends GameObject {
   _loadPixiAssets() {
     const texturesNames = [];
 
-    pixiImages.forEach((textureFilename) => {
+    pixiAssets.forEach((textureFilename) => {
       const textureName = textureFilename.replace(/\.[^/.]+$/, "");
       PIXI.Assets.add(textureName, textureFilename);
 

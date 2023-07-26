@@ -5,7 +5,6 @@ import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 
 export default class GameBoyController {
   constructor(data) {
-
     this._scene = data.scene;
     this._camera = data.camera;
     this._renderer = data.renderer;
@@ -15,6 +14,7 @@ export default class GameBoyController {
     this._activeObjects = data.activeObjects;
     this._gameBoyDebug = data.gameBoyDebug;
     this._games = data.games;
+    this._cameraController = data.cameraController;
 
     this._pointerPosition = new THREE.Vector2();
     this._pointerPositionOnDown = new THREE.Vector2();
@@ -29,6 +29,7 @@ export default class GameBoyController {
   update(dt) {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
     this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].update(dt);
+    this._cameraController.update(dt);
 
     if (this._isIntroActive) {
       return;
@@ -92,7 +93,8 @@ export default class GameBoyController {
   }
 
   onWheelScroll(delta) {
-    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onWheelScroll(delta);
+    this._cameraController.onWheelScroll(delta);
+    // this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onWheelScroll(delta);
   }
 
   _onPointerClick(x, y) {
@@ -164,12 +166,17 @@ export default class GameBoyController {
     gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
     gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
-    gameBoy.events.on('onRotationDragDisabled', () => this._gameBoyDebug.disableRotationDrag());
-    gameBoy.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
     // cartridges.events.on('onCartridgeInsert', (msg, gameType) => gameBoy.onCartridgeInsert(gameType));
 
+    this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
+    this._cameraController.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
     this._gameBoyDebug.events.on('rotationCursorChanged', () => gameBoy.onDebugRotationChanged());
     this._gameBoyDebug.events.on('rotationDragChanged', () => gameBoy.onDebugRotationChanged());
+  }
+
+  _onRotationDragDisabled() {
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].resetRotation();
+    this._gameBoyDebug.disableRotationDrag();
   }
 
   _initIntroSignal() {

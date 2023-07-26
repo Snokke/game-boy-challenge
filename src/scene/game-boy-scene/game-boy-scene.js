@@ -5,6 +5,7 @@ import CartridgesController from './cartridges/cartridges-controller';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import GameBoyGames from './game-boy-games/game-boy-games';
 import GameBoyDebug from './game-boy-debug';
+import CameraController from './camera-controller/camera-controller';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {
@@ -51,6 +52,7 @@ export default class GameBoyScene extends THREE.Group {
     this._initCartridgesController();
     this._initGameBoyGames();
     this._initGameBoyDebug();
+    this._initCameraController();
     this._configureRaycaster();
     this._initGameBoyController();
   }
@@ -79,6 +81,10 @@ export default class GameBoyScene extends THREE.Group {
     this._gameBoyDebug = new GameBoyDebug();
   }
 
+  _initCameraController() {
+    this._cameraController = new CameraController(this._data.camera);
+  }
+
   _configureRaycaster() {
     const allMeshes = [];
     const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
@@ -94,6 +100,7 @@ export default class GameBoyScene extends THREE.Group {
     this._data.activeObjects = this._activeObjects;
     this._data.games = this._gameBoyGames;
     this._data.gameBoyDebug = this._gameBoyDebug;
+    this._data.cameraController = this._cameraController;
 
     this._gameBoyController = new GameBoyController(this._data);
   }

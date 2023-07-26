@@ -44,8 +44,8 @@ export default class GameBoyGames {
     this._container.alpha = 1;
     this._container.visible = true;
 
-    this._loadingScreen.show();
-    // this.startGame(this._gameType);
+    // this._loadingScreen.show();
+    this.startGame(this._gameType);
   }
 
   onPowerOff() {

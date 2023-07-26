@@ -15,5 +15,11 @@ export default class TitleScreen extends PIXI.Container {
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);
     screen.tint = GAME_BOY_CONFIG.screen.tint;
+
+    // const text = new PIXI.Text('1 PLAYER', new PIXI.TextStyle({ fontFamily: 'tetris', fontSize: 8 }));
+    // this.addChild(text);
+
+    // text.x = 16;
+    // text.y = 120;
   }
 }

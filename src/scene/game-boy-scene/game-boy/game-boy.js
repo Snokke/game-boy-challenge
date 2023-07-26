@@ -30,16 +30,11 @@ export default class GameBoy extends THREE.Group {
     this._crossButtonsGroup = null;
 
     this._rotationObject = new THREE.Object3D();
-    this._zoomObject = new THREE.Object3D();
     this._rotationQuaternion = new THREE.Quaternion();
     this._pointerPosition = new THREE.Vector2();
     this._isDefaultRotation = true;
     this._returnRotationTimer = null;
 
-    this._zoomDistance = 0;
-    this._zoomOffsetY = 0;
-
-    this._rotationDragPreviousState = true;
     this._isDragging = false;
     this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
     this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.standardLerpSpeed;
@@ -53,8 +48,6 @@ export default class GameBoy extends THREE.Group {
     } else {
       this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.02);
       this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
-
-      this.position.lerp(this._zoomObject.position, dt * 60 * 0.05);
     }
 
     if (GAME_BOY_CONFIG.updateTexture) {
@@ -125,40 +118,6 @@ export default class GameBoy extends THREE.Group {
     this._isDragging = false;
 
     this._resetReturnRotationTimer();
-  }
-
-  onWheelScroll(delta) {
-    const zoomDelta = -delta * 0.25;
-    const minDistance = 0;
-    const maxDistance = 3.5;
-    this._zoomDistance = THREE.MathUtils.clamp(this._zoomDistance + zoomDelta, minDistance, maxDistance);
-
-    const cursorRotationCoeff = THREE.MathUtils.clamp(this._zoomDistance, 0, 2.5);
-    GAME_BOY_CONFIG.rotation.cursorRotationSpeed = 0.2 - (cursorRotationCoeff / 2.5) * 0.2;
-
-    if (this._zoomDistance !== minDistance && this._zoomDistance !== maxDistance) {
-      this._zoomObject.translateOnAxis(new THREE.Vector3(0, 0, 1), zoomDelta);
-      this._zoomObject.translateOnAxis(new THREE.Vector3(0, 1, 0), -zoomDelta * 0.24);
-    }
-
-    if (this._zoomDistance > GAME_BOY_CONFIG.rotation.zoomThresholdToDisableRotation) {
-      GAME_BOY_CONFIG.rotation.rotationDragEnabled = false;
-
-      if (this._rotationDragPreviousState !== GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
-        this._rotationDragPreviousState = GAME_BOY_CONFIG.rotation.rotationDragEnabled;
-        this.resetRotation();
-
-        this.events.post('onRotationDragDisabled');
-      }
-    } else {
-      GAME_BOY_CONFIG.rotation.rotationDragEnabled = true;
-
-      if (this._rotationDragPreviousState !== GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
-        this._rotationDragPreviousState = GAME_BOY_CONFIG.rotation.rotationDragEnabled;
-
-        this.events.post('onRotationDragEnabled');
-      }
-    }
   }
 
   onPointerOver(object) { }
