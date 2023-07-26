@@ -2,9 +2,11 @@ import { BUTTON_TYPE, GAME_BOY_PART_TYPE } from "./game-boy-data";
 
 const GAME_BOY_CONFIG = {
   powerOn: true,
+  updateTexture: true,
   screen: {
     width: 160,
     height: 144,
+    tint: '#96a06e',
   },
   powerButton: {
     moveDistance: 0.114,

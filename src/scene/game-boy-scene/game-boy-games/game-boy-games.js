@@ -16,7 +16,10 @@ export default class GameBoyGames {
     this._loadingScreen = null;
     this._noCartridgeScreen = null;
     this._damagedCartridgeScreen = null;
+    this._allScreens = [];
     this._games = {};
+    this._powerOffTween = null;
+    this._isUpdateEnabled = GAME_BOY_CONFIG.powerOn;
 
     this._gameType = GAME_TYPE.Tetris;
 
@@ -24,29 +27,44 @@ export default class GameBoyGames {
   }
 
   update(dt) {
-    // if (!GAME_BOY_CONFIG.powerOn) {
-    //   return;
-    // }
+    if (!this._isUpdateEnabled) {
+      return;
+    }
 
-    if (this._gameType !== null) {
+    if (this._gameType !== null && this._games[this._gameType].visible) {
       this._games[this._gameType].update(dt);
     }
   }
 
   onPowerOn() {
-    this._container.alpha = 1;
-    // this._loadingScreen.show();
+    GAME_BOY_CONFIG.updateTexture = true;
+    this._isUpdateEnabled = true;
+    this._stopPowerOffTween();
 
-    this.startGame(this._gameType);
+    this._container.alpha = 1;
+    this._container.visible = true;
+
+    this._loadingScreen.show();
+    // this.startGame(this._gameType);
   }
 
   onPowerOff() {
-    this._loadingScreen.onPowerOff();
+    this._isUpdateEnabled = false;
 
-    new TWEEN.Tween(this._container)
-      .to({ alpha: 0 }, 200)
+    this._stopPowerOffTween();
+    this._allScreens.forEach(screen => screen.stopTweens());
+
+    this._powerOffTween = new TWEEN.Tween(this._container)
+      .to({ alpha: 0 }, 1000)
       .easing(TWEEN.Easing.Sinusoidal.Out)
       .start()
+      .onComplete(() => {
+        this._container.visible = false;
+        GAME_BOY_CONFIG.updateTexture = false;
+
+        this._games[this._gameType].hide();
+        this._games[this._gameType].reset();
+      });
   }
 
   onButtonPress(buttonType) {
@@ -59,8 +77,14 @@ export default class GameBoyGames {
     }
   }
 
-  startGame(gameType) {
-    this._games[this._gameType].start();
+  startGame() {
+    this._games[this._gameType].show();
+  }
+
+  _stopPowerOffTween() {
+    if (this._powerOffTween) {
+      this._powerOffTween.stop();
+    }
   }
 
   _init() {
@@ -81,6 +105,12 @@ export default class GameBoyGames {
     this._initLoadingScreen();
     this._initNoCartridgeScreen();
     this._initDamagedCartridgeScreen();
+
+    this._allScreens = [
+      this._loadingScreen,
+      this._noCartridgeScreen,
+      this._damagedCartridgeScreen,
+    ];
   }
 
   _initOverlays() {
@@ -124,8 +154,18 @@ export default class GameBoyGames {
   }
 
   _initSignals() {
-    this._loadingScreen.events.on('onComplete', () => {
+    this._loadingScreen.events.on('onComplete', () => this._onLoadingComplete());
+  }
 
-    });
+  _onLoadingComplete() {
+    if (!GAME_BOY_CONFIG.powerOn) {
+      return;
+    }
+
+    if (this._gameType === null) {
+      this._noCartridgeScreen.start();
+    } else {
+      this.startGame();
+    }
   }
 }

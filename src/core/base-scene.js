@@ -106,8 +106,7 @@ export default class BaseScene {
       view: view,
       width: GAME_BOY_CONFIG.screen.width,
       height: GAME_BOY_CONFIG.screen.height,
-      backgroundAlpha: 0,
-      // background: '#8e9f58',
+      background: GAME_BOY_CONFIG.screen.tint,
     });
   }
 

@@ -45,8 +45,6 @@ export default class GameBoy extends THREE.Group {
   }
 
   update(dt) {
-    // todo if game is active
-
     if (this._isIntroActive) {
       this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dt * 60 * GAME_BOY_CONFIG.intro.speed * 0.001);
     } else {
@@ -54,7 +52,9 @@ export default class GameBoy extends THREE.Group {
       this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
     }
 
-    this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+    if (GAME_BOY_CONFIG.updateTexture) {
+      this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+    }
   }
 
   onClick(object) {
@@ -455,7 +455,7 @@ export default class GameBoy extends THREE.Group {
     const canvasTexture = new THREE.Texture(this._pixiCanvas);
     canvasTexture.flipY = false;
 
-    const bakedTexture = Loader.assets['baked-screen'];
+    const bakedTexture = Loader.assets['baked-screen-shadow'];
     bakedTexture.flipY = false;
 
     const material = new THREE.ShaderMaterial({

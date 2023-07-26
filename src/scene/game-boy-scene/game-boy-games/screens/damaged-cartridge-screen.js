@@ -7,6 +7,10 @@ export default class DamagedCartridgeScreen extends PIXI.Container {
     this._init();
   }
 
+  stopTweens() {
+
+  }
+
   _init() {
 
   }

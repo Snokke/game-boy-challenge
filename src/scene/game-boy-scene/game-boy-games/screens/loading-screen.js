@@ -12,13 +12,15 @@ export default class LoadingScreen extends PIXI.Container {
 
     this._logo = null;
     this._movingTween = null;
+    this._delayToStart = null;
 
     this._init();
   }
 
   show() {
     this.visible = true;
-    this._stopTween();
+
+    this.stopTweens();
     this._logo.y = -15;
 
     this._movingTween = new TWEEN.Tween(this._logo)
@@ -26,7 +28,7 @@ export default class LoadingScreen extends PIXI.Container {
       .easing(TWEEN.Easing.Linear.None)
       .start()
       .onComplete(() => {
-        Delayed.call(1000, () => {
+        this._delayToStart = Delayed.call(1000, () => {
           this.hide();
           this.events.emit('onComplete');
         });
@@ -35,15 +37,17 @@ export default class LoadingScreen extends PIXI.Container {
 
   hide() {
     this.visible = false;
+
+    this.stopTweens();
   }
 
-  onPowerOff() {
-    this._stopTween();
-  }
-
-  _stopTween() {
+  stopTweens() {
     if (this._movingTween) {
       this._movingTween.stop();
+    }
+
+    if (this._delayToStart) {
+      this._delayToStart.stop();
     }
   }
 

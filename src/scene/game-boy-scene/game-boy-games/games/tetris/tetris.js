@@ -19,12 +19,12 @@ export default class Tetris extends GameAbstract {
 
   }
 
-  start() {
-    super.start();
+  show() {
+    super.show();
   }
 
-  stop() {
-    super.stop();
+  hide() {
+    super.hide();
     this._reset();
   }
 
@@ -46,12 +46,6 @@ export default class Tetris extends GameAbstract {
     this._initLicenseScreen();
     this._initTitleScreen();
     this._initGameplayScreen();
-
-    // const graphics = new PIXI.Graphics();
-    // graphics.beginFill(0x000000);
-    // graphics.drawRect(10, 10, 160 - 20, 144 - 20);
-
-    // this.addChild(graphics);
   }
 
   _initLicenseScreen() {

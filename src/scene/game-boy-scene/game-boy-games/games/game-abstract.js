@@ -8,13 +8,17 @@ export default class GameAbstract extends PIXI.Container {
 
   update(dt) { }
 
-  start() {
+  show() {
     this.visible = true;
   }
 
-  stop() {
+  hide() {
     this.visible = false;
   }
+
+  stopTweens() {}
+
+  reset() { }
 
   onButtonPress(buttonType) { }
 }

@@ -7,7 +7,11 @@ export default class NoCartridgeScreen extends PIXI.Container {
     this._init();
   }
 
-  start() {
+  show() {
+
+  }
+
+  stopTweens() {
 
   }
 

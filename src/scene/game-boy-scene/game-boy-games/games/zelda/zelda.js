@@ -8,7 +8,7 @@ export default class Zelda extends GameAbstract {
     this._init();
   }
 
-  start() {
+  show() {
 
   }
 
