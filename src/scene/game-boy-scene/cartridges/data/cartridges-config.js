@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GAME_TYPE } from '../../games/data/games-config';
+import { GAME_TYPE } from '../../game-boy-games/data/games-config';
 
 const CARTRIDGE_TYPE = {
   Tetris: 'TETRIS',

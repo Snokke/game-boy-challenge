@@ -4,7 +4,7 @@ import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
-import { Black, MessageDispatcher } from 'black-engine';
+import { MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
@@ -50,7 +50,7 @@ export default class GameBoy extends THREE.Group {
     if (this._isIntroActive) {
       this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dt * 60 * GAME_BOY_CONFIG.intro.speed * 0.001);
     } else {
-      this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.1);
+      this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.02);
       this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
     }
 

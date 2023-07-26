@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-export default class Tetris extends PIXI.Container {
+export default class GameplayScreen extends PIXI.Container {
   constructor() {
     super();
 

@@ -25,7 +25,8 @@ const images = [
 ];
 
 const pixiImages = [
-  'ui_assets/nintendo-logo-screen.png'
+  'ui_assets/nintendo-logo-screen.png',
+  'ui_assets/tetris/title-screen.png',
 ];
 
 const sounds = [
