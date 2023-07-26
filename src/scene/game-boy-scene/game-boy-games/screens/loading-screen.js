@@ -58,6 +58,8 @@ export default class LoadingScreen extends PIXI.Container {
     logo.anchor.set(0.5);
     this.addChild(logo);
 
+    logo.tint = GAME_BOY_CONFIG.screen.tint;
+
     logo.x = GAME_BOY_CONFIG.screen.width * 0.5;
     logo.y = GAME_BOY_CONFIG.screen.height * 0.5;
 

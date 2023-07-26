@@ -18,7 +18,5 @@ export default class GameAbstract extends PIXI.Container {
 
   stopTweens() {}
 
-  reset() { }
-
   onButtonPress(buttonType) { }
 }

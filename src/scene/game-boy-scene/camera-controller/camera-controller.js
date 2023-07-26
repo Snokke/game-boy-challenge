@@ -23,18 +23,19 @@ export default class CameraController {
 
   onWheelScroll(delta) {
     const zoomDelta = delta * 0.4;
-    const minDistance = 3;
+    const minDistance = 3.2;
     const maxDistance = 6;
-    this._zoomDistance = THREE.MathUtils.clamp(this._zoomDistance + zoomDelta, minDistance, maxDistance);
 
-    const cursorRotationCoeff = 3 - (THREE.MathUtils.clamp(this._zoomDistance, 3, 6) - 3);
+    this._zoomDistance += zoomDelta;
+    this._zoomDistance = THREE.MathUtils.clamp(this._zoomDistance, minDistance, maxDistance);
 
-    GAME_BOY_CONFIG.rotation.cursorRotationSpeed = 0.2 - (cursorRotationCoeff / 3) * 0.2;
+    const cursorRotationCoeff = 3.2 - (THREE.MathUtils.clamp(this._zoomDistance, 3.2, 6) - 3.2);
 
-    if (this._zoomDistance !== minDistance && this._zoomDistance !== maxDistance) {
-      this._zoomObject.position.z = this._zoomDistance;
-      this._zoomObject.position.y = (-this._zoomObject.position.z + 6 - 0.4) * 0.13;
-    }
+    GAME_BOY_CONFIG.rotation.cursorRotationSpeed = 0.2 - (cursorRotationCoeff / 3.2) * 0.2;
+
+    this._zoomObject.position.z = this._zoomDistance;
+    this._zoomObject.position.y = (-this._zoomObject.position.z + 6 - 0.4) * 0.13;
+
 
     if (cursorRotationCoeff > GAME_BOY_CONFIG.rotation.zoomThresholdToDisableRotation) {
       GAME_BOY_CONFIG.rotation.rotationDragEnabled = false;
@@ -57,5 +58,9 @@ export default class CameraController {
 
   _init() {
     this._zoomObject.position.copy(this._camera.position);
+
+    for (let i = 0; i < 10; i++) {
+      this.onWheelScroll(-1);
+    }
   }
 }

@@ -25,8 +25,21 @@ const images = [
 ];
 
 const pixiAssets = [
+  // Tetris
   'ui_assets/nintendo-logo-screen.png',
   'ui_assets/tetris/title-screen.png',
+  'ui_assets/tetris/license-screen.png',
+  'ui_assets/tetris/gameplay-screen.png',
+
+  'ui_assets/tetris/block-i-edge.png',
+  'ui_assets/tetris/block-i-middle.png',
+  'ui_assets/tetris/block-j.png',
+  'ui_assets/tetris/block-l.png',
+  'ui_assets/tetris/block-o.png',
+  'ui_assets/tetris/block-s.png',
+  'ui_assets/tetris/block-t.png',
+  'ui_assets/tetris/block-z.png',
+
   'fonts/tetris.ttf',
 ];
 

@@ -7,6 +7,7 @@ const GAME_BOY_CONFIG = {
     width: 160,
     height: 144,
     tint: '#96a06e',
+    blackColor: 0x282a1e,
   },
   powerButton: {
     moveDistance: 0.114,
@@ -21,7 +22,7 @@ const GAME_BOY_CONFIG = {
     dragRotationSpeed: 3,
     standardLerpSpeed: 0.05,
     slowLerpSpeed: 0.01,
-    zoomThresholdToDisableRotation: 2.5,
+    zoomThresholdToDisableRotation: 2.3,
   },
   intro: {
     enabled: false,
@@ -48,6 +49,7 @@ const GAME_BOY_BUTTONS_CONFIG = {
   [BUTTON_TYPE.Start]: {
     moveDistance: 0.039,
     moveSpeed: 0.5,
+    keyCode: ['Enter'],
   },
   [BUTTON_TYPE.CrossLeft]: {
     rotateAxis: 'y',

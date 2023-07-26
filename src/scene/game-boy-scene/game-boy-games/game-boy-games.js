@@ -39,6 +39,8 @@ export default class GameBoyGames {
   onPowerOn() {
     GAME_BOY_CONFIG.updateTexture = true;
     this._isUpdateEnabled = true;
+
+    this._games[this._gameType].hide();
     this._stopPowerOffTween();
 
     this._container.alpha = 1;
@@ -53,6 +55,7 @@ export default class GameBoyGames {
 
     this._stopPowerOffTween();
     this._allScreens.forEach(screen => screen.stopTweens());
+    this._games[this._gameType].stopTweens();
 
     this._powerOffTween = new TWEEN.Tween(this._container)
       .to({ alpha: 0 }, 1000)
@@ -63,7 +66,6 @@ export default class GameBoyGames {
         GAME_BOY_CONFIG.updateTexture = false;
 
         this._games[this._gameType].hide();
-        this._games[this._gameType].reset();
       });
   }
 

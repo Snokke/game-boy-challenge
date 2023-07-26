@@ -3,41 +3,64 @@ import LicenseScreen from './screens/license-screen';
 import TitleScreen from './screens/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
+import { SCREEN_TYPE } from './data/tetris-data';
 
 export default class Tetris extends GameAbstract {
   constructor() {
     super();
 
-    this._licenseScreen = null;
-    this._titleScreen = null;
-    this._gameplayScreen = null;
+    this._screens = {};
+
+    this._currentScreenType = null;
 
     this._init();
   }
 
   update(dt) {
-
+    this._screens[this._currentScreenType].update(dt);
   }
 
   show() {
     super.show();
+
+    this._showScreen(SCREEN_TYPE.Gameplay);
+    // this._showScreen(SCREEN_TYPE.License);
   }
 
   hide() {
     super.hide();
+
+    for (let screenType in this._screens) {
+      this._screens[screenType].hide();
+    }
+
     this._reset();
   }
 
   onButtonPress(buttonType) {
+    this._screens[this._currentScreenType].onButtonPress(buttonType);
+  }
 
+  stopTweens() {
+    for (let screenType in this._screens) {
+      this._screens[screenType].stopTweens();
+    }
   }
 
   _reset() {
+    for (let screenType in this._screens) {
+      this._screens[screenType].reset();
+    }
+  }
 
+  _showScreen(screenType) {
+    this._currentScreenType = screenType;
+    this._screens[screenType].show();
   }
 
   _init() {
     this._initScreens();
+    this._initSignals();
 
     this.visible = false;
   }
@@ -49,17 +72,50 @@ export default class Tetris extends GameAbstract {
   }
 
   _initLicenseScreen() {
-    const licenseScreen = this._licenseScreen = new LicenseScreen();
+    const licenseScreen = new LicenseScreen();
     this.addChild(licenseScreen);
+
+    this._screens[SCREEN_TYPE.License] = licenseScreen;
   }
 
   _initTitleScreen() {
-    const titleScreen = this._titleScreen = new TitleScreen();
+    const titleScreen = new TitleScreen();
     this.addChild(titleScreen);
+
+    this._screens[SCREEN_TYPE.Title] = titleScreen;
   }
 
   _initGameplayScreen() {
-    const gameplayScreen = this._gameplayScreen = new GameplayScreen();
+    const gameplayScreen = new GameplayScreen();
     this.addChild(gameplayScreen);
+
+    this._screens[SCREEN_TYPE.Gameplay] = gameplayScreen;
+  }
+
+  _initSignals() {
+    this._screens[SCREEN_TYPE.License].events.on('onComplete', () => this._onLicenseScreenComplete());
+    this._screens[SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
+  }
+
+  _onLicenseScreenComplete() {
+    this._screens[SCREEN_TYPE.License].hide();
+    this._showScreen(SCREEN_TYPE.Title);
+  }
+
+  _onStartGame() {
+    this._screens[SCREEN_TYPE.Title].hide();
+    this._showScreen(SCREEN_TYPE.Gameplay);
+  }
+
+  _getScreenByType(screenType) {
+    for (let screenType in this._screens) {
+      const type = this._screens[screenType].getScreenType();
+
+      if (type === screenType) {
+        return this._screens[screenType];
+      }
+    }
+
+    return null;
   }
 }
