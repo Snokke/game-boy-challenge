@@ -14,11 +14,14 @@ const GAME_BOY_CONFIG = {
     powerIndicatorColor: 0xff0000,
   },
   rotation: {
+    rotationCursorEnabled: true,
+    rotationDragEnabled: true,
     returnTime: 2500,
     cursorRotationSpeed: 0.2,
     dragRotationSpeed: 3,
     standardLerpSpeed: 0.05,
     slowLerpSpeed: 0.01,
+    zoomThresholdToDisableRotation: 2.5,
   },
   intro: {
     enabled: false,

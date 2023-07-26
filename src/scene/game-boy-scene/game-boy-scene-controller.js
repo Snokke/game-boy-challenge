@@ -13,6 +13,7 @@ export default class GameBoyController {
     this._outlinePass = data.outlinePass;
     this._raycasterController = data.raycasterController;
     this._activeObjects = data.activeObjects;
+    this._gameBoyDebug = data.gameBoyDebug;
     this._games = data.games;
 
     this._pointerPosition = new THREE.Vector2();
@@ -91,7 +92,7 @@ export default class GameBoyController {
   }
 
   onWheelScroll(delta) {
-
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onWheelScroll(delta);
   }
 
   _onPointerClick(x, y) {
@@ -163,7 +164,12 @@ export default class GameBoyController {
     gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
     gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
+    gameBoy.events.on('onRotationDragDisabled', () => this._gameBoyDebug.disableRotationDrag());
+    gameBoy.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
     // cartridges.events.on('onCartridgeInsert', (msg, gameType) => gameBoy.onCartridgeInsert(gameType));
+
+    this._gameBoyDebug.events.on('rotationCursorChanged', () => gameBoy.onDebugRotationChanged());
+    this._gameBoyDebug.events.on('rotationDragChanged', () => gameBoy.onDebugRotationChanged());
   }
 
   _initIntroSignal() {
