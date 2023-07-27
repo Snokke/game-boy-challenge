@@ -23,9 +23,17 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.O]: {
     texture: 'ui_assets/tetris/block-o',
+    blocksView: [
+      [1, 1],
+      [1, 1],
+    ],
   },
   [SHAPE_TYPE.S]: {
     texture: 'ui_assets/tetris/block-s',
+    blocksView: [
+      [0, 1, 1],
+      [1, 1, 0],
+    ],
   },
   [SHAPE_TYPE.T]: {
     texture: 'ui_assets/tetris/block-t',

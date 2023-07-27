@@ -36,8 +36,12 @@ export default class GameBoy extends THREE.Group {
     this._returnRotationTimer = null;
 
     this._isDragging = false;
+    this._pressedButtonType = null;
     this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
     this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.standardLerpSpeed;
+    this._buttonRepeatTime = 0;
+    this._firstRepeatTimer = null;
+    this._buttonRepeatAllowed = false;
 
     this._init();
   }
@@ -53,9 +57,18 @@ export default class GameBoy extends THREE.Group {
     if (GAME_BOY_CONFIG.updateTexture) {
       this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
     }
+
+    if (this._pressedButtonType && this._buttonRepeatAllowed) {
+      this._buttonRepeatTime += dt;
+
+      if (this._buttonRepeatTime >= GAME_BOY_CONFIG.buttons.repeatTime) {
+        this.events.post('onButtonPress', this._pressedButtonType);
+        this._buttonRepeatTime = 0;
+      }
+    }
   }
 
-  onClick(object) {
+  onPointerDown(object) {
     const objectPartType = object.userData['partType'];
 
     for (const buttonPart in GAME_BOY_BUTTON_PART_BY_TYPE) {
@@ -70,6 +83,14 @@ export default class GameBoy extends THREE.Group {
       this._powerButtonSwitch();
       this._resetReturnRotationTimer();
     }
+  }
+
+  onPointerUp() {
+    if (!this._pressedButtonType) {
+      return;
+    }
+
+    this._pressUpButton(this._pressedButtonType);
   }
 
   onPointerMove(x, y) {
@@ -110,7 +131,7 @@ export default class GameBoy extends THREE.Group {
     this._stopReturnRotationTimer();
   }
 
-  onPointerUp() {
+  onDragPointerUp() {
     if (!GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
       return;
     }
@@ -187,7 +208,7 @@ export default class GameBoy extends THREE.Group {
     this._setReturnRotationTimer();
   }
 
-  _pressDownCrossButton(buttonType, autoPressUp = true) {
+  _pressDownCrossButton(buttonType, autoPressUp = false) {
     const config = GAME_BOY_BUTTONS_CONFIG[buttonType];
     this._stopButtonTween(buttonType);
 
@@ -217,8 +238,15 @@ export default class GameBoy extends THREE.Group {
       .start();
   }
 
-  _pressDownButton(buttonType, autoPressUp = true) {
+  _pressDownButton(buttonType, autoPressUp = false) {
+    this._pressedButtonType = buttonType;
     this.events.post('onButtonPress', buttonType);
+
+    if (GAME_BOY_BUTTONS_CONFIG[buttonType].keyRepeat) {
+      this._firstRepeatTimer = Delayed.call(GAME_BOY_CONFIG.buttons.firstRepeatTime, () => {
+        this._buttonRepeatAllowed = true;
+      });
+    }
 
     if (CROSS_BUTTONS.includes(buttonType)) {
       this._pressDownCrossButton(buttonType, autoPressUp);
@@ -246,6 +274,10 @@ export default class GameBoy extends THREE.Group {
   }
 
   _pressUpButton(buttonType) {
+    this._pressedButtonType = null;
+    this._buttonRepeatAllowed = false;
+    this._stopFirstRepeatTimer();
+
     if (CROSS_BUTTONS.includes(buttonType)) {
       this._pressUpCrossButton(buttonType);
 
@@ -269,6 +301,12 @@ export default class GameBoy extends THREE.Group {
   _stopButtonTween(buttonType) {
     if (this._buttonTween[buttonType]) {
       this._buttonTween[buttonType].stop();
+    }
+  }
+
+  _stopFirstRepeatTimer() {
+    if (this._firstRepeatTimer) {
+      this._firstRepeatTimer.stop();
     }
   }
 
@@ -488,19 +526,15 @@ export default class GameBoy extends THREE.Group {
 
     for (const value in BUTTON_TYPE) {
       const buttonType = BUTTON_TYPE[value];
-      const keysCode = GAME_BOY_BUTTONS_CONFIG[buttonType].keyCode;
+      const config = GAME_BOY_BUTTONS_CONFIG[buttonType];
 
-      if (keysCode && keysCode.includes(e.code)) {
+      if (config.keyCode && config.keyCode.includes(e.code)) {
         this._pressDownButton(buttonType, false);
       }
     }
   }
 
   _onPressUpSignal(e) {
-    if (e.repeat) {
-      return;
-    }
-
     for (const value in BUTTON_TYPE) {
       const buttonType = BUTTON_TYPE[value];
       const keysCode = GAME_BOY_BUTTONS_CONFIG[buttonType].keyCode;

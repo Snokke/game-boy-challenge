@@ -69,48 +69,33 @@ export default class GameBoyController {
 
     const intersectObject = intersect.object;
 
-    if (intersectObject && intersectObject.userData.isDraggable) {
-      this._dragPointerDownPosition.set(x, y);
+    if (intersectObject) {
       const sceneObjectType = intersectObject.userData.sceneObjectType;
-      this._draggingObject = this._activeObjects[sceneObjectType];
-      this._draggingObject.onPointerDragDown();
+      const activeObject = this._activeObjects[sceneObjectType];
+
+      if (intersectObject.userData.isActive) {
+        activeObject.onPointerDown(intersectObject);
+      }
+
+      if (intersectObject.userData.isDraggable) {
+        this._dragPointerDownPosition.set(x, y);
+        this._draggingObject = activeObject;
+        this._draggingObject.onPointerDragDown();
+      }
     }
   }
 
   onPointerUp(x, y) {
-    const pixelsError = 2;
-    const isCursorMoved = Math.abs(Math.round(this._pointerPositionOnDown.x) - Math.round(x)) <= pixelsError
-      && Math.abs(Math.round(this._pointerPositionOnDown.y) - Math.round(y)) <= pixelsError;
-
-    if (this._draggingObject === null && isCursorMoved) {
-      this._onPointerClick(x, y);
-    }
-
     if (this._draggingObject) {
-      this._draggingObject.onPointerUp();
+      this._draggingObject.onDragPointerUp();
       this._draggingObject = null;
     }
+
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onPointerUp();
   }
 
   onWheelScroll(delta) {
     this._cameraController.onWheelScroll(delta);
-    // this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onWheelScroll(delta);
-  }
-
-  _onPointerClick(x, y) {
-    const intersect = this._raycasterController.checkIntersection(x, y);
-
-    if (!intersect) {
-      return;
-    }
-
-    const intersectObject = intersect.object;
-
-    if (intersectObject && intersectObject.userData.isActive) {
-      const sceneObjectType = intersectObject.userData.sceneObjectType;
-
-      this._activeObjects[sceneObjectType].onClick(intersectObject);
-    }
   }
 
   _checkToGlow(intersect) {

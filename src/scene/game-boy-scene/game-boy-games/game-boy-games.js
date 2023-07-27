@@ -58,7 +58,7 @@ export default class GameBoyGames {
     this._games[this._gameType].stopTweens();
 
     this._powerOffTween = new TWEEN.Tween(this._container)
-      .to({ alpha: 0 }, 1000)
+      .to({ alpha: 0 }, 500)
       .easing(TWEEN.Easing.Sinusoidal.Out)
       .start()
       .onComplete(() => {

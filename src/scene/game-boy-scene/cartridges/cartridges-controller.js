@@ -37,7 +37,7 @@ export default class CartridgesController extends THREE.Group {
     return allMeshes;
   }
 
-  onClick(object) {
+  onPointerDown(object) {
     const objectPartType = object.userData['partType'];
     const gameType = CARTRIDGES_BY_TYPE_CONFIG[objectPartType].game;
 

@@ -14,6 +14,10 @@ const GAME_BOY_CONFIG = {
     moveSpeed: 1.3,
     powerIndicatorColor: 0xff0000,
   },
+  buttons: {
+    firstRepeatTime: 400,
+    repeatTime: 0.04,
+  },
   rotation: {
     rotationCursorEnabled: true,
     rotationDragEnabled: true,
@@ -35,44 +39,52 @@ const GAME_BOY_BUTTONS_CONFIG = {
   [BUTTON_TYPE.A]: {
     moveDistance: 0.055,
     moveSpeed: 0.5,
+    keyRepeat: false,
     keyCode: ['KeyX'],
   },
   [BUTTON_TYPE.B]: {
     moveDistance: 0.055,
     moveSpeed: 0.5,
+    keyRepeat: false,
     keyCode: ['KeyZ'],
   },
   [BUTTON_TYPE.Select]: {
     moveDistance: 0.039,
     moveSpeed: 0.5,
+    keyRepeat: false,
   },
   [BUTTON_TYPE.Start]: {
     moveDistance: 0.039,
     moveSpeed: 0.5,
+    keyRepeat: false,
     keyCode: ['Enter'],
   },
   [BUTTON_TYPE.CrossLeft]: {
     rotateAxis: 'y',
     rotateAngle: -8,
     moveSpeed: 1,
+    keyRepeat: true,
     keyCode: ['ArrowLeft'],
   },
   [BUTTON_TYPE.CrossRight]: {
     rotateAxis: 'y',
     rotateAngle: 8,
     moveSpeed: 1,
+    keyRepeat: true,
     keyCode: ['ArrowRight'],
   },
   [BUTTON_TYPE.CrossUp]: {
     rotateAxis: 'x',
     rotateAngle: -8,
     moveSpeed: 1,
+    keyRepeat: true,
     keyCode: ['ArrowUp'],
   },
   [BUTTON_TYPE.CrossDown]: {
     rotateAxis: 'x',
     rotateAngle: 8,
     moveSpeed: 1,
+    keyRepeat: true,
     keyCode: ['ArrowDown'],
   },
 }
