@@ -14,7 +14,29 @@ const SHAPE_TYPE = {
   Z: 'Z',
 }
 
+const SHAPE_DIRECTION = {
+  Up: 'UP',
+  Right: 'RIGHT',
+  Down: 'DOWN',
+  Left: 'LEFT',
+}
+
+const DIRECTION_SEQUENCE = [
+  SHAPE_DIRECTION.Up,
+  SHAPE_DIRECTION.Right,
+  SHAPE_DIRECTION.Down,
+  SHAPE_DIRECTION.Left,
+];
+
+const ROTATE_TYPE = {
+  Clockwise: 'CLOCKWISE',
+  CounterClockwise: 'COUNTER_CLOCKWISE',
+}
+
 export {
   SCREEN_TYPE,
   SHAPE_TYPE,
+  SHAPE_DIRECTION,
+  DIRECTION_SEQUENCE,
+  ROTATE_TYPE
 };
