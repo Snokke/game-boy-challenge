@@ -15,6 +15,7 @@ export default class GameBoyController {
     this._gameBoyDebug = data.gameBoyDebug;
     this._games = data.games;
     this._cameraController = data.cameraController;
+    this._background = data.background;
 
     this._pointerPosition = new THREE.Vector2();
     this._pointerPositionOnDown = new THREE.Vector2();
@@ -108,7 +109,7 @@ export default class GameBoyController {
       return;
     }
 
-    if (object.userData.isActive) {
+    if (object.userData.isActive && object.userData.showOutline) {
       Black.engine.containerElement.style.cursor = 'pointer';
 
       const sceneObjectType = object.userData.sceneObjectType;
@@ -147,11 +148,14 @@ export default class GameBoyController {
 
     const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
+    const background = this._activeObjects[SCENE_OBJECT_TYPE.Background];
 
     gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
     gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
     // cartridges.events.on('onCartridgeInsert', (msg, gameType) => gameBoy.onCartridgeInsert(gameType));
+
+    background.events.on('onClick', () => gameBoy.onBackgroundClick());
 
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
     this._cameraController.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());

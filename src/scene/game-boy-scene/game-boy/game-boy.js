@@ -10,6 +10,7 @@ import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-textu
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
 import Delayed from '../../../core/helpers/delayed-call';
+import DEBUG_CONFIG from '../../../core/configs/debug-config';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas) {
@@ -47,25 +48,9 @@ export default class GameBoy extends THREE.Group {
   }
 
   update(dt) {
-    if (this._isIntroActive) {
-      this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dt * 60 * GAME_BOY_CONFIG.intro.speed * 0.001);
-    } else {
-      this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.02);
-      this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
-    }
-
-    if (GAME_BOY_CONFIG.updateTexture) {
-      this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
-    }
-
-    if (this._pressedButtonType && this._buttonRepeatAllowed) {
-      this._buttonRepeatTime += dt;
-
-      if (this._buttonRepeatTime >= GAME_BOY_CONFIG.buttons.repeatTime) {
-        this.events.post('onButtonPress', this._pressedButtonType);
-        this._buttonRepeatTime = 0;
-      }
-    }
+    this._updateRotation(dt);
+    this._updateScreenTexture();
+    this._updateButtonsRepeat(dt);
   }
 
   onPointerDown(object) {
@@ -141,6 +126,10 @@ export default class GameBoy extends THREE.Group {
     this._resetReturnRotationTimer();
   }
 
+  onBackgroundClick() {
+    this._onReturnRotation();
+  }
+
   onPointerOver(object) { }
 
   powerOn() {
@@ -181,6 +170,36 @@ export default class GameBoy extends THREE.Group {
     }
 
     return [object];
+  }
+
+  _updateRotation(dt) {
+    if (DEBUG_CONFIG.orbitControls) {
+      return;
+    }
+
+    if (this._isIntroActive) {
+      this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dt * 60 * GAME_BOY_CONFIG.intro.speed * 0.001);
+    } else {
+      this._rotationLerpSpeed = this._lerp(this._rotationLerpSpeed, GAME_BOY_CONFIG.rotation.standardLerpSpeed, dt * 60 * 0.02);
+      this.quaternion.slerp(this._rotationObject.quaternion, dt * 60 * this._rotationLerpSpeed);
+    }
+  }
+
+  _updateScreenTexture() {
+    if (GAME_BOY_CONFIG.updateTexture) {
+      this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+    }
+  }
+
+  _updateButtonsRepeat(dt) {
+    if (this._pressedButtonType && this._buttonRepeatAllowed) {
+      this._buttonRepeatTime += dt;
+
+      if (this._buttonRepeatTime >= GAME_BOY_CONFIG.buttons.repeatTime) {
+        this.events.post('onButtonPress', this._pressedButtonType);
+        this._buttonRepeatTime = 0;
+      }
+    }
   }
 
   _onReturnRotation() {
@@ -405,6 +424,7 @@ export default class GameBoy extends THREE.Group {
       part.userData['partType'] = partType;
       part.userData['sceneObjectType'] = this._sceneObjectType;
       part.userData['isActive'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
+      part.userData['showOutline'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
       part.userData['isDraggable'] = GAME_BOY_DRAGGABLE_PARTS.includes(partType);
       part.userData['startPosition'] = part.position.clone();
 

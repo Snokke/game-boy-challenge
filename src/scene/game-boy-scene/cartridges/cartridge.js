@@ -41,5 +41,6 @@ export default class Cartridge extends THREE.Group {
     mesh.userData['isActive'] = true;
     mesh.userData['sceneObjectType'] = this._sceneObjectType;
     mesh.userData['partType'] = this._type;
+    mesh.userData['showOutline'] = true;
   }
 }

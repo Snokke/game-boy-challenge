@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
 import { MessageDispatcher } from 'black-engine';
+import DEBUG_CONFIG from '../../../core/configs/debug-config';
 
 export default class CameraController {
   constructor(camera) {
@@ -18,10 +19,18 @@ export default class CameraController {
   }
 
   update(dt) {
+    if (DEBUG_CONFIG.orbitControls) {
+      return;
+    }
+
     this._camera.position.lerp(this._zoomObject.position, dt * 60 * 0.04);
   }
 
   onWheelScroll(delta) {
+    if (DEBUG_CONFIG.orbitControls) {
+      return;
+    }
+
     const zoomDelta = delta * 0.4;
     const minDistance = 3.2;
     const maxDistance = 6;
