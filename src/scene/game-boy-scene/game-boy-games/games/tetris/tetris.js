@@ -25,6 +25,7 @@ export default class Tetris extends GameAbstract {
 
     this._showScreen(SCREEN_TYPE.Gameplay);
     // this._showScreen(SCREEN_TYPE.License);
+    // this._showScreen(SCREEN_TYPE.Title);
   }
 
   hide() {

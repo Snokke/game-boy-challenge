@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { SHAPE_DIRECTION, SHAPE_TYPE } from "./tetris-data";
+import { LEVEL_TYPE } from "./tetris-data";
 
 const TETRIS_CONFIG = {
   field: {
@@ -8,97 +8,22 @@ const TETRIS_CONFIG = {
     position: new PIXI.Point(16, 0),
   },
   blockSize: 8,
-  shapeSpawnPosition: new PIXI.Point(5, 1),
+  shapeSpawnPosition: new PIXI.Point(4, 1),
 }
 
-const SHAPE_CONFIG = {
-  [SHAPE_TYPE.I]: {
-    textureEdge: 'ui_assets/tetris/block-i-edge',
-    textureMiddle: 'ui_assets/tetris/block-i-middle',
-    blocksView: [
-      [1, 1, 1, 1],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Left,
-    ],
+const LEVELS_CONFIG = {
+  [LEVEL_TYPE.Level01]: {
+    fallInterval: 200,
   },
-  [SHAPE_TYPE.J]: {
-    texture: 'ui_assets/tetris/block-j',
-    blocksView: [
-      [1, 1, 1],
-      [0, 0, 1],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Right,
-      SHAPE_DIRECTION.Down,
-      SHAPE_DIRECTION.Left,
-    ],
+  [LEVEL_TYPE.Level02]: {
+    fallInterval: 900,
   },
-  [SHAPE_TYPE.L]: {
-    texture: 'ui_assets/tetris/block-l',
-    blocksView: [
-      [1, 1, 1],
-      [1, 0, 0],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Right,
-      SHAPE_DIRECTION.Down,
-      SHAPE_DIRECTION.Left,
-    ],
-  },
-  [SHAPE_TYPE.O]: {
-    texture: 'ui_assets/tetris/block-o',
-    blocksView: [
-      [1, 1],
-      [1, 1],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [],
-  },
-  [SHAPE_TYPE.S]: {
-    texture: 'ui_assets/tetris/block-s',
-    blocksView: [
-      [0, 1, 1],
-      [1, 1, 0],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Right,
-    ],
-  },
-  [SHAPE_TYPE.T]: {
-    texture: 'ui_assets/tetris/block-t',
-    blocksView: [
-      [1, 1, 1],
-      [0, 1, 0],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Right,
-      SHAPE_DIRECTION.Down,
-      SHAPE_DIRECTION.Left,
-    ],
-  },
-  [SHAPE_TYPE.Z]: {
-    texture: 'ui_assets/tetris/block-z',
-    blocksView: [
-      [1, 1, 0],
-      [0, 1, 1],
-    ],
-    pivot: new PIXI.Point(1, 0),
-    availableDirections: [
-      SHAPE_DIRECTION.Up,
-      SHAPE_DIRECTION.Right,
-    ],
+  [LEVEL_TYPE.Level03]: {
+    fallInterval: 800,
   },
 }
 
-export { TETRIS_CONFIG, SHAPE_CONFIG };
+export {
+  TETRIS_CONFIG,
+  LEVELS_CONFIG,
+};

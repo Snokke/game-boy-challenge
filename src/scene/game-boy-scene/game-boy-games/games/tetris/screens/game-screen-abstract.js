@@ -23,6 +23,8 @@ export default class GameScreenAbstract extends PIXI.Container {
     return this._screenType;
   }
 
+  update(dt) { }
+
   onButtonPress(buttonType) { }
 
   reset() { }

@@ -1,16 +1,15 @@
 import * as PIXI from 'pixi.js';
-import { SHAPE_CONFIG, TETRIS_CONFIG } from '../../../data/tetris-config';
-import Loader from '../../../../../../../../core/loader';
-import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
-import { DIRECTION_SEQUENCE, ROTATE_TYPE, SHAPE_DIRECTION, SHAPE_TYPE } from '../../../data/tetris-data';
+import { TETRIS_CONFIG } from '../../../../data/tetris-config';
+import Loader from '../../../../../../../../../core/loader';
+import { GAME_BOY_CONFIG } from '../../../../../../../game-boy/data/game-boy-config';
+import { DIRECTION_SEQUENCE, ROTATE_TYPE, SHAPE_CONFIG, SHAPE_DIRECTION, SHAPE_TYPE } from './shape-config';
 
 export default class Shape extends PIXI.Container {
   constructor(type) {
     super();
 
     this._type = type;
-    this._blocksView = null;
-    this._blocks = [];
+    this._blocksView = [];
     this._shapePivot = null;
     this._direction = SHAPE_DIRECTION.Up;
     this._blockPosition = new PIXI.Point(0, 0);
@@ -19,7 +18,7 @@ export default class Shape extends PIXI.Container {
   }
 
   setPosition(x, y) {
-    this._blockPosition.set(x - this._shapePivot.x, y - this._shapePivot.y);
+    this._blockPosition.set(x, y);
 
     this.x = this._blockPosition.x * TETRIS_CONFIG.blockSize;
     this.y = this._blockPosition.y * TETRIS_CONFIG.blockSize;
@@ -50,6 +49,10 @@ export default class Shape extends PIXI.Container {
 
   getPivot() {
     return this._shapePivot;
+  }
+
+  getType() {
+    return this._type;
   }
 
   rotate(rotateType) {
@@ -162,12 +165,14 @@ export default class Shape extends PIXI.Container {
 
   _initShapeI() {
     const config = SHAPE_CONFIG[this._type];
-    const blocksView = this._blocksView = config.blocksView;
+    const blocksView = config.blocksView;
 
     const blockTexture = Loader.assets[config.textureMiddle];
     const edgeTexture = Loader.assets[config.textureEdge];
 
     for (let row = 0; row < blocksView.length; row++) {
+      this._blocksView[row] = [];
+
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
           const texture = (column === 0 || column === blocksView[0].length - 1) ? edgeTexture : blockTexture;
@@ -175,7 +180,9 @@ export default class Shape extends PIXI.Container {
           this.addChild(block);
 
           block.tint = GAME_BOY_CONFIG.screen.tint;
-          this._blocks.push(block);
+          this._blocksView[row][column] = block;
+        } else {
+          this._blocksView[row][column] = null;
         }
       }
     }
@@ -186,17 +193,21 @@ export default class Shape extends PIXI.Container {
 
   _initShape() {
     const config = SHAPE_CONFIG[this._type];
-    const blocksView = this._blocksView = config.blocksView;
+    const blocksView = config.blocksView;
     const blockTexture = Loader.assets[config.texture];
 
     for (let row = 0; row < blocksView.length; row++) {
+      this._blocksView[row] = [];
+
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
           const block = new PIXI.Sprite(blockTexture);
           this.addChild(block);
 
           block.tint = GAME_BOY_CONFIG.screen.tint;
-          this._blocks.push(block);
+          this._blocksView[row][column] = block;
+        } else {
+          this._blocksView[row][column] = null;
         }
       }
     }
@@ -210,9 +221,9 @@ export default class Shape extends PIXI.Container {
 
     for (let row = 0; row < this._blocksView.length; row++) {
       for (let column = 0; column < this._blocksView[0].length; column++) {
-        if (this._blocksView[row][column] === 1) {
-          const block = this._blocks[index];
+        const block = this._blocksView[row][column];
 
+        if (block !== null) {
           block.x = (column - this._shapePivot.x) * TETRIS_CONFIG.blockSize;
           block.y = (row - this._shapePivot.y) * TETRIS_CONFIG.blockSize;
 
@@ -227,9 +238,9 @@ export default class Shape extends PIXI.Container {
 
     for (let row = 0; row < this._blocksView.length; row++) {
       for (let column = 0; column < this._blocksView[0].length; column++) {
-        if (this._blocksView[row][column] === 1) {
-          const block = this._blocks[index];
+        const block = this._blocksView[row][column];
 
+        if (block !== null) {
           if (this._direction === SHAPE_DIRECTION.Up) {
             block.rotation = 0;
             block.x = (column - this._shapePivot.x) * TETRIS_CONFIG.blockSize;
