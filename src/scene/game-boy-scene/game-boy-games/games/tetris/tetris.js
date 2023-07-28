@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import LicenseScreen from './screens/license-screen';
-import TitleScreen from './screens/title-screen';
+import LicenseScreen from './screens/license-screen/license-screen';
+import TitleScreen from './screens/title-screen/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
 import { SCREEN_TYPE } from './data/tetris-data';

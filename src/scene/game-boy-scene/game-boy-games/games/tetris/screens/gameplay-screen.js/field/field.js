@@ -113,7 +113,7 @@ export default class Field extends PIXI.Container {
         if (shapeBlock === 1) {
           if (shapePosition.y + row + 1 > TETRIS_CONFIG.field.height - 1) {
             this._removeShape();
-            this._createShape(SHAPE_TYPE.S);
+            this._spawnShape(SHAPE_TYPE.S);
             return;
           }
         }
@@ -131,7 +131,7 @@ export default class Field extends PIXI.Container {
   _init() {
     this._initMap();
 
-    this._createShape(SHAPE_TYPE.J);
+    this._spawnShape(SHAPE_TYPE.J);
   }
 
   _initMap() {
@@ -162,11 +162,9 @@ export default class Field extends PIXI.Container {
     }
   }
 
-  _createShape(shapeType) {
-    const shape = new Shape(shapeType);
+  _spawnShape(shapeType) {
+    const shape = this._currentShape = new Shape(shapeType);
     this.addChild(shape);
-
-    this._currentShape = shape;
 
     shape.setPosition(5, 5);
   }

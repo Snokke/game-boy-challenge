@@ -21,7 +21,7 @@ export default class GameBoyGames {
     this._powerOffTween = null;
     this._isUpdateEnabled = GAME_BOY_CONFIG.powerOn;
 
-    this._gameType = GAME_TYPE.Tetris;
+    this._gameType = null;
 
     this._init();
   }
@@ -40,14 +40,16 @@ export default class GameBoyGames {
     GAME_BOY_CONFIG.updateTexture = true;
     this._isUpdateEnabled = true;
 
-    this._games[this._gameType].hide();
+    this._hideAllScreens();
+    this._hideAllGames();
     this._stopPowerOffTween();
 
     this._container.alpha = 1;
     this._container.visible = true;
 
     // this._loadingScreen.show();
-    this.startGame(this._gameType);
+    this.setGame(GAME_TYPE.Tetris);
+    this.startGame();
   }
 
   onPowerOff() {
@@ -55,7 +57,10 @@ export default class GameBoyGames {
 
     this._stopPowerOffTween();
     this._allScreens.forEach(screen => screen.stopTweens());
-    this._games[this._gameType].stopTweens();
+
+    if (this._gameType) {
+      this._games[this._gameType].stopTweens();
+    }
 
     this._powerOffTween = new TWEEN.Tween(this._container)
       .to({ alpha: 0 }, 500)
@@ -65,8 +70,20 @@ export default class GameBoyGames {
         this._container.visible = false;
         GAME_BOY_CONFIG.updateTexture = false;
 
-        this._games[this._gameType].hide();
+        if (this._gameType) {
+          this._games[this._gameType].hide();
+        }
       });
+  }
+
+  _hideAllGames() {
+    for (const gameType in this._games) {
+      this._games[gameType].hide();
+    }
+  }
+
+  _hideAllScreens() {
+    this._allScreens.forEach(screen => screen.hide());
   }
 
   onButtonPress(buttonType) {
@@ -77,6 +94,14 @@ export default class GameBoyGames {
     if (this._gameType !== null) {
       this._games[this._gameType].onButtonPress(buttonType);
     }
+  }
+
+  setGame(gameType) {
+    this._gameType = gameType;
+  }
+
+  setNoGame() {
+    this._gameType = null;
   }
 
   startGame() {
@@ -135,7 +160,7 @@ export default class GameBoyGames {
 
         this._games[gameType] = game;
       } else {
-        this._games[gameType] = this._noCartridgeScreen;
+        this._games[gameType] = this._damagedCartridgeScreen;
       }
     });
   }
@@ -165,7 +190,7 @@ export default class GameBoyGames {
     }
 
     if (this._gameType === null) {
-      this._noCartridgeScreen.start();
+      this._noCartridgeScreen.show();
     } else {
       this.startGame();
     }

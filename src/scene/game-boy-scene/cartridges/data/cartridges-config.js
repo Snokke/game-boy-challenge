@@ -8,20 +8,36 @@ const CARTRIDGE_TYPE = {
 }
 
 const CARTRIDGES_CONFIG = {
-  startPosition: new THREE.Vector3(-3, 0, 0),
-  offset: new THREE.Vector3(0, 0.5, -0.3),
+  movingSpeed: 5,
+  positions: {
+    insert: {
+      middle: new THREE.Vector3(-2.6, 3.6, 0.7),
+      beforeInsert: new THREE.Vector3(0, 2.8, -0.28),
+      slot: new THREE.Vector3(0, 1.03, -0.28),
+    },
+    eject: {
+      beforeEject: new THREE.Vector3(0, 2.8, -0.28),
+      middle: new THREE.Vector3(-2.2, 3.5, 0.5),
+    }
+  },
   floating: {
     [CARTRIDGE_TYPE.Tetris]: {
+      startPosition: new THREE.Vector3(-2.8, -1, 0.7),
+      rotation: new THREE.Vector3(0, 5, 2),
       amplitude: 0.05,
       speed: 0.3,
       startTime: 0,
     },
     [CARTRIDGE_TYPE.Zelda]: {
+      startPosition: new THREE.Vector3(-3.3, 0.1, 0.2),
+      rotation: new THREE.Vector3(-3, 0, -1),
       amplitude: 0.03,
       speed: 0.4,
       startTime: 2,
     },
     [CARTRIDGE_TYPE.DuckTales]: {
+      startPosition: new THREE.Vector3(-2.7, 1.2, -0.3),
+      rotation: new THREE.Vector3(0, -5, -2),
       amplitude: 0.04,
       speed: 0.5,
       startTime: 3,

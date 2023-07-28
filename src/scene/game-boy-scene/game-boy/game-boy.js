@@ -136,6 +136,10 @@ export default class GameBoy extends THREE.Group {
     this._powerButtonOn();
   }
 
+  powerOff() {
+    this._powerButtonOff();
+  }
+
   disableIntro() {
     this._isIntroActive = false;
   }
@@ -145,6 +149,28 @@ export default class GameBoy extends THREE.Group {
     this._rotationQuaternion.copy(new THREE.Quaternion());
     this._isDefaultRotation = true;
     this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.slowLerpSpeed;
+  }
+
+  resetRotationFast() {
+    this._rotationObject.quaternion.copy(new THREE.Quaternion());
+    this._rotationQuaternion.copy(new THREE.Quaternion());
+    this._isDefaultRotation = true;
+    this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.fastLerpSpeed;
+  }
+
+  disableRotation() {
+    GAME_BOY_CONFIG.rotation.rotationCursorEnabled = false;
+    GAME_BOY_CONFIG.rotation.rotationDragEnabled = false;
+  }
+
+  enableRotation() {
+    GAME_BOY_CONFIG.rotation.rotationCursorEnabled = true;
+    GAME_BOY_CONFIG.rotation.rotationDragEnabled = true;
+  }
+
+  addCartridge(cartridge) {
+    this._cartridge = cartridge;
+    this.add(this._cartridge);
   }
 
   onDebugRotationChanged() {

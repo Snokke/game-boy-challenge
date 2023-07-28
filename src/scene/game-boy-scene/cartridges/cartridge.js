@@ -10,6 +10,7 @@ export default class Cartridge extends THREE.Group {
     this._type = type;
     this._config = CARTRIDGES_BY_TYPE_CONFIG[type];
     this._sceneObjectType = SCENE_OBJECT_TYPE.Cartridges;
+    this._isInserted = false;
 
     this._mesh = null;
 
@@ -22,6 +23,26 @@ export default class Cartridge extends THREE.Group {
 
   getType() {
     return this._type;
+  }
+
+  disableActivity() {
+    this._mesh.userData['isActive'] = false;
+  }
+
+  enableActivity() {
+    this._mesh.userData['isActive'] = true;
+  }
+
+  setInserted() {
+    this._isInserted = true;
+  }
+
+  setNotInserted() {
+    this._isInserted = false;
+  }
+
+  isInserted() {
+    return this._isInserted;
   }
 
   _init() {

@@ -26,6 +26,7 @@ const GAME_BOY_CONFIG = {
     dragRotationSpeed: 3,
     standardLerpSpeed: 0.05,
     slowLerpSpeed: 0.01,
+    fastLerpSpeed: 0.07,
     zoomThresholdToDisableRotation: 2.3,
   },
   intro: {

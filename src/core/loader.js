@@ -27,6 +27,8 @@ const images = [
 const pixiAssets = [
   // Tetris
   'ui_assets/nintendo-logo-screen.png',
+  'ui_assets/stop-sign.png',
+
   'ui_assets/tetris/title-screen.png',
   'ui_assets/tetris/license-screen.png',
   'ui_assets/tetris/gameplay-screen.png',

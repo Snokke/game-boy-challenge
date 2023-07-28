@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
-import ScreenAbstract from '../screen-abstract';
+import GameScreenAbstract from '../game-screen-abstract';
 import { SCREEN_TYPE } from '../../data/tetris-data';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import Field from './field/field';
 
-export default class GameplayScreen extends ScreenAbstract {
+export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
     super();
 

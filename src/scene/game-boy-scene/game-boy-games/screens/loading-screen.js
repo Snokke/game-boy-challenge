@@ -3,8 +3,9 @@ import Loader from '../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
 import Delayed from '../../../../core/helpers/delayed-call';
+import ScreenAbstract from './screen-abstract';
 
-export default class LoadingScreen extends PIXI.Container {
+export default class LoadingScreen extends ScreenAbstract {
   constructor() {
     super();
 

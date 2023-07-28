@@ -8,6 +8,7 @@ const TETRIS_CONFIG = {
     position: new PIXI.Point(16, 0),
   },
   blockSize: 8,
+  shapeSpawnPosition: new PIXI.Point(5, 1),
 }
 
 const SHAPE_CONFIG = {
@@ -20,8 +21,6 @@ const SHAPE_CONFIG = {
     pivot: new PIXI.Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
-      // SHAPE_DIRECTION.Right, //
-      // SHAPE_DIRECTION.Down, //
       SHAPE_DIRECTION.Left,
     ],
   },
