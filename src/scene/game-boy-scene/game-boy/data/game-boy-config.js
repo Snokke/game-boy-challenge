@@ -3,6 +3,7 @@ import { BUTTON_TYPE, GAME_BOY_PART_TYPE } from "./game-boy-data";
 const GAME_BOY_CONFIG = {
   powerOn: true,
   updateTexture: true,
+  volume: 0.5,
   screen: {
     width: 160,
     height: 144,
@@ -19,6 +20,11 @@ const GAME_BOY_CONFIG = {
     firstRepeatTime: 400,
     repeatTime: 0.04,
   },
+  volumeController: {
+    sensitivity: 0.01,
+    maxAngle: 120,
+    hideTime: 1200,
+  },
   rotation: {
     rotationCursorEnabled: true,
     rotationDragEnabled: true,
@@ -34,7 +40,7 @@ const GAME_BOY_CONFIG = {
     enabled: false,
     speed: 5,
     rotationX: -20,
-  }
+  },
 }
 
 const GAME_BOY_BUTTONS_CONFIG = {

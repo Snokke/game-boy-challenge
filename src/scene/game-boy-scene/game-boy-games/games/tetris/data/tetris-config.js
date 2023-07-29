@@ -13,7 +13,7 @@ const TETRIS_CONFIG = {
 
 const LEVELS_CONFIG = {
   [LEVEL_TYPE.Level01]: {
-    fallInterval: 200,
+    fallInterval: 1000,
   },
   [LEVEL_TYPE.Level02]: {
     fallInterval: 900,

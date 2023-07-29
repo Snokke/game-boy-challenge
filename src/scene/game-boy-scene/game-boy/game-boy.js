@@ -4,7 +4,7 @@ import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
-import { MessageDispatcher } from 'black-engine';
+import { Black, MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
@@ -37,6 +37,7 @@ export default class GameBoy extends THREE.Group {
     this._returnRotationTimer = null;
 
     this._isDragging = false;
+    this._draggingObjectType = null;
     this._pressedButtonType = null;
     this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
     this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.standardLerpSpeed;
@@ -94,26 +95,48 @@ export default class GameBoy extends THREE.Group {
   }
 
   onPointerDragMove(dragX, dragY) {
-    if (!GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
-      return;
+    if (this._draggingObjectType === GAME_BOY_PART_TYPE.VolumeControl) {
+      const volumeControl = this._parts[GAME_BOY_PART_TYPE.VolumeControl];
+      const maxAngle = GAME_BOY_CONFIG.volumeController.maxAngle * THREE.MathUtils.DEG2RAD;
+      volumeControl.rotation.z = dragY * GAME_BOY_CONFIG.volumeController.sensitivity;
+
+      if (volumeControl.rotation.z < -maxAngle) {
+        volumeControl.rotation.z = -maxAngle;
+      }
+
+      if (volumeControl.rotation.z > maxAngle) {
+        volumeControl.rotation.z = maxAngle;
+      }
+
+      GAME_BOY_CONFIG.volume = (volumeControl.rotation.z + maxAngle) / (maxAngle * 2);
+      this.events.post('onVolumeChanged');
     }
 
-    this._rotationObject.quaternion.copy(this._rotationQuaternion);
-    this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
-    this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+    if (GAME_BOY_DRAGGABLE_PARTS.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
+      this._rotationObject.quaternion.copy(this._rotationQuaternion);
+      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+    }
   }
 
-  onPointerDragDown() {
-    if (!GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
-      return;
+  onPointerDragDown(object) {
+    const objectPartType = object.userData['partType'];
+
+    if (objectPartType === GAME_BOY_PART_TYPE.VolumeControl) {
+      this._isDragging = true;
+      this._draggingObjectType = objectPartType;
+      this._stopReturnRotationTimer();
     }
 
-    this._rotationQuaternion.copy(this.quaternion);
+    if (GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
+      this._rotationQuaternion.copy(this.quaternion);
 
-    this._isDragging = true;
-    this._isDefaultRotation = false;
+      this._isDragging = true;
+      this._draggingObjectType = objectPartType;
+      this._isDefaultRotation = false;
 
-    this._stopReturnRotationTimer();
+      this._stopReturnRotationTimer();
+    }
   }
 
   onDragPointerUp() {
@@ -122,6 +145,7 @@ export default class GameBoy extends THREE.Group {
     }
 
     this._isDragging = false;
+    this._draggingObjectType = null;
 
     this._resetReturnRotationTimer();
   }
@@ -130,7 +154,14 @@ export default class GameBoy extends THREE.Group {
     this._onReturnRotation();
   }
 
-  onPointerOver(object) { }
+  onPointerOver(object) {
+    const objectPartType = object.userData['partType'];
+
+    if ((GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled)
+      || (objectPartType === GAME_BOY_PART_TYPE.VolumeControl)) {
+      Black.engine.containerElement.style.cursor = 'grab';
+    }
+  }
 
   powerOn() {
     this._powerButtonOn();
@@ -451,7 +482,7 @@ export default class GameBoy extends THREE.Group {
       part.userData['sceneObjectType'] = this._sceneObjectType;
       part.userData['isActive'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
       part.userData['showOutline'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
-      part.userData['isDraggable'] = GAME_BOY_DRAGGABLE_PARTS.includes(partType);
+      part.userData['isDraggable'] = GAME_BOY_DRAGGABLE_PARTS.includes(partType) || partType === GAME_BOY_PART_TYPE.VolumeControl;
       part.userData['startPosition'] = part.position.clone();
 
       this._parts[partType] = part;

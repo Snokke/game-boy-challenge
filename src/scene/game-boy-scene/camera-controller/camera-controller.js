@@ -68,8 +68,8 @@ export default class CameraController {
   _init() {
     this._zoomObject.position.copy(this._camera.position);
 
-    for (let i = 0; i < 10; i++) {
-      this.onWheelScroll(-1);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //   this.onWheelScroll(-1);
+    // }
   }
 }

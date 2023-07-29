@@ -6,6 +6,7 @@ import NoCartridgeScreen from './screens/no-cartridge-screen';
 import DamagedCartridgeScreen from './screens/damaged-cartridge-screen';
 import { GAME_TYPE } from './data/games-config';
 import { GAMES_CLASSES } from './data/games-classes';
+import VolumeOverlay from './overlay/volume-overlay';
 
 export default class GameBoyGames {
   constructor(application) {
@@ -16,6 +17,7 @@ export default class GameBoyGames {
     this._loadingScreen = null;
     this._noCartridgeScreen = null;
     this._damagedCartridgeScreen = null;
+    this._volumeOverlay = null;
     this._allScreens = [];
     this._games = {};
     this._powerOffTween = null;
@@ -76,6 +78,10 @@ export default class GameBoyGames {
       });
   }
 
+  onVolumeChanged() {
+    this._volumeOverlay.onVolumeChanged();
+  }
+
   _hideAllGames() {
     for (const gameType in this._games) {
       this._games[gameType].hide();
@@ -117,8 +123,8 @@ export default class GameBoyGames {
   _init() {
     this._initRootContainer();
     this._initScreens();
-    this._initOverlays();
     this._initGames();
+    this._initOverlays();
 
     this._initSignals();
   }
@@ -141,7 +147,15 @@ export default class GameBoyGames {
   }
 
   _initOverlays() {
+    this._initVolumeOverlay();
+  }
 
+  _initVolumeOverlay() {
+    const volumeOverlay = this._volumeOverlay = new VolumeOverlay();
+    this._container.addChild(volumeOverlay);
+
+    volumeOverlay.x = GAME_BOY_CONFIG.screen.width * 0.5;
+    volumeOverlay.y = GAME_BOY_CONFIG.screen.height - 15;
   }
 
   _initGames() {

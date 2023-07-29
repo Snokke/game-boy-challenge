@@ -47,6 +47,12 @@ export default class GameBoyController {
     if (intersect && intersect.object && !this._draggingObject) {
       this._checkToGlow(intersect);
     }
+
+    if (intersect && intersect.object) {
+      const object = intersect.object;
+      const sceneObjectType = object.userData.sceneObjectType;
+      this._activeObjects[sceneObjectType].onPointerOver(object);
+    }
   }
 
   onPointerMove(x, y) {
@@ -82,7 +88,7 @@ export default class GameBoyController {
       if (intersectObject.userData.isDraggable) {
         this._dragPointerDownPosition.set(x, y);
         this._draggingObject = activeObject;
-        this._draggingObject.onPointerDragDown();
+        this._draggingObject.onPointerDragDown(intersectObject);
       }
     }
   }
@@ -117,7 +123,6 @@ export default class GameBoyController {
 
       const sceneObjectType = object.userData.sceneObjectType;
       const meshes = this._activeObjects[sceneObjectType].getOutlineMeshes(object);
-      this._activeObjects[sceneObjectType].onPointerOver(object);
 
       this._setGlow(meshes);
     }
@@ -148,7 +153,21 @@ export default class GameBoyController {
 
   _initSignals() {
     this._initIntroSignal();
+    this._initActiveObjectsSignals();
+    this._initCameraControllerSignals();
+    this._initDebugSignals();
+  }
 
+  _initIntroSignal() {
+    window.addEventListener('pointerdown', () => {
+      if (this._isIntroActive) {
+        this._isIntroActive = false;
+        this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableIntro();
+      }
+    });
+  }
+
+  _initActiveObjectsSignals() {
     const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
     const background = this._activeObjects[SCENE_OBJECT_TYPE.Background];
@@ -156,14 +175,22 @@ export default class GameBoyController {
     gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
     gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
+    gameBoy.events.on('onVolumeChanged', () => this._games.onVolumeChanged());
     cartridges.events.on('onCartridgeInserting', () => this._onCartridgeInserting());
     cartridges.events.on('onCartridgeInserted', (msg, cartridge) => this._onCartridgeInserted(cartridge));
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());
     cartridges.events.on('onCartridgeEjected', () => this._onCartridgeEjected());
     background.events.on('onClick', () => gameBoy.onBackgroundClick());
+  }
 
+  _initCameraControllerSignals() {
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
     this._cameraController.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
+  }
+
+  _initDebugSignals() {
+    const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
+
     this._gameBoyDebug.events.on('rotationCursorChanged', () => gameBoy.onDebugRotationChanged());
     this._gameBoyDebug.events.on('rotationDragChanged', () => gameBoy.onDebugRotationChanged());
   }
@@ -198,15 +225,6 @@ export default class GameBoyController {
   _onRotationDragDisabled() {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].resetRotation();
     this._gameBoyDebug.disableRotationDrag();
-  }
-
-  _initIntroSignal() {
-    window.addEventListener('pointerdown', () => {
-      if (this._isIntroActive) {
-        this._isIntroActive = false;
-        this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableIntro();
-      }
-    });
   }
 
   _onButtonPress(buttonType) {
