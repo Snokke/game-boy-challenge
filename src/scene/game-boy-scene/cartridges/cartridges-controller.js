@@ -3,6 +3,7 @@ import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js
 import Cartridge from './cartridge';
 import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
 import { MessageDispatcher } from 'black-engine';
+import Delayed from '../../../core/helpers/delayed-call';
 
 export default class CartridgesController extends THREE.Group {
   constructor() {
@@ -12,11 +13,12 @@ export default class CartridgesController extends THREE.Group {
 
     this._cartridges = {};
     this._cartridgesArray = [];
-    this._time = 0;
 
+    this._timeByCartridgeType = {};
     this._showCartridgeObjects = {};
     this._showCartridgeTween = {};
     this._isCartridgeShown = {};
+    this._positionObject = {};
 
     this._cartridgeDisableFloating = {};
 
@@ -24,17 +26,17 @@ export default class CartridgesController extends THREE.Group {
   }
 
   update(dt) {
-    this._time += dt;
-
     this._cartridgesArray.forEach(cartridge => {
       const cartridgeType = cartridge.getType();
 
       if (!this._cartridgeDisableFloating[cartridgeType]) {
         const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];
+        this._timeByCartridgeType[cartridgeType] += dt;
 
-        // const showPositionY = this._showCartridgeObjects[cartridgeType].position.y;
-        cartridge.position.y = cartridge.startPosition.y + Math.sin(floatingConfig.startTime + this._time * floatingConfig.speed) * floatingConfig.amplitude;
-        cartridge.rotation.z = Math.sin(floatingConfig.startTime + this._time * floatingConfig.speed * 0.5) * floatingConfig.rotation.z * THREE.MathUtils.DEG2RAD;
+        cartridge.rotation.z = Math.sin(this._timeByCartridgeType[cartridgeType] * floatingConfig.speed * 0.5) * floatingConfig.rotation.z * THREE.MathUtils.DEG2RAD;
+
+        this._positionObject[cartridgeType].position.y = cartridge.startPosition.y + Math.sin(this._timeByCartridgeType[cartridgeType] * floatingConfig.speed) * floatingConfig.amplitude;
+        cartridge.position.lerp(this._positionObject[cartridgeType].position, 0.1);
       }
     });
   }
@@ -55,24 +57,55 @@ export default class CartridgesController extends THREE.Group {
     const cartridgeType = mesh.userData['partType'];
     const cartridge = this._cartridges[cartridgeType];
 
-    if (!cartridge.isInserted()) {
-      this.events.post('onCartridgeInserting');
-      this._moveCartridgeToGameBoy(cartridge);
-    } else {
+    const insertedCartridge = this._checkIsCartridgeInserted(cartridge);
+
+    if (insertedCartridge !== null) {
       this.events.post('onCartridgeEjecting');
-      this._moveCartridgeFromGameBoy(cartridge);
+      this._moveCartridgeFromGameBoy(insertedCartridge, 7, 200);
+
+      this.events.post('onCartridgeInserting');
+      this._moveCartridgeToGameBoy(cartridge, 3.2);
+    } else {
+
+      if (!cartridge.isInserted()) {
+        this.events.post('onCartridgeInserting');
+        this._moveCartridgeToGameBoy(cartridge, 5);
+      } else {
+        this.events.post('onCartridgeEjecting');
+        this._moveCartridgeFromGameBoy(cartridge, 5, 400);
+      }
     }
   }
 
-  _moveCartridgeToGameBoy(cartridge) {
+  onZoomChanged(zoomPercent) {
+    this._cartridgesArray.forEach(cartridge => {
+      const cartridgeType = cartridge.getType();
+      this._positionObject[cartridgeType].position.x = cartridge.startPosition.x - 1.8 * zoomPercent;
+    });
+  }
+
+  _checkIsCartridgeInserted(clickedCartridge) {
+    let isCartridgeInserted = null;
+
+    this._cartridgesArray.forEach(cartridge => {
+      if (cartridge.isInserted() && cartridge.getType() !== clickedCartridge.getType()) {
+        isCartridgeInserted = cartridge;
+      }
+    });
+
+    return isCartridgeInserted;
+  }
+
+  _moveCartridgeToGameBoy(cartridge, speed) {
     const cartridgeType = cartridge.getType();
     cartridge.setInserted();
 
     this._cartridgeDisableFloating[cartridgeType] = true;
+    cartridge.lastRotation = cartridge.rotation.clone();
 
     const positions = CARTRIDGES_CONFIG.positions.insert;
     const distance = cartridge.position.distanceTo(positions.beforeInsert);
-    const time = distance / (CARTRIDGES_CONFIG.movingSpeed * 0.001);
+    const time = distance / (speed * 0.001);
 
     new TWEEN.Tween(cartridge.position)
       .to({
@@ -100,7 +133,7 @@ export default class CartridgesController extends THREE.Group {
       .start();
   }
 
-  _moveCartridgeFromGameBoy(cartridge) {
+  _moveCartridgeFromGameBoy(cartridge, speed, ejectTime) {
     const cartridgeType = cartridge.getType();
     cartridge.setNotInserted();
 
@@ -108,13 +141,13 @@ export default class CartridgesController extends THREE.Group {
     const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];
 
     const moveTween = new TWEEN.Tween(cartridge.position)
-      .to({ x: positions.beforeEject.x, y: positions.beforeEject.y, z: positions.beforeEject.z }, 400)
+      .to({ x: positions.beforeEject.x, y: positions.beforeEject.y, z: positions.beforeEject.z }, ejectTime)
       .easing(TWEEN.Easing.Sinusoidal.Out)
       .delay(400)
       .start()
       .onComplete(() => {
         const distance = cartridge.position.distanceTo(floatingConfig.startPosition);
-        const time = distance / (CARTRIDGES_CONFIG.movingSpeed * 0.001);
+        const time = distance / (speed * 0.001);
 
         new TWEEN.Tween(cartridge.position)
           .to({
@@ -126,14 +159,15 @@ export default class CartridgesController extends THREE.Group {
           .easing(TWEEN.Easing.Sinusoidal.Out)
           .start()
           .onComplete(() => {
+            cartridge.position.copy(floatingConfig.startPosition);
             this._onCartridgeEjected(cartridgeType);
           });
 
         new TWEEN.Tween(cartridge.rotation)
           .to({
-            x: floatingConfig.rotation.x * THREE.MathUtils.DEG2RAD,
-            y: floatingConfig.rotation.y * THREE.MathUtils.DEG2RAD,
-            z: floatingConfig.rotation.z * THREE.MathUtils.DEG2RAD
+            x: cartridge.lastRotation.x,
+            y: cartridge.lastRotation.y,
+            z: cartridge.lastRotation.z,
           }, time)
           .easing(TWEEN.Easing.Quartic.Out)
           .start();
@@ -258,6 +292,9 @@ export default class CartridgesController extends THREE.Group {
       this._showCartridgeObjects[cartridgeType] = new THREE.Object3D();
       this._isCartridgeShown[cartridgeType] = false;
       this._cartridgeDisableFloating[cartridgeType] = false;
+      this._timeByCartridgeType[cartridgeType] = 0;
+      this._positionObject[cartridgeType] = new THREE.Object3D();
+      this._positionObject[cartridgeType].position.copy(cartridge.position);
     });
   }
 }

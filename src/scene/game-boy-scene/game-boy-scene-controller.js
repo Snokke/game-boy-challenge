@@ -184,8 +184,11 @@ export default class GameBoyController {
   }
 
   _initCameraControllerSignals() {
+    const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
+
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
     this._cameraController.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
+    this._cameraController.events.on('onZoom', (msg, zoomPercent) => cartridges.onZoomChanged(zoomPercent));
   }
 
   _initDebugSignals() {
