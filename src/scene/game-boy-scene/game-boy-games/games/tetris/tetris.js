@@ -1,16 +1,17 @@
-import * as PIXI from 'pixi.js';
 import LicenseScreen from './screens/license-screen/license-screen';
 import TitleScreen from './screens/title-screen/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
 import { SCREEN_TYPE } from './data/tetris-data';
+import VolumeController from './overlays/volume-controller';
+import { GAME_BOY_CONFIG } from '../../../game-boy/data/game-boy-config';
 
 export default class Tetris extends GameAbstract {
   constructor() {
     super();
 
     this._screens = {};
-
+    this._volumeController = null;
     this._currentScreenType = null;
 
     this._init();
@@ -61,6 +62,7 @@ export default class Tetris extends GameAbstract {
 
   _init() {
     this._initScreens();
+    this._initOverlays();
     this._initSignals();
 
     this.visible = false;
@@ -70,6 +72,10 @@ export default class Tetris extends GameAbstract {
     this._initLicenseScreen();
     this._initTitleScreen();
     this._initGameplayScreen();
+  }
+
+  _initOverlays() {
+    this._initVolumeController();
   }
 
   _initLicenseScreen() {
@@ -91,6 +97,14 @@ export default class Tetris extends GameAbstract {
     this.addChild(gameplayScreen);
 
     this._screens[SCREEN_TYPE.Gameplay] = gameplayScreen;
+  }
+
+  _initVolumeController() {
+    const volumeController = this._volumeController = new VolumeController();
+    this.addChild(volumeController);
+
+    volumeController.x = GAME_BOY_CONFIG.screen.width * 0.5;
+    volumeController.y = GAME_BOY_CONFIG.screen.height - 15;
   }
 
   _initSignals() {
