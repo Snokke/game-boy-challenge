@@ -63,6 +63,7 @@ export default class GameOverPopup extends PIXI.Container {
 
     Delayed.call(this._showWallLineDelay * this._blockLines.length + 100, () => {
       this.events.emit('onWallShowed');
+      this._gameOverContainer.visible = true;
       this._wallHideAnimation();
     });
   }
@@ -80,14 +81,13 @@ export default class GameOverPopup extends PIXI.Container {
 
     Delayed.call(this._showWallLineDelay * this._blockLines.length, () => {
       this._wallContainer.visible = false;
-      this._gameOverContainer.visible = true;
       this._isGameOverShowed = true;
     });
   }
 
   _init() {
-    this._initWall();
     this._initGameOverContainer();
+    this._initWall();
 
     this.visible = false;
   }

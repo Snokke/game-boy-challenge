@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { LEVEL_TYPE } from "./tetris-data";
 
 const TETRIS_CONFIG = {
+  startLevel: 0,
   field: {
     width: 10,
     height: 18,
@@ -10,19 +10,34 @@ const TETRIS_CONFIG = {
   blockSize: 8,
   shapeSpawnPosition: new PIXI.Point(4, 1),
   fastFallInterval: 30,
+  originalTetrisFramesPerSecond: 59.73,
+  scorePerLine: [40, 100, 300, 1200],
+  scoreForSoftDrop: 1,
 }
 
-const LEVELS_CONFIG = {
-  [LEVEL_TYPE.Level01]: {
-    fallInterval: 200,
-  },
-  [LEVEL_TYPE.Level02]: {
-    fallInterval: 900,
-  },
-  [LEVEL_TYPE.Level03]: {
-    fallInterval: 800,
-  },
-}
+const LEVELS_CONFIG = [
+  { framesPerRow: 53 }, // 0
+  { framesPerRow: 49 }, // 1
+  { framesPerRow: 45 }, // 2
+  { framesPerRow: 41 }, // 3
+  { framesPerRow: 37 }, // 4
+  { framesPerRow: 33 }, // 5
+  { framesPerRow: 28 }, // 6
+  { framesPerRow: 22 }, // 7
+  { framesPerRow: 17 }, // 8
+  { framesPerRow: 11 }, // 9
+  { framesPerRow: 10 }, // 10
+  { framesPerRow: 9 }, // 11
+  { framesPerRow: 8 }, // 12
+  { framesPerRow: 7 }, // 13
+  { framesPerRow: 6 }, // 14
+  { framesPerRow: 6 }, // 15
+  { framesPerRow: 5 }, // 16
+  { framesPerRow: 5 }, // 17
+  { framesPerRow: 4 }, // 18
+  { framesPerRow: 4 }, // 19
+  { framesPerRow: 3 }, // 20
+]
 
 export {
   TETRIS_CONFIG,

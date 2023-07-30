@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { LEVELS_CONFIG, TETRIS_CONFIG } from '../../../data/tetris-config';
 import Shape from './shape/shape';
-import { LEVEL_TYPE } from '../../../data/tetris-data';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import { ROTATE_TYPE, SHAPE_TYPE } from './shape/shape-config';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
@@ -17,11 +16,16 @@ export default class Field extends PIXI.Container {
     this._nextShapeType = null;
     this._fieldMapContainer = null;
     this._filledRowAnimationShapes = [];
-    this._currentLevel = LEVEL_TYPE.Level01;
+    this._currentLevel = TETRIS_CONFIG.startLevel;
 
+    this._filledRowsCount = 0;
+    this._filledRowsCountCurrentLevel = 0;
     this._shapeFallTime = 0;
-    this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._score = 0;
+    this._scoreForFallFast = 0;
+    this._shapeFallInterval = this._calculateFallInterval();
     this._isPressUpForFallFast = true;
+    this._isShapeFallFast = false;
 
     this._init();
   }
@@ -68,7 +72,8 @@ export default class Field extends PIXI.Container {
   onButtonUp(buttonType) {
     if (buttonType === BUTTON_TYPE.CrossDown) {
       this._isPressUpForFallFast = true;
-      this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+      this._isShapeFallFast = false;
+      this._shapeFallInterval = this._calculateFallInterval();
     }
   }
 
@@ -86,11 +91,16 @@ export default class Field extends PIXI.Container {
     this._removeCurrentShape();
 
     this._nextShapeType = null;
-    this._currentLevel = LEVEL_TYPE.Level01;
+    this._currentLevel = TETRIS_CONFIG.startLevel;
 
     this._shapeFallTime = 0;
-    this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._filledRowsCount = 0;
+    this._filledRowsCountCurrentLevel = 0;
+    this._score = 0;
+    this._scoreForFallFast = 0;
+    this._shapeFallInterval = this._calculateFallInterval();
     this._isPressUpForFallFast = true;
+    this._isShapeFallFast = false;
   }
 
   _moveShapeRight() {
@@ -177,12 +187,17 @@ export default class Field extends PIXI.Container {
     }
 
     this._currentShape.moveDown();
+
+    if (this._isShapeFallFast) {
+      this._scoreForFallFast += TETRIS_CONFIG.scoreForSoftDrop;
+    }
   }
 
   _moveShapeDownFast() {
     if (this._isPressUpForFallFast) {
       this._shapeFallInterval = TETRIS_CONFIG.fastFallInterval;
       this._isPressUpForFallFast = false;
+      this._isShapeFallFast = true;
     }
   }
 
@@ -231,9 +246,32 @@ export default class Field extends PIXI.Container {
     this._blinkFilledRows(usedFilledRowAnimationShape);
 
     Delayed.call(900, () => {
+      this._filledRowsCount += usedFilledRowAnimationShape.length;
+      this.events.emit('onFilledRowsCountChange', this._filledRowsCount);
+
+      this._calculateScore(usedFilledRowAnimationShape.length);
+      this._checkForNextLevel(usedFilledRowAnimationShape.length);
       this._hideUsedFilledRowAnimationShape(usedFilledRowAnimationShape);
       this._afterFilledRowsAnimation(filledRows);
     });
+  }
+
+  _calculateScore(filledRowsCount) {
+    const scorePerLine = TETRIS_CONFIG.scorePerLine[filledRowsCount - 1];
+    this._score += scorePerLine * (this._currentLevel + 1);
+  }
+
+  _checkForNextLevel(filledRowsCount) {
+    this._filledRowsCountCurrentLevel += filledRowsCount;
+    const filledRowsCountForNextLevel = this._currentLevel * 10 + 10;
+
+    if (this._filledRowsCountCurrentLevel >= filledRowsCountForNextLevel) {
+      this._filledRowsCountCurrentLevel = 0;
+      this._currentLevel++;
+
+      this.events.emit('onLevelChanged', this._currentLevel);
+      this._shapeFallInterval = this._calculateFallInterval();
+    }
   }
 
   _blinkFilledRows(filledRowAnimationShapes) {
@@ -278,11 +316,15 @@ export default class Field extends PIXI.Container {
   }
 
   _afterShapePlaced() {
+    this._score += this._scoreForFallFast;
+    this._scoreForFallFast = 0;
+    this.events.emit('onScoreChange', this._score);
+
     this._spawnShape(this._nextShapeType);
     this._nextShapeType = this._getRandomShapeType();
     this.events.emit('onChangedNextShape', this._nextShapeType);
 
-    this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._shapeFallInterval = this._calculateFallInterval();
     this._fieldMapContainer.cacheAsBitmap = true;
   }
 
@@ -413,6 +455,13 @@ export default class Field extends PIXI.Container {
     const randomIndex = Math.floor(Math.random() * shapeTypes.length);
 
     return SHAPE_TYPE[shapeTypes[randomIndex]];
+  }
+
+  _calculateFallInterval() {
+    const level = this._currentLevel > LEVELS_CONFIG.length - 1 ? LEVELS_CONFIG.length - 1 : this._currentLevel;
+
+    const framesPerRow = LEVELS_CONFIG[level].framesPerRow;
+    return framesPerRow / TETRIS_CONFIG.originalTetrisFramesPerSecond * 1000;
   }
 
   _init() {

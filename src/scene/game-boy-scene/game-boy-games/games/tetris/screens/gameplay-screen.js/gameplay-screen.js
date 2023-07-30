@@ -18,6 +18,8 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._field = null;
     this._gameOverPopup = null;
     this._pausePopup = null;
+    this._linesCount = null;
+    this._score = null;
 
     this._isGameActive = false;
     this._isPaused = false;
@@ -88,6 +90,9 @@ export default class GameplayScreen extends GameScreenAbstract {
   _init() {
     this._initBackground();
     this._initField();
+    this._initLinesCount();
+    this._initLevel();
+    this._initScore();
     this._initPopups();
     this._initSignals();
   }
@@ -103,6 +108,48 @@ export default class GameplayScreen extends GameScreenAbstract {
   _initField() {
     const field = this._field = new Field();
     this.addChild(field);
+  }
+
+  _initLinesCount() {
+    const linesCount = this._linesCount = new PIXI.Text('0', new PIXI.TextStyle({
+      fontFamily: 'tetris',
+      fontSize: 8,
+      fill: GAME_BOY_CONFIG.screen.blackColor,
+    }));
+
+    this.addChild(linesCount);
+    linesCount.anchor.set(1, 0);
+
+    linesCount.x = GAME_BOY_CONFIG.screen.width - 15;
+    linesCount.y = 78;
+  }
+
+  _initLevel() {
+    const level = this._level = new PIXI.Text(TETRIS_CONFIG.startLevel, new PIXI.TextStyle({
+      fontFamily: 'tetris',
+      fontSize: 8,
+      fill: GAME_BOY_CONFIG.screen.blackColor,
+    }));
+
+    this.addChild(level);
+    level.anchor.set(1, 0);
+
+    level.x = GAME_BOY_CONFIG.screen.width - 15;
+    level.y = 54;
+  }
+
+  _initScore() {
+    const score = this._score = new PIXI.Text('0', new PIXI.TextStyle({
+      fontFamily: 'tetris',
+      fontSize: 8,
+      fill: GAME_BOY_CONFIG.screen.blackColor,
+    }));
+
+    this.addChild(score);
+    score.anchor.set(1, 0);
+
+    score.x = GAME_BOY_CONFIG.screen.width - 7;
+    score.y = 22;
   }
 
   _initPopups() {
@@ -129,6 +176,9 @@ export default class GameplayScreen extends GameScreenAbstract {
   _initSignals() {
     this._field.events.on('onChangedNextShape', (shapeType) => this._updateNextShape(shapeType));
     this._field.events.on('onLose', () => this._onLose());
+    this._field.events.on('onFilledRowsCountChange', (linesCount) => this._onFilledRowsCountChange(linesCount));
+    this._field.events.on('onLevelChanged', (level) => this._onLevelChange(level));
+    this._field.events.on('onScoreChange', (score) => this._onScoreChange(score));
     this._gameOverPopup.events.on('onWallShowed', () => this._onWallShowed());
     this._gameOverPopup.events.on('onGameOverPopupClick', () => this._onGameOverPopupClick());
   }
@@ -153,6 +203,26 @@ export default class GameplayScreen extends GameScreenAbstract {
 
     this._nextShape.hide();
     this._gameOverPopup.show();
+  }
+
+  _onFilledRowsCountChange(linesCount) {
+    if (linesCount >= 9999) {
+      linesCount = 9999;
+    }
+
+    this._linesCount.text = linesCount;
+  }
+
+  _onScoreChange(score) {
+    if (score >= 999999) {
+      score = 999999;
+    }
+
+    this._score.text = score;
+  }
+
+  _onLevelChange(level) {
+    this._level.text = level;
   }
 
   _onWallShowed() {
