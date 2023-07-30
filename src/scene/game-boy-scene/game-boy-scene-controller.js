@@ -32,6 +32,7 @@ export default class GameBoyController {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].update(dt);
     this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].update(dt);
     this._cameraController.update(dt);
+    this._background.update(dt);
 
     if (this._isIntroActive) {
       return;

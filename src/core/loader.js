@@ -11,6 +11,7 @@ const textures = [
   'baked-power-indicator.jpg',
   'baked-screen.jpg',
   'baked-screen-shadow.png',
+  'background.jpg',
 ];
 
 const models = [
