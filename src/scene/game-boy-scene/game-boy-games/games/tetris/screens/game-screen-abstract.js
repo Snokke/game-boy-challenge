@@ -27,6 +27,8 @@ export default class GameScreenAbstract extends PIXI.Container {
 
   onButtonPress(buttonType) { }
 
+  onButtonUp(buttonType) { }
+
   reset() { }
 
   stopTweens() { }

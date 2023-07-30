@@ -40,6 +40,10 @@ export default class Tetris extends GameAbstract {
     this._screens[this._currentScreenType].onButtonPress(buttonType);
   }
 
+  onButtonUp(buttonType) {
+    this._screens[this._currentScreenType].onButtonUp(buttonType);
+  }
+
   stopTweens() {
     for (let screenType in this._screens) {
       this._screens[screenType].stopTweens();

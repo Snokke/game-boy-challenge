@@ -350,6 +350,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   _pressUpButton(buttonType) {
+    this.events.post('onButtonUp', buttonType);
     this._pressedButtonType = null;
     this._buttonRepeatAllowed = false;
     this._stopFirstRepeatTimer();

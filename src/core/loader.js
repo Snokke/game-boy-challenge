@@ -32,6 +32,8 @@ const pixiAssets = [
   'ui_assets/tetris/title-screen.png',
   'ui_assets/tetris/license-screen.png',
   'ui_assets/tetris/gameplay-screen.png',
+  'ui_assets/tetris/game-over-block.png',
+  'ui_assets/tetris/game-over-frame.png',
 
   'ui_assets/tetris/block-i-edge.png',
   'ui_assets/tetris/block-i-middle.png',

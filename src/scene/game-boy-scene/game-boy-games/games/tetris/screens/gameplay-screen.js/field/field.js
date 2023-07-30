@@ -4,6 +4,7 @@ import Shape from './shape/shape';
 import { LEVEL_TYPE } from '../../../data/tetris-data';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import { ROTATE_TYPE, SHAPE_TYPE } from './shape/shape-config';
+import Delayed from '../../../../../../../../core/helpers/delayed-call';
 
 export default class Field extends PIXI.Container {
   constructor() {
@@ -15,10 +16,12 @@ export default class Field extends PIXI.Container {
     this._currentShape = null;
     this._nextShapeType = null;
     this._fieldMapContainer = null;
+    this._filledRowAnimationShapes = [];
     this._currentLevel = LEVEL_TYPE.Level01;
 
     this._shapeFallTime = 0;
     this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._isPressUpForFallFast = true;
 
     this._init();
   }
@@ -32,6 +35,14 @@ export default class Field extends PIXI.Container {
     }
   }
 
+  show() {
+    this.visible = true;
+  }
+
+  hide() {
+    this.visible = false;
+  }
+
   onButtonPress(buttonType) {
     if (buttonType === BUTTON_TYPE.CrossRight) {
       this._moveShapeRight();
@@ -39,6 +50,10 @@ export default class Field extends PIXI.Container {
 
     if (buttonType === BUTTON_TYPE.CrossLeft) {
       this._moveShapeLeft();
+    }
+
+    if (buttonType === BUTTON_TYPE.CrossDown) {
+      this._moveShapeDownFast();
     }
 
     if (buttonType === BUTTON_TYPE.A) {
@@ -50,12 +65,32 @@ export default class Field extends PIXI.Container {
     }
   }
 
+  onButtonUp(buttonType) {
+    if (buttonType === BUTTON_TYPE.CrossDown) {
+      this._isPressUpForFallFast = true;
+      this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    }
+  }
+
   startGame() {
     const shapeType = this._getRandomShapeType();
     this._spawnShape(shapeType);
 
     this._nextShapeType = this._getRandomShapeType();
     this.events.emit('onChangedNextShape', this._nextShapeType);
+  }
+
+  reset() {
+    this._fieldMapContainer.removeChildren();
+    this._clearFieldMap();
+    this._removeCurrentShape();
+
+    this._nextShapeType = null;
+    this._currentLevel = LEVEL_TYPE.Level01;
+
+    this._shapeFallTime = 0;
+    this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._isPressUpForFallFast = true;
   }
 
   _moveShapeRight() {
@@ -124,12 +159,16 @@ export default class Field extends PIXI.Container {
         if (shapeBlock !== null) {
           if ((shapePosition.y - pivot.y + row + 1 > TETRIS_CONFIG.field.height - 1)
             || (this._fieldMap[shapePosition.y - pivot.y + row + 1][shapePosition.x - pivot.x + column] !== null)) {
-            this._addShapeToFieldMap();
-            this._removeShape();
 
-            this._spawnShape(this._nextShapeType);
-            this._nextShapeType = this._getRandomShapeType();
-            this.events.emit('onChangedNextShape', this._nextShapeType);
+            if (this._currentShape.getBlockPosition().y === TETRIS_CONFIG.shapeSpawnPosition.y) {
+              this.events.emit('onLose');
+
+              return;
+            }
+
+            this._addShapeToFieldMap();
+            this._removeCurrentShape();
+            this._checkToRemoveFilledRows();
 
             return;
           }
@@ -138,6 +177,139 @@ export default class Field extends PIXI.Container {
     }
 
     this._currentShape.moveDown();
+  }
+
+  _moveShapeDownFast() {
+    if (this._isPressUpForFallFast) {
+      this._shapeFallInterval = TETRIS_CONFIG.fastFallInterval;
+      this._isPressUpForFallFast = false;
+    }
+  }
+
+  _checkToRemoveFilledRows() {
+    const filledRows = [];
+
+    for (let row = 0; row < this._fieldMap.length; row++) {
+      filledRows[row] = true;
+
+      for (let column = 0; column < this._fieldMap[0].length; column++) {
+        if (this._fieldMap[row][column] === null) {
+          filledRows[row] = false;
+          break;
+        }
+      }
+    }
+
+    if (this._isFilledRows(filledRows)) {
+      this._showFilledRowsAnimation(filledRows);
+    } else {
+      this._afterShapePlaced();
+    }
+  }
+
+  _isFilledRows(filledRows) {
+    for (let row = 0; row < filledRows.length; row++) {
+      if (filledRows[row]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  _showFilledRowsAnimation(filledRows) {
+    const usedFilledRowAnimationShape = [];
+
+    for (let row = 0; row < filledRows.length; row++) {
+      if (filledRows[row]) {
+        const filledRowAnimationShape = this._filledRowAnimationShapes.pop();
+        filledRowAnimationShape.position.set(0, row * TETRIS_CONFIG.blockSize);
+        usedFilledRowAnimationShape.push(filledRowAnimationShape);
+      }
+    }
+
+    this._blinkFilledRows(usedFilledRowAnimationShape);
+
+    Delayed.call(900, () => {
+      this._hideUsedFilledRowAnimationShape(usedFilledRowAnimationShape);
+      this._afterFilledRowsAnimation(filledRows);
+    });
+  }
+
+  _blinkFilledRows(filledRowAnimationShapes) {
+    const blinkCount = 3;
+
+    for (let i = 0; i < blinkCount; i++) {
+      Delayed.call(300 * i, () => {
+        filledRowAnimationShapes.forEach((filledRowAnimationShape) => this._blinkFilledRow(filledRowAnimationShape));
+      });
+    }
+  }
+
+  _blinkFilledRow(filledRowAnimationShape) {
+    Delayed.call(150, () => {
+      filledRowAnimationShape.visible = true;
+    });
+
+    Delayed.call(300, () => {
+      filledRowAnimationShape.visible = false;
+    });
+  }
+
+  _afterFilledRowsAnimation(filledRows) {
+    this._removeRowAndMoveRowsDown(filledRows);
+    this._afterShapePlaced();
+  }
+
+  _removeRowAndMoveRowsDown(filledRows) {
+    for (let row = 0; row < filledRows.length; row++) {
+      if (filledRows[row]) {
+        this._removeRow(row);
+        this._moveRowsDown(row);
+      }
+    }
+  }
+
+  _hideUsedFilledRowAnimationShape(usedFilledRowAnimationShape) {
+    for (let i = 0; i < usedFilledRowAnimationShape.length; i++) {
+      usedFilledRowAnimationShape[i].visible = false;
+      this._filledRowAnimationShapes.push(usedFilledRowAnimationShape[i]);
+    }
+  }
+
+  _afterShapePlaced() {
+    this._spawnShape(this._nextShapeType);
+    this._nextShapeType = this._getRandomShapeType();
+    this.events.emit('onChangedNextShape', this._nextShapeType);
+
+    this._shapeFallInterval = LEVELS_CONFIG[this._currentLevel].fallInterval;
+    this._fieldMapContainer.cacheAsBitmap = true;
+  }
+
+  _removeRow(row) {
+    for (let column = 0; column < this._fieldMap[0].length; column++) {
+      const block = this._fieldMap[row][column];
+      this._fieldMapContainer.removeChild(block);
+      this._fieldMap[row][column] = null;
+    }
+  }
+
+  _moveRowsDown(row) {
+    for (let i = row; i > 0; i--) {
+      for (let column = 0; column < this._fieldMap[0].length; column++) {
+        this._fieldMap[i][column] = this._fieldMap[i - 1][column];
+
+        const block = this._fieldMap[i][column];
+
+        if (block !== null) {
+          block.y += TETRIS_CONFIG.blockSize;
+        }
+      }
+    }
+
+    for (let column = 0; column < this._fieldMap[0].length; column++) {
+      this._fieldMap[0][column] = null;
+    }
   }
 
   _rotateShapeClockwise() {
@@ -179,7 +351,7 @@ export default class Field extends PIXI.Container {
     }
   }
 
-  _removeShape() {
+  _removeCurrentShape() {
     this.removeChild(this._currentShape);
     this._currentShape = null;
   }
@@ -208,8 +380,6 @@ export default class Field extends PIXI.Container {
         }
       }
     }
-
-    this._fieldMapContainer.cacheAsBitmap = true;
   }
 
   _createBlockCopy(block) {
@@ -248,6 +418,17 @@ export default class Field extends PIXI.Container {
   _init() {
     this.position = TETRIS_CONFIG.field.position;
 
+    this._initFieldMapContainer();
+    this._initFieldMap();
+    this._initFilledRowAnimationShapes();
+  }
+
+  _initFieldMapContainer() {
+    this._fieldMapContainer = new PIXI.Container();
+    this.addChild(this._fieldMapContainer);
+  }
+
+  _initFieldMap() {
     for (let row = 0; row < TETRIS_CONFIG.field.height; row++) {
       this._fieldMap[row] = [];
 
@@ -255,9 +436,23 @@ export default class Field extends PIXI.Container {
         this._fieldMap[row][column] = null;
       }
     }
+  }
 
-    this._fieldMapContainer = new PIXI.Container();
-    this.addChild(this._fieldMapContainer);
+  _initFilledRowAnimationShapes() {
+    const filledRowsAnimationShapeCount = 4;
+
+    for (let i = 0; i < filledRowsAnimationShapeCount; i++) {
+      const filledRowAnimationShape = new PIXI.Graphics();
+
+      filledRowAnimationShape.beginFill(0x686f4a);
+      filledRowAnimationShape.drawRect(0, 0, TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize, TETRIS_CONFIG.blockSize);
+      filledRowAnimationShape.endFill();
+
+      filledRowAnimationShape.visible = false;
+
+      this.addChild(filledRowAnimationShape);
+      this._filledRowAnimationShapes.push(filledRowAnimationShape);
+    }
   }
 
   _spawnShape(shapeType) {
@@ -266,5 +461,22 @@ export default class Field extends PIXI.Container {
 
     const spawnPosition = TETRIS_CONFIG.shapeSpawnPosition;
     shape.setPosition(spawnPosition.x, spawnPosition.y);
+  }
+
+  _clearFieldMap() {
+    this._fieldMapContainer.cacheAsBitmap = false;
+
+    for (let row = 0; row < this._fieldMap.length; row++) {
+      for (let column = 0; column < this._fieldMap[0].length; column++) {
+        const block = this._fieldMap[row][column];
+
+        if (block !== null) {
+          this._fieldMapContainer.removeChild(block);
+          this._fieldMap[row][column] = null;
+        }
+      }
+    }
+
+    this._fieldMapContainer.cacheAsBitmap = true;
   }
 }

@@ -172,7 +172,8 @@ export default class GameBoyController {
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
     const background = this._activeObjects[SCENE_OBJECT_TYPE.Background];
 
-    gameBoy.events.on('onButtonPress', (msg, buttonType) => this._onButtonPress(buttonType));
+    gameBoy.events.on('onButtonPress', (msg, buttonType) => this._games.onButtonPress(buttonType));
+    gameBoy.events.on('onButtonUp', (msg, buttonType) => this._games.onButtonUp(buttonType));
     gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
     gameBoy.events.on('onVolumeChanged', () => this._games.onVolumeChanged());
@@ -228,9 +229,5 @@ export default class GameBoyController {
   _onRotationDragDisabled() {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].resetRotation();
     this._gameBoyDebug.disableRotationDrag();
-  }
-
-  _onButtonPress(buttonType) {
-    this._games.onButtonPress(buttonType);
   }
 }

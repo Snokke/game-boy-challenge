@@ -9,11 +9,12 @@ const TETRIS_CONFIG = {
   },
   blockSize: 8,
   shapeSpawnPosition: new PIXI.Point(4, 1),
+  fastFallInterval: 30,
 }
 
 const LEVELS_CONFIG = {
   [LEVEL_TYPE.Level01]: {
-    fallInterval: 1000,
+    fallInterval: 200,
   },
   [LEVEL_TYPE.Level02]: {
     fallInterval: 900,

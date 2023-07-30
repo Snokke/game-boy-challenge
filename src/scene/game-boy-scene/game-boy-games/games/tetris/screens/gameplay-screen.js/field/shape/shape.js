@@ -13,6 +13,7 @@ export default class Shape extends PIXI.Container {
     this._shapePivot = null;
     this._direction = SHAPE_DIRECTION.Up;
     this._blockPosition = new PIXI.Point(0, 0);
+    this._distanceFallen = 0;
 
     this._init();
   }
@@ -37,6 +38,8 @@ export default class Shape extends PIXI.Container {
   moveDown() {
     this.y += TETRIS_CONFIG.blockSize;
     this._blockPosition.y += 1;
+
+    this._distanceFallen += 1;
   }
 
   getBlockPosition() {
@@ -53,6 +56,10 @@ export default class Shape extends PIXI.Container {
 
   getType() {
     return this._type;
+  }
+
+  getFallenDistance() {
+    return this._distanceFallen;
   }
 
   rotate(rotateType) {

@@ -102,6 +102,16 @@ export default class GameBoyGames {
     }
   }
 
+  onButtonUp(buttonType) {
+    if (!GAME_BOY_CONFIG.powerOn) {
+      return;
+    }
+
+    if (this._gameType !== null) {
+      this._games[this._gameType].onButtonUp(buttonType);
+    }
+  }
+
   setGame(gameType) {
     this._gameType = gameType;
   }

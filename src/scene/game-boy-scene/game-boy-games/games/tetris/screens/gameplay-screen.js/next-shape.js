@@ -18,6 +18,14 @@ export default class NextShape extends PIXI.Container {
     this._init();
   }
 
+  show() {
+    this.visible = true;
+  }
+
+  hide() {
+    this.visible = false;
+  }
+
   getWidth() {
     return this._width;
   }
