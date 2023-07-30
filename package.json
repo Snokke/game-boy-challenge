@@ -1,7 +1,7 @@
 {
   "name": "game-boy-challenge",
   "version": "0.1.0",
-  "description": "Andrii Babintsev Game Boy - Three.js Journey Challenge",
+  "description": "Game Boy Challenge - Andrii Babintsev",
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
