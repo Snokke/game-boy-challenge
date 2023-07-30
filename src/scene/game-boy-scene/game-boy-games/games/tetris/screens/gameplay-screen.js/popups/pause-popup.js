@@ -20,6 +20,10 @@ export default class PausePopup extends PIXI.Container {
     this.visible = false;
   }
 
+  reset() {
+    this.visible = false;
+  }
+
   _init() {
     this._createTextLine('PAUSE', 32);
     this._createTextLine('PRESS', 80);

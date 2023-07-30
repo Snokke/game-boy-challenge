@@ -1,7 +1,7 @@
 import { BUTTON_TYPE, GAME_BOY_PART_TYPE } from "./game-boy-data";
 
 const GAME_BOY_CONFIG = {
-  powerOn: true,
+  powerOn: false,
   updateTexture: true,
   volume: 0.5,
   screen: {

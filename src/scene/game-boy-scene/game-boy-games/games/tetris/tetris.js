@@ -21,9 +21,10 @@ export default class Tetris extends GameAbstract {
   show() {
     super.show();
 
-    this._showScreen(SCREEN_TYPE.Gameplay);
-    // this._showScreen(SCREEN_TYPE.License);
+    this._reset();
+    this._showScreen(SCREEN_TYPE.License);
     // this._showScreen(SCREEN_TYPE.Title);
+    // this._showScreen(SCREEN_TYPE.Gameplay);
   }
 
   hide() {
@@ -37,10 +38,18 @@ export default class Tetris extends GameAbstract {
   }
 
   onButtonPress(buttonType) {
+    if (!this._currentScreenType) {
+      return;
+    }
+
     this._screens[this._currentScreenType].onButtonPress(buttonType);
   }
 
   onButtonUp(buttonType) {
+    if (!this._currentScreenType) {
+      return;
+    }
+
     this._screens[this._currentScreenType].onButtonUp(buttonType);
   }
 
@@ -108,17 +117,5 @@ export default class Tetris extends GameAbstract {
   _onStartGame() {
     this._screens[SCREEN_TYPE.Title].hide();
     this._showScreen(SCREEN_TYPE.Gameplay);
-  }
-
-  _getScreenByType(screenType) {
-    for (let screenType in this._screens) {
-      const type = this._screens[screenType].getScreenType();
-
-      if (type === screenType) {
-        return this._screens[screenType];
-      }
-    }
-
-    return null;
   }
 }

@@ -62,6 +62,25 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._startGame();
   }
 
+  stopTweens() {
+    this._gameOverPopup.stopTweens();
+    this._field.stopTweens();
+  }
+
+  reset() {
+    this._field.reset();
+    this._gameOverPopup.reset();
+    this._pausePopup.reset();
+
+    this._isGameActive = false;
+    this._isPaused = false;
+    this._gameOver = false;
+
+    this._linesCount.text = '0'
+    this._score.text = '0';
+    this._level.text = TETRIS_CONFIG.startLevel.toString();
+  }
+
   _onPauseClick() {
     this._isPaused = !this._isPaused;
 
@@ -81,10 +100,6 @@ export default class GameplayScreen extends GameScreenAbstract {
 
     this._field.show();
     this._field.startGame();
-  }
-
-  _resetGame() {
-    this._field.reset();
   }
 
   _init() {

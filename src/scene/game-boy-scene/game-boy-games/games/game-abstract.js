@@ -3,7 +3,6 @@ import * as PIXI from 'pixi.js';
 export default class GameAbstract extends PIXI.Container {
   constructor() {
     super();
-
   }
 
   update(dt) { }

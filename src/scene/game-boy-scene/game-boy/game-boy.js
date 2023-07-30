@@ -98,7 +98,7 @@ export default class GameBoy extends THREE.Group {
     if (this._draggingObjectType === GAME_BOY_PART_TYPE.VolumeControl) {
       const volumeControl = this._parts[GAME_BOY_PART_TYPE.VolumeControl];
       const maxAngle = GAME_BOY_CONFIG.volumeController.maxAngle * THREE.MathUtils.DEG2RAD;
-      volumeControl.rotation.z = dragY * GAME_BOY_CONFIG.volumeController.sensitivity;
+      volumeControl.rotation.z = volumeControl.rotationZ + dragY * GAME_BOY_CONFIG.volumeController.sensitivity;
 
       if (volumeControl.rotation.z < -maxAngle) {
         volumeControl.rotation.z = -maxAngle;
@@ -146,6 +146,9 @@ export default class GameBoy extends THREE.Group {
 
     this._isDragging = false;
     this._draggingObjectType = null;
+
+    const volumeControl = this._parts[GAME_BOY_PART_TYPE.VolumeControl];
+    volumeControl.rotationZ = volumeControl.rotation.z;
 
     this._resetReturnRotationTimer();
   }
@@ -490,6 +493,8 @@ export default class GameBoy extends THREE.Group {
       this._allMeshes.push(part);
       this.add(part);
     }
+
+    this._parts[GAME_BOY_PART_TYPE.VolumeControl].rotationZ = 0;
   }
 
   _initButtons() {

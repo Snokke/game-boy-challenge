@@ -18,6 +18,11 @@ export default class Field extends PIXI.Container {
     this._filledRowAnimationShapes = [];
     this._currentLevel = TETRIS_CONFIG.startLevel;
 
+    this._linesBlinkTimer = null;
+    this._blinkRowShowTimer = null;
+    this._blinkRowHideTimer = null;
+    this._linesBlinkTimers = [];
+
     this._filledRowsCount = 0;
     this._filledRowsCountCurrentLevel = 0;
     this._shapeFallTime = 0;
@@ -101,6 +106,26 @@ export default class Field extends PIXI.Container {
     this._shapeFallInterval = this._calculateFallInterval();
     this._isPressUpForFallFast = true;
     this._isShapeFallFast = false;
+  }
+
+  stopTweens() {
+    if (this._linesBlinkTimer) {
+      this._linesBlinkTimer.stop();
+    }
+
+    if (this._blinkRowShowTimer) {
+      this._blinkRowShowTimer.stop();
+    }
+
+    if (this._blinkRowHideTimer) {
+      this._blinkRowHideTimer.stop();
+    }
+
+    this._linesBlinkTimers.forEach((timer) => {
+      if (timer) {
+        timer.stop();
+      }
+    });
   }
 
   _moveShapeRight() {
@@ -194,6 +219,10 @@ export default class Field extends PIXI.Container {
   }
 
   _moveShapeDownFast() {
+    if (this._currentShape === null) {
+      return;
+    }
+
     if (this._isPressUpForFallFast) {
       this._shapeFallInterval = TETRIS_CONFIG.fastFallInterval;
       this._isPressUpForFallFast = false;
@@ -245,7 +274,7 @@ export default class Field extends PIXI.Container {
 
     this._blinkFilledRows(usedFilledRowAnimationShape);
 
-    Delayed.call(900, () => {
+    this._linesBlinkTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * TETRIS_CONFIG.linesBlinkCount, () => {
       this._filledRowsCount += usedFilledRowAnimationShape.length;
       this.events.emit('onFilledRowsCountChange', this._filledRowsCount);
 
@@ -275,21 +304,21 @@ export default class Field extends PIXI.Container {
   }
 
   _blinkFilledRows(filledRowAnimationShapes) {
-    const blinkCount = 3;
-
-    for (let i = 0; i < blinkCount; i++) {
-      Delayed.call(300 * i, () => {
+    for (let i = 0; i < TETRIS_CONFIG.linesBlinkCount; i++) {
+      const timer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * i, () => {
         filledRowAnimationShapes.forEach((filledRowAnimationShape) => this._blinkFilledRow(filledRowAnimationShape));
       });
+
+      this._linesBlinkTimers[i] = timer;
     }
   }
 
   _blinkFilledRow(filledRowAnimationShape) {
-    Delayed.call(150, () => {
+    this._blinkRowShowTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * 0.5, () => {
       filledRowAnimationShape.visible = true;
     });
 
-    Delayed.call(300, () => {
+    this._blinkRowHideTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime, () => {
       filledRowAnimationShape.visible = false;
     });
   }
@@ -355,11 +384,19 @@ export default class Field extends PIXI.Container {
   }
 
   _rotateShapeClockwise() {
+    if (this._currentShape === null) {
+      return;
+    }
+
     this._currentShape.rotate(ROTATE_TYPE.Clockwise);
     this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
   }
 
   _rotateShapeCounterClockwise() {
+    if (this._currentShape === null) {
+      return;
+    }
+
     this._currentShape.rotate(ROTATE_TYPE.CounterClockwise);
     this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
   }

@@ -49,9 +49,9 @@ export default class GameBoyGames {
     this._container.alpha = 1;
     this._container.visible = true;
 
-    // this._loadingScreen.show();
-    this.setGame(GAME_TYPE.Tetris);
-    this.startGame();
+    this._loadingScreen.show();
+    // this.setGame(GAME_TYPE.Tetris);
+    // this.startGame();
   }
 
   onPowerOff() {
@@ -79,17 +79,9 @@ export default class GameBoyGames {
   }
 
   onVolumeChanged() {
-    this._volumeOverlay.onVolumeChanged();
-  }
-
-  _hideAllGames() {
-    for (const gameType in this._games) {
-      this._games[gameType].hide();
+    if (GAME_BOY_CONFIG.powerOn) {
+      this._volumeOverlay.onVolumeChanged();
     }
-  }
-
-  _hideAllScreens() {
-    this._allScreens.forEach(screen => screen.hide());
   }
 
   onButtonPress(buttonType) {
@@ -122,6 +114,16 @@ export default class GameBoyGames {
 
   startGame() {
     this._games[this._gameType].show();
+  }
+
+  _hideAllGames() {
+    for (const gameType in this._games) {
+      this._games[gameType].hide();
+    }
+  }
+
+  _hideAllScreens() {
+    this._allScreens.forEach(screen => screen.hide());
   }
 
   _stopPowerOffTween() {

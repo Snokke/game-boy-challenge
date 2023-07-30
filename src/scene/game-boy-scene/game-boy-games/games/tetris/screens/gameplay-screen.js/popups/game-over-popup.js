@@ -17,6 +17,8 @@ export default class GameOverPopup extends PIXI.Container {
     this._wallContainer = null;
     this._blockLines = [];
     this._gameOverContainer = null;
+    this._animationTimer = null;
+    this._lineAnimationTimers = [];
 
     this._isGameOverShowed = false;
 
@@ -44,6 +46,26 @@ export default class GameOverPopup extends PIXI.Container {
     }
   }
 
+  stopTweens() {
+    if (this._animationTimer) {
+      this._animationTimer.stop();
+    }
+
+    this._lineAnimationTimers.forEach((timer) => {
+      if (timer) {
+        timer.stop();
+      }
+    });
+  }
+
+  reset() {
+    this.visible = false;
+    this._wallContainer.visible = false;
+    this._gameOverContainer.visible = false;
+
+    this._isGameOverShowed = false;
+  }
+
   _showWall() {
     this._wallContainer.visible = true;
 
@@ -54,14 +76,15 @@ export default class GameOverPopup extends PIXI.Container {
     let index = 0;
 
     for (let i = this._blockLines.length - 1; i >= 0; i--) {
-      Delayed.call(this._showWallLineDelay * index, () => {
+      const lineAnimationTimer = Delayed.call(this._showWallLineDelay * index, () => {
         this._blockLines[i].visible = true;
       });
 
       index += 1;
+      this._lineAnimationTimers[i] = lineAnimationTimer;
     }
 
-    Delayed.call(this._showWallLineDelay * this._blockLines.length + 100, () => {
+    this._animationTimer = Delayed.call(this._showWallLineDelay * this._blockLines.length + 100, () => {
       this.events.emit('onWallShowed');
       this._gameOverContainer.visible = true;
       this._wallHideAnimation();
@@ -72,14 +95,15 @@ export default class GameOverPopup extends PIXI.Container {
     let index = 0;
 
     for (let i = this._blockLines.length - 1; i >= 0; i--) {
-      Delayed.call(this._showWallLineDelay * index, () => {
+      const lineAnimationTimer = Delayed.call(this._showWallLineDelay * index, () => {
         this._blockLines[i].visible = false;
       });
 
       index += 1;
+      this._lineAnimationTimers[i] = lineAnimationTimer;
     }
 
-    Delayed.call(this._showWallLineDelay * this._blockLines.length, () => {
+    this._animationTimer = Delayed.call(this._showWallLineDelay * this._blockLines.length, () => {
       this._wallContainer.visible = false;
       this._isGameOverShowed = true;
     });
