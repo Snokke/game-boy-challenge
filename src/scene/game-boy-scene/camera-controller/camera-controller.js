@@ -24,6 +24,7 @@ export default class CameraController {
     }
 
     this._camera.position.lerp(this._zoomObject.position, dt * 60 * 0.04);
+    this._camera.quaternion.slerp(this._zoomObject.quaternion, dt * 60 * 0.04);
   }
 
   onWheelScroll(delta) {
@@ -62,7 +63,6 @@ export default class CameraController {
       if (this._rotationDragPreviousState !== GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
         this._rotationDragPreviousState = GAME_BOY_CONFIG.rotation.rotationDragEnabled;
 
-        this.events.post('onRotationDragEnabled');
       }
     }
   }

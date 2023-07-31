@@ -4,6 +4,7 @@ import Cartridge from './cartridge';
 import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
 import { MessageDispatcher } from 'black-engine';
 import Delayed from '../../../core/helpers/delayed-call';
+import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
 
 export default class CartridgesController extends THREE.Group {
   constructor() {
@@ -19,8 +20,8 @@ export default class CartridgesController extends THREE.Group {
     this._showCartridgeTween = {};
     this._isCartridgeShown = {};
     this._positionObject = {};
-
     this._cartridgeDisableFloating = {};
+    this._insertedCartridge = null;
 
     this._init();
   }
@@ -84,6 +85,27 @@ export default class CartridgesController extends THREE.Group {
     });
   }
 
+  ejectCartridge() {
+    if (this._insertedCartridge) {
+      const mesh = this._insertedCartridge.getMesh();
+      this.onPointerDown(mesh);
+    }
+  }
+
+  insertCartridge(cartridgeType) {
+    if (this._insertedCartridge) {
+      const insertedCartridgeType = this._insertedCartridge.getType();
+
+      if (insertedCartridgeType !== cartridgeType) {
+        const mesh = this._cartridges[cartridgeType].getMesh();
+        this.onPointerDown(mesh);
+      }
+    } else {
+      const mesh = this._cartridges[cartridgeType].getMesh();
+      this.onPointerDown(mesh);
+    }
+  }
+
   _checkIsCartridgeInserted(clickedCartridge) {
     let isCartridgeInserted = null;
 
@@ -99,6 +121,8 @@ export default class CartridgesController extends THREE.Group {
   _moveCartridgeToGameBoy(cartridge, speed) {
     const cartridgeType = cartridge.getType();
     cartridge.setInserted();
+
+    this._insertedCartridge = cartridge;
 
     this._cartridgeDisableFloating[cartridgeType] = true;
     cartridge.lastRotation = cartridge.rotation.clone();
@@ -136,6 +160,10 @@ export default class CartridgesController extends THREE.Group {
   _moveCartridgeFromGameBoy(cartridge, speed, ejectTime) {
     const cartridgeType = cartridge.getType();
     cartridge.setNotInserted();
+
+    GAME_BOY_CONFIG.currentCartridge = 'NONE';
+    this._insertedCartridge = null;
+    this.events.post('cartridgeTypeChanged');
 
     const positions = CARTRIDGES_CONFIG.positions.eject;
     const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];
@@ -179,6 +207,10 @@ export default class CartridgesController extends THREE.Group {
   }
 
   _onCartridgeInserted(cartridge) {
+    const cartridgeType = cartridge.getType();
+    GAME_BOY_CONFIG.currentCartridge = cartridgeType;
+    this.events.post('cartridgeTypeChanged');
+
     this._enableCartridges();
     this.events.post('onCartridgeInserted', cartridge);
   }

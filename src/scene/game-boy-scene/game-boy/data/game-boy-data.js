@@ -53,10 +53,22 @@ const BUTTON_TYPE = {
   CrossDown: 'CROSS_DOWN',
 }
 
+const POWER_STATE = {
+  On: 'ON',
+  Off: 'OFF',
+}
+
+const CARTRIDGE_STATE = {
+  Inserted: 'INSERTED',
+  NotInserted: 'NOT_INSERTED',
+}
+
 export {
   GAME_BOY_PART_TYPE,
   GAME_BOY_ACTIVE_PARTS,
   GAME_BOY_CROSS_PARTS,
   BUTTON_TYPE,
   GAME_BOY_DRAGGABLE_PARTS,
+  POWER_STATE,
+  CARTRIDGE_STATE,
 };

@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
+import { CARTRIDGE_STATE } from '../../../../game-boy/data/game-boy-data';
 
 const TETRIS_CONFIG = {
+  cartridgeState: CARTRIDGE_STATE.NotInserted,
   startLevel: 0,
   field: {
     width: 10,
@@ -9,12 +11,13 @@ const TETRIS_CONFIG = {
   },
   blockSize: 8,
   shapeSpawnPosition: new PIXI.Point(4, 1),
-  linesBlinkTime: 1300,
-  linesBlinkCount: 3,
+  linesBlinkTime: 300,
+  linesBlinkCount: 1,
   fastFallInterval: 30,
   originalTetrisFramesPerSecond: 59.73,
   scorePerLine: [40, 100, 300, 1200],
   scoreForSoftDrop: 1,
+  bestScore: '0',
 }
 
 const LEVELS_CONFIG = [

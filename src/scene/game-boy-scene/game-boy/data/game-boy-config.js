@@ -3,6 +3,8 @@ import { BUTTON_TYPE, GAME_BOY_PART_TYPE } from "./game-boy-data";
 const GAME_BOY_CONFIG = {
   powerOn: false,
   updateTexture: true,
+  currentCartridge: 'NONE',
+  mute: false,
   volume: 0.5,
   screen: {
     width: 160,
@@ -28,6 +30,8 @@ const GAME_BOY_CONFIG = {
   rotation: {
     rotationCursorEnabled: true,
     rotationDragEnabled: true,
+    debugRotationCursorEnabled: true,
+    debugRotationDragEnabled:true,
     returnTime: 2500,
     cursorRotationSpeed: 0.2,
     dragRotationSpeed: 3,

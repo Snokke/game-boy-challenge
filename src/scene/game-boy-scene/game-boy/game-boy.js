@@ -66,7 +66,7 @@ export default class GameBoy extends THREE.Group {
     }
 
     if (objectPartType === GAME_BOY_PART_TYPE.PowerButton || objectPartType === GAME_BOY_PART_TYPE.PowerButtonFrame) {
-      this._powerButtonSwitch();
+      this.powerButtonSwitch();
       this._resetReturnRotationTimer();
     }
   }
@@ -82,7 +82,7 @@ export default class GameBoy extends THREE.Group {
   onPointerMove(x, y) {
     this._pointerPosition.set(x, y);
 
-    if (this._isDragging || !this._isDefaultRotation || !GAME_BOY_CONFIG.rotation.rotationCursorEnabled) {
+    if (this._isDragging || !this._isDefaultRotation || !GAME_BOY_CONFIG.rotation.rotationCursorEnabled || !GAME_BOY_CONFIG.rotation.debugRotationCursorEnabled) {
       return;
     }
 
@@ -112,7 +112,7 @@ export default class GameBoy extends THREE.Group {
       this.events.post('onVolumeChanged');
     }
 
-    if (GAME_BOY_DRAGGABLE_PARTS.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
+    if (GAME_BOY_DRAGGABLE_PARTS.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
       this._rotationObject.quaternion.copy(this._rotationQuaternion);
       this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
       this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
@@ -128,7 +128,7 @@ export default class GameBoy extends THREE.Group {
       this._stopReturnRotationTimer();
     }
 
-    if (GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
+    if (GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
       this._rotationQuaternion.copy(this.quaternion);
 
       this._isDragging = true;
@@ -140,7 +140,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   onDragPointerUp() {
-    if (!GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
+    if (!GAME_BOY_CONFIG.rotation.rotationDragEnabled || !GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
       return;
     }
 
@@ -160,9 +160,17 @@ export default class GameBoy extends THREE.Group {
   onPointerOver(object) {
     const objectPartType = object.userData['partType'];
 
-    if ((GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled)
+    if ((GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled)
       || (objectPartType === GAME_BOY_PART_TYPE.VolumeControl)) {
       Black.engine.containerElement.style.cursor = 'grab';
+    }
+  }
+
+  powerButtonSwitch() {
+    if (GAME_BOY_CONFIG.powerOn) {
+      this._powerButtonOff();
+    } else {
+      this._powerButtonOn();
     }
   }
 
@@ -208,7 +216,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   onDebugRotationChanged() {
-    if (GAME_BOY_CONFIG.rotation.rotationCursorEnabled === false) {
+    if (GAME_BOY_CONFIG.rotation.debugRotationCursorEnabled === false) {
       this._onReturnRotation();
     }
   }
@@ -387,14 +395,6 @@ export default class GameBoy extends THREE.Group {
   _stopFirstRepeatTimer() {
     if (this._firstRepeatTimer) {
       this._firstRepeatTimer.stop();
-    }
-  }
-
-  _powerButtonSwitch() {
-    if (GAME_BOY_CONFIG.powerOn) {
-      this._powerButtonOff();
-    } else {
-      this._powerButtonOn();
     }
   }
 

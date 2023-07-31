@@ -7,10 +7,13 @@ import GameBoyGames from './game-boy-games/game-boy-games';
 import GameBoyDebug from './game-boy-debug';
 import CameraController from './camera-controller/camera-controller';
 import Background from './background/background';
+import { MessageDispatcher } from 'black-engine';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {
     super();
+
+    this.events = new MessageDispatcher();
 
     this._data = data;
     this._data.raycasterController = raycasterController;
@@ -57,6 +60,8 @@ export default class GameBoyScene extends THREE.Group {
     this._initBackground();
     this._configureRaycaster();
     this._initGameBoyController();
+
+    this._initSignals();
   }
 
   _initGameBoy() {
@@ -114,5 +119,9 @@ export default class GameBoyScene extends THREE.Group {
     this._data.background = this._background;
 
     this._gameBoyController = new GameBoyController(this._data);
+  }
+
+  _initSignals() {
+    this._gameBoyController.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
   }
 }

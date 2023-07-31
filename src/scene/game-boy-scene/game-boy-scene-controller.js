@@ -1,11 +1,15 @@
-import { Black } from 'black-engine';
+import { Black, MessageDispatcher } from 'black-engine';
 import * as THREE from 'three';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGES_BY_TYPE_CONFIG } from './cartridges/data/cartridges-config';
+import DEBUG_CONFIG from '../../core/configs/debug-config';
 
 export default class GameBoyController {
   constructor(data) {
+
+    this.events = new MessageDispatcher();
+
     this._scene = data.scene;
     this._camera = data.camera;
     this._renderer = data.renderer;
@@ -175,13 +179,14 @@ export default class GameBoyController {
 
     gameBoy.events.on('onButtonPress', (msg, buttonType) => this._games.onButtonPress(buttonType));
     gameBoy.events.on('onButtonUp', (msg, buttonType) => this._games.onButtonUp(buttonType));
-    gameBoy.events.on('onPowerOn', () => this._games.onPowerOn());
-    gameBoy.events.on('onPowerOff', () => this._games.onPowerOff());
+    gameBoy.events.on('onPowerOn', () => this._onPowerOn());
+    gameBoy.events.on('onPowerOff', () => this._onPowerOff());
     gameBoy.events.on('onVolumeChanged', () => this._games.onVolumeChanged());
     cartridges.events.on('onCartridgeInserting', () => this._onCartridgeInserting());
     cartridges.events.on('onCartridgeInserted', (msg, cartridge) => this._onCartridgeInserted(cartridge));
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());
     cartridges.events.on('onCartridgeEjected', () => this._onCartridgeEjected());
+    cartridges.events.on('cartridgeTypeChanged', () => this._onCartridgeTypeChanged());
     background.events.on('onClick', () => gameBoy.onBackgroundClick());
   }
 
@@ -189,7 +194,6 @@ export default class GameBoyController {
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
 
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
-    this._cameraController.events.on('onRotationDragEnabled', () => this._gameBoyDebug.enableRotationDrag());
     this._cameraController.events.on('onZoom', (msg, zoomPercent) => cartridges.onZoomChanged(zoomPercent));
   }
 
@@ -198,6 +202,23 @@ export default class GameBoyController {
 
     this._gameBoyDebug.events.on('rotationCursorChanged', () => gameBoy.onDebugRotationChanged());
     this._gameBoyDebug.events.on('rotationDragChanged', () => gameBoy.onDebugRotationChanged());
+    this._gameBoyDebug.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
+    this._gameBoyDebug.events.on('orbitControlsChanged', () => this._onOrbitControlsChanged());
+    this._gameBoyDebug.events.on('turnOnButtonClicked', () => gameBoy.powerButtonSwitch());
+    this._gameBoyDebug.events.on('ejectCartridgeButtonClicked', () => this._onEjectCartridgeButtonClicked());
+    this._gameBoyDebug.events.on('insertCartridgeButtonClicked', (msg, cartridgeType) => this._onInsertCartridgeButtonClicked(cartridgeType));
+  }
+
+  _onPowerOn() {
+    this._gameBoyDebug.updateGameBoyPowerState();
+    this._gameBoyDebug.updateGameBoyTurnOnButton();
+    this._games.onPowerOn();
+  }
+
+  _onPowerOff() {
+    this._gameBoyDebug.updateGameBoyPowerState();
+    this._gameBoyDebug.updateGameBoyTurnOnButton();
+    this._games.onPowerOff();
   }
 
   _onCartridgeInserting() {
@@ -220,15 +241,33 @@ export default class GameBoyController {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].addCartridge(cartridge);
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].enableRotation();
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].powerOn();
+
+    this._gameBoyDebug.enableEjectCartridgeButton();
   }
 
   _onCartridgeEjected() {
     this._games.setNoGame();
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].enableRotation();
+    this._gameBoyDebug.disableEjectCartridgeButton();
+  }
+
+  _onCartridgeTypeChanged() {
+    this._gameBoyDebug.updateCartridgeType();
   }
 
   _onRotationDragDisabled() {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].resetRotation();
-    this._gameBoyDebug.disableRotationDrag();
+  }
+
+  _onOrbitControlsChanged() {
+    this._orbitControls.enabled = DEBUG_CONFIG.orbitControls;
+  }
+
+  _onEjectCartridgeButtonClicked() {
+    this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].ejectCartridge();
+  }
+
+  _onInsertCartridgeButtonClicked(cartridgeType) {
+    this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].insertCartridge(cartridgeType);
   }
 }
