@@ -14,33 +14,37 @@ export default class Scene3D extends THREE.Group {
     this._camera = data.camera,
 
     this._raycasterController = null;
-    this._gameBoy = null;
+    this._gameBoyScene = null;
 
     this._init();
   }
 
   update(dt) {
-    this._gameBoy.update(dt);
+    this._gameBoyScene.update(dt);
   }
 
   onPointerMove(x, y) {
-    this._gameBoy.onPointerMove(x, y);
+    this._gameBoyScene.onPointerMove(x, y);
   }
 
   onPointerDown(x, y) {
-    this._gameBoy.onPointerDown(x, y);
+    this._gameBoyScene.onPointerDown(x, y);
   }
 
   onPointerUp(x, y) {
-    this._gameBoy.onPointerUp(x, y);
+    this._gameBoyScene.onPointerUp(x, y);
   }
 
   onPointerLeave() {
-    this._gameBoy.onPointerLeave();
+    this._gameBoyScene.onPointerLeave();
   }
 
   onWheelScroll(delta) {
-    this._gameBoy.onWheelScroll(delta);
+    this._gameBoyScene.onWheelScroll(delta);
+  }
+
+  onSoundChanged() {
+    this._gameBoyScene.onSoundChanged();
   }
 
   _init() {
@@ -54,11 +58,12 @@ export default class Scene3D extends THREE.Group {
   }
 
   _initGameBoy() {
-    const gameBoy = this._gameBoy = new GameBoyScene(this._data, this._raycasterController);
-    this.add(gameBoy);
+    const gameBoyScene = this._gameBoyScene = new GameBoyScene(this._data, this._raycasterController);
+    this.add(gameBoyScene);
   }
 
   _initSignals() {
-    this._gameBoy.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
+    this._gameBoyScene.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
+    this._gameBoyScene.events.on('onSoundsEnabledChanged', () => this.events.post('onSoundsEnabledChanged'));
   }
 }

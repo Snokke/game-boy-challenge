@@ -6,6 +6,7 @@ import { CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { POWER_STATE } from './game-boy/data/game-boy-data';
+import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
 
 export default class GameBoyDebug extends THREE.Group {
   constructor() {
@@ -17,6 +18,7 @@ export default class GameBoyDebug extends THREE.Group {
     this._gameBoyTurnOnButton = null;
     this._cartridgeTypeController = null;
     this._ejectCartridgeButton = null;
+    this._audioEnabledController = null;
 
     this._init();
   }
@@ -51,6 +53,10 @@ export default class GameBoyDebug extends THREE.Group {
     this._ejectCartridgeButton.disabled = true;
   }
 
+  updateSoundsEnabledController() {
+    this._audioEnabledController.refresh();
+  }
+
   _init() {
     this._initGeneralFolder();
     this._initGameBoyFolder();
@@ -76,12 +82,22 @@ export default class GameBoyDebug extends THREE.Group {
 
     generalFolder.addSeparator();
 
-    generalFolder.addInput(GAME_BOY_CONFIG, 'mute', {
-      label: 'Mute',
+    this._audioEnabledController = generalFolder.addInput(SOUNDS_CONFIG, 'enabled', {
+      label: 'Audio',
+    }).on('change', () => {
+      this.events.post('audioEnabledChanged');
     });
 
-    generalFolder.addInput(GAME_BOY_CONFIG, 'volume', {
-      label: 'Volume',
+    generalFolder.addInput(SOUNDS_CONFIG, 'masterVolume', {
+      label: 'Master volume',
+      min: 0,
+      max: 1,
+    }).on('change', () => {
+      this.events.post('masterVolumeChanged');
+    });
+
+    generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
+      label: 'Game Boy volume',
       min: 0,
       max: 1,
     });

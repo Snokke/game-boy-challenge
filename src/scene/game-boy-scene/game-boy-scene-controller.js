@@ -4,6 +4,7 @@ import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGES_BY_TYPE_CONFIG } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
+import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
 
 export default class GameBoyController {
   constructor(data) {
@@ -111,6 +112,11 @@ export default class GameBoyController {
     this._cameraController.onWheelScroll(delta);
   }
 
+  onUISoundIconChanged() {
+    this._onSoundsEnabledChanged();
+    this._gameBoyDebug.updateSoundsEnabledController();
+  }
+
   _checkToGlow(intersect) {
     const object = intersect.object;
 
@@ -187,6 +193,8 @@ export default class GameBoyController {
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());
     cartridges.events.on('onCartridgeEjected', () => this._onCartridgeEjected());
     cartridges.events.on('cartridgeTypeChanged', () => this._onCartridgeTypeChanged());
+    cartridges.events.on('cartridgeInsertSound', () => gameBoy.playCartridgeInsertSound());
+    cartridges.events.on('cartridgeEjectSound', () => gameBoy.playCartridgeEjectSound());
     background.events.on('onClick', () => gameBoy.onBackgroundClick());
   }
 
@@ -207,6 +215,8 @@ export default class GameBoyController {
     this._gameBoyDebug.events.on('turnOnButtonClicked', () => gameBoy.powerButtonSwitch());
     this._gameBoyDebug.events.on('ejectCartridgeButtonClicked', () => this._onEjectCartridgeButtonClicked());
     this._gameBoyDebug.events.on('insertCartridgeButtonClicked', (msg, cartridgeType) => this._onInsertCartridgeButtonClicked(cartridgeType));
+    this._gameBoyDebug.events.on('audioEnabledChanged', () => this._onDebugSoundsEnabledChanged());
+    this._gameBoyDebug.events.on('masterVolumeChanged', () => this._onMasterVolumeChanged());
   }
 
   _onPowerOn() {
@@ -269,5 +279,22 @@ export default class GameBoyController {
 
   _onInsertCartridgeButtonClicked(cartridgeType) {
     this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].insertCartridge(cartridgeType);
+  }
+
+  _onSoundsEnabledChanged() {
+    if (SOUNDS_CONFIG.enabled) {
+      this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].enableSound();
+    } else {
+      this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableSound();
+    }
+  }
+
+  _onDebugSoundsEnabledChanged() {
+    this._onSoundsEnabledChanged();
+    this.events.post('onSoundsEnabledChanged');
+  }
+
+  _onMasterVolumeChanged() {
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onVolumeChanged(SOUNDS_CONFIG.masterVolume);
   }
 }

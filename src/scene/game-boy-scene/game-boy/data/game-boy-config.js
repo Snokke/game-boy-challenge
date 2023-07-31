@@ -4,8 +4,6 @@ const GAME_BOY_CONFIG = {
   powerOn: false,
   updateTexture: true,
   currentCartridge: 'NONE',
-  mute: false,
-  volume: 0.5,
   screen: {
     width: 160,
     height: 144,

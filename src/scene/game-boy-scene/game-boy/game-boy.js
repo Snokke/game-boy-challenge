@@ -11,14 +11,16 @@ import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-textu
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
 import Delayed from '../../../core/helpers/delayed-call';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
+import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 
 export default class GameBoy extends THREE.Group {
-  constructor(pixiCanvas) {
+  constructor(pixiCanvas, audioListener) {
     super();
 
     this.events = new MessageDispatcher();
 
     this._pixiCanvas = pixiCanvas;
+    this._audioListener = audioListener;
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
     this._parts = [];
@@ -44,6 +46,12 @@ export default class GameBoy extends THREE.Group {
     this._buttonRepeatTime = 0;
     this._firstRepeatTimer = null;
     this._buttonRepeatAllowed = false;
+
+    this._globalVolume = SOUNDS_CONFIG.masterVolume;
+    this._isSoundsEnabled = true;
+    this._powerSwitchSound = null;
+    this._insertCartridgeSound = null;
+    this._ejectCartridgeSound = null;
 
     this._init();
   }
@@ -240,6 +248,40 @@ export default class GameBoy extends THREE.Group {
     return [object];
   }
 
+  onVolumeChanged(volume) {
+    this._globalVolume = volume;
+
+    if (this._isSoundsEnabled) {
+      this._powerSwitchSound.setVolume(this._globalVolume);
+      this._insertCartridgeSound.setVolume(this._globalVolume);
+      this._ejectCartridgeSound.setVolume(this._globalVolume);
+    }
+  }
+
+  enableSound() {
+    this._isSoundsEnabled = true;
+
+    this._powerSwitchSound.setVolume(this._globalVolume);
+    this._insertCartridgeSound.setVolume(this._globalVolume);
+    this._ejectCartridgeSound.setVolume(this._globalVolume);
+  }
+
+  disableSound() {
+    this._isSoundsEnabled = false;
+
+    this._powerSwitchSound.setVolume(0);
+    this._insertCartridgeSound.setVolume(0);
+    this._ejectCartridgeSound.setVolume(0);
+  }
+
+  playCartridgeInsertSound() {
+    this._playSound(this._insertCartridgeSound);
+  }
+
+  playCartridgeEjectSound() {
+    this._playSound(this._ejectCartridgeSound);
+  }
+
   _updateRotation(dt) {
     if (DEBUG_CONFIG.orbitControls) {
       return;
@@ -399,6 +441,11 @@ export default class GameBoy extends THREE.Group {
   }
 
   _powerButtonOn() {
+    if (GAME_BOY_CONFIG.powerOn) {
+      return;
+    }
+
+    this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = true;
     this.events.post('onPowerOn');
 
@@ -427,6 +474,11 @@ export default class GameBoy extends THREE.Group {
   }
 
   _powerButtonOff() {
+    if (GAME_BOY_CONFIG.powerOn === false) {
+      return;
+    }
+
+    this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = false;
     this.events.post('onPowerOff');
 
@@ -473,6 +525,7 @@ export default class GameBoy extends THREE.Group {
     this._initCrossMeshes();
     this._initInitialRotation();
     this._initKeyboardEvents();
+    this._initSounds();
   }
 
   _initGameBoyParts() {
@@ -630,5 +683,57 @@ export default class GameBoy extends THREE.Group {
 
   _lerp(from, to, t) {
     return from + (to - from) * t;
+  }
+
+  _playSound(sound) {
+    if (sound.isPlaying) {
+      sound.stop();
+    }
+
+    sound.play();
+  }
+
+  _initSounds() {
+    this._initPowerSwitchSound();
+    this._initInsertEjectCartridgeSound();
+  }
+
+  _initPowerSwitchSound() {
+    const powerSwitchSound = this._powerSwitchSound = new THREE.PositionalAudio(this._audioListener);
+    this.add(powerSwitchSound);
+
+    powerSwitchSound.setRefDistance(10);
+
+    const powerButton = this._parts[GAME_BOY_PART_TYPE.PowerButton];
+    powerSwitchSound.position.copy(powerButton.position);
+
+    powerSwitchSound.setVolume(this._globalVolume);
+
+    Loader.events.on('onAudioLoaded', () => {
+      powerSwitchSound.setBuffer(Loader.assets['power-switch']);
+    });
+  }
+
+  _initInsertEjectCartridgeSound() {
+    const insertCartridgeSound = this._insertCartridgeSound = new THREE.PositionalAudio(this._audioListener);
+    this.add(insertCartridgeSound);
+
+    const ejectCartridgeSound = this._ejectCartridgeSound = new THREE.PositionalAudio(this._audioListener);
+    this.add(ejectCartridgeSound);
+
+    insertCartridgeSound.setRefDistance(10);
+    ejectCartridgeSound.setRefDistance(10);
+
+    const body = this._parts[GAME_BOY_PART_TYPE.Body];
+    insertCartridgeSound.position.copy(body.position);
+    ejectCartridgeSound.position.copy(body.position);
+
+    insertCartridgeSound.setVolume(this._globalVolume);
+    ejectCartridgeSound.setVolume(this._globalVolume);
+
+    Loader.events.on('onAudioLoaded', () => {
+      insertCartridgeSound.setBuffer(Loader.assets['insert-cartridge']);
+      ejectCartridgeSound.setBuffer(Loader.assets['eject-cartridge']);
+    });
   }
 }

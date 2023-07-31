@@ -149,6 +149,8 @@ export default class CartridgesController extends THREE.Group {
           .onComplete(() => {
             this._onCartridgeInserted(cartridge);
           });
+
+        Delayed.call(200, () => this.events.post('cartridgeInsertSound'));
       });
 
     new TWEEN.Tween(cartridge.rotation)
@@ -164,6 +166,7 @@ export default class CartridgesController extends THREE.Group {
     GAME_BOY_CONFIG.currentCartridge = 'NONE';
     this._insertedCartridge = null;
     this.events.post('cartridgeTypeChanged');
+    this.events.post('cartridgeEjectSound');
 
     const positions = CARTRIDGES_CONFIG.positions.eject;
     const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];

@@ -12,6 +12,10 @@ export default class UI extends DisplayObject {
     this.touchable = true;
   }
 
+  updateSoundIcon() {
+    this._soundIcon.updateTexture();
+  }
+
   onAdded() {
     this._initOverlay();
     this._initSoundIcon();
@@ -36,6 +40,7 @@ export default class UI extends DisplayObject {
     this._overlay.on('onPointerDown', (msg, x, y) => this.post('onPointerDown', x, y));
     this._overlay.on('onPointerUp', (msg, x, y) => this.post('onPointerUp', x, y));
     this._overlay.on('onWheelScroll', (msg, delta) => this.post('onWheelScroll', delta));
+    this._soundIcon.on('onSoundChanged', () => this.post('onSoundChanged'));
   }
 
   _handleResize() {

@@ -49,7 +49,9 @@ const pixiAssets = [
 ];
 
 const sounds = [
-
+  'power-switch.mp3',
+  'insert-cartridge.mp3',
+  'eject-cartridge.mp3',
 ];
 
 const loadingPercentElement = document.querySelector('.loading-percent');

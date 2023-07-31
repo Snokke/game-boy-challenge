@@ -1,6 +1,7 @@
 const SOUNDS_CONFIG = {
   enabled: true,
-  volume: 0.5,
+  masterVolume: 0.5,
+  gameBoyVolume: 0.5,
 }
 
 export { SOUNDS_CONFIG };

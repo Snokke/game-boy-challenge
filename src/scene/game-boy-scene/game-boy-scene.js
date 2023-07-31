@@ -51,6 +51,10 @@ export default class GameBoyScene extends THREE.Group {
     this._gameBoyController.onWheelScroll(delta);
   }
 
+  onSoundChanged() {
+    this._gameBoyController.onUISoundIconChanged();
+  }
+
   _init() {
     this._initGameBoy();
     this._initCartridgesController();
@@ -66,8 +70,9 @@ export default class GameBoyScene extends THREE.Group {
 
   _initGameBoy() {
     const pixiCanvas = this._data.pixiApplication.view;
+    const audioListener = this._data.audioListener;
 
-    const gameBoy = new GameBoy(pixiCanvas);
+    const gameBoy = new GameBoy(pixiCanvas, audioListener);
     this.add(gameBoy);
 
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy] = gameBoy;
@@ -123,5 +128,6 @@ export default class GameBoyScene extends THREE.Group {
 
   _initSignals() {
     this._gameBoyController.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
+    this._gameBoyController.events.on('onSoundsEnabledChanged', () => this.events.post('onSoundsEnabledChanged'));
   }
 }

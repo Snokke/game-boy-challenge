@@ -12,7 +12,7 @@ const TETRIS_CONFIG = {
   blockSize: 8,
   shapeSpawnPosition: new PIXI.Point(4, 1),
   linesBlinkTime: 300,
-  linesBlinkCount: 1,
+  linesBlinkCount: 3,
   fastFallInterval: 30,
   originalTetrisFramesPerSecond: 59.73,
   scorePerLine: [40, 100, 300, 1200],
