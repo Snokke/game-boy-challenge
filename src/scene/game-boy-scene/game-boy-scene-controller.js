@@ -174,6 +174,9 @@ export default class GameBoyController {
       if (this._isIntroActive) {
         this._isIntroActive = false;
         this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableIntro();
+
+        const introText = document.querySelector('.intro-text');
+        introText.classList.add('hide');
       }
     });
   }

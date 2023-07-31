@@ -65,7 +65,7 @@ export default class Field extends PIXI.Container {
       this._moveShapeDownFast();
     }
 
-    if (buttonType === BUTTON_TYPE.A) {
+    if (buttonType === BUTTON_TYPE.A || buttonType === BUTTON_TYPE.CrossUp) {
       this._rotateShapeClockwise();
     }
 

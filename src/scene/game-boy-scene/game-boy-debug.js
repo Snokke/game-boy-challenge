@@ -66,6 +66,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initGeneralFolder() {
     const generalFolder = GUIHelper.getGui().addFolder({
       title: 'General',
+      expanded: false,
     });
 
     generalFolder.addInput(DEBUG_CONFIG, 'fpsMeter', {
@@ -122,6 +123,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initGameBoyFolder() {
     const gameBoyFolder = GUIHelper.getGui().addFolder({
       title: 'Game Boy',
+      expanded: false,
     });
 
     this._powerState = { value: POWER_STATE.Off };
@@ -176,6 +178,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
+      expanded: false,
     });
 
     tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {

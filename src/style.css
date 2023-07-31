@@ -70,3 +70,20 @@ body
   font-family: sans-serif;
   opacity: 0.5;
 }
+
+.intro-text
+{
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  color: #000000;
+  font-size: 35px;
+  font-family: sans-serif;
+  transform: translateX(-50%);
+}
+
+.intro-text.hide
+{
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
