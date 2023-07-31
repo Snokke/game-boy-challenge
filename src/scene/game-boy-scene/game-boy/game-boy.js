@@ -12,6 +12,7 @@ import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-tex
 import Delayed from '../../../core/helpers/delayed-call';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
+import GameBoyAudio from './game-boy-audio/game-boy-audio';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas, audioListener) {
@@ -116,8 +117,8 @@ export default class GameBoy extends THREE.Group {
         volumeControl.rotation.z = maxAngle;
       }
 
-      GAME_BOY_CONFIG.volume = (volumeControl.rotation.z + maxAngle) / (maxAngle * 2);
-      this.events.post('onVolumeChanged');
+      SOUNDS_CONFIG.gameBoyVolume = (volumeControl.rotation.z + maxAngle) / (maxAngle * 2);
+      this.events.post('onGameBoyVolumeChanged');
     }
 
     if (GAME_BOY_DRAGGABLE_PARTS.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
@@ -159,6 +160,18 @@ export default class GameBoy extends THREE.Group {
     volumeControl.rotationZ = volumeControl.rotation.z;
 
     this._resetReturnRotationTimer();
+  }
+
+  updateVolumeControlRotation() {
+    if (this._draggingObjectType === GAME_BOY_PART_TYPE.VolumeControl) {
+      return;
+    }
+
+    const maxAngle = GAME_BOY_CONFIG.volumeController.maxAngle * THREE.MathUtils.DEG2RAD;
+    const volumeControl = this._parts[GAME_BOY_PART_TYPE.VolumeControl];
+
+    volumeControl.rotation.z = SOUNDS_CONFIG.gameBoyVolume * (maxAngle * 2) - maxAngle;
+    volumeControl.rotationZ = volumeControl.rotation.z;
   }
 
   onBackgroundClick() {
@@ -256,6 +269,8 @@ export default class GameBoy extends THREE.Group {
       this._insertCartridgeSound.setVolume(this._globalVolume);
       this._ejectCartridgeSound.setVolume(this._globalVolume);
     }
+
+    GameBoyAudio.changeGlobalVolume(volume);
   }
 
   enableSound() {
@@ -264,6 +279,8 @@ export default class GameBoy extends THREE.Group {
     this._powerSwitchSound.setVolume(this._globalVolume);
     this._insertCartridgeSound.setVolume(this._globalVolume);
     this._ejectCartridgeSound.setVolume(this._globalVolume);
+
+    GameBoyAudio.enableSound();
   }
 
   disableSound() {
@@ -272,6 +289,8 @@ export default class GameBoy extends THREE.Group {
     this._powerSwitchSound.setVolume(0);
     this._insertCartridgeSound.setVolume(0);
     this._ejectCartridgeSound.setVolume(0);
+
+    GameBoyAudio.disableSound();
   }
 
   playCartridgeInsertSound() {
@@ -526,6 +545,7 @@ export default class GameBoy extends THREE.Group {
     this._initInitialRotation();
     this._initKeyboardEvents();
     this._initSounds();
+    this._initGameBoyAudio();
   }
 
   _initGameBoyParts() {
@@ -616,6 +636,7 @@ export default class GameBoy extends THREE.Group {
   _addScreenMaterial() {
     const canvasTexture = new THREE.Texture(this._pixiCanvas);
     canvasTexture.flipY = false;
+    canvasTexture.magFilter = THREE.NearestFilter;
 
     const bakedTexture = Loader.assets['baked-screen-shadow'];
     bakedTexture.flipY = false;
@@ -735,5 +756,12 @@ export default class GameBoy extends THREE.Group {
       insertCartridgeSound.setBuffer(Loader.assets['insert-cartridge']);
       ejectCartridgeSound.setBuffer(Loader.assets['eject-cartridge']);
     });
+  }
+
+  _initGameBoyAudio() {
+    const audioGroup = new THREE.Group();
+    this.add(audioGroup);
+
+    new GameBoyAudio(this._audioListener, audioGroup);
   }
 }

@@ -7,6 +7,8 @@ import DamagedCartridgeScreen from './screens/damaged-cartridge-screen';
 import { GAME_TYPE } from './data/games-config';
 import { GAMES_CLASSES } from './data/games-classes';
 import VolumeOverlay from './overlay/volume-overlay';
+import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
+import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 
 export default class GameBoyGames {
   constructor(application) {
@@ -82,6 +84,9 @@ export default class GameBoyGames {
     if (GAME_BOY_CONFIG.powerOn) {
       this._volumeOverlay.onVolumeChanged();
     }
+
+    const gameBoyVolume = SOUNDS_CONFIG.gameBoyVolume;
+    GameBoyAudio.changeGameBoyVolume(gameBoyVolume);
   }
 
   onButtonPress(buttonType) {

@@ -170,12 +170,17 @@ export default class GameBoyController {
   }
 
   _initIntroSignal() {
+    const introText = document.querySelector('.intro-text');
+
+    if (GAME_BOY_CONFIG.intro.enabled) {
+      introText.innerHTML = 'Click on screen to start';
+    }
+
     window.addEventListener('pointerdown', () => {
       if (this._isIntroActive) {
         this._isIntroActive = false;
         this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].disableIntro();
 
-        const introText = document.querySelector('.intro-text');
         introText.classList.add('hide');
       }
     });
@@ -190,7 +195,7 @@ export default class GameBoyController {
     gameBoy.events.on('onButtonUp', (msg, buttonType) => this._games.onButtonUp(buttonType));
     gameBoy.events.on('onPowerOn', () => this._onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._onPowerOff());
-    gameBoy.events.on('onVolumeChanged', () => this._games.onVolumeChanged());
+    gameBoy.events.on('onGameBoyVolumeChanged', () => this._onGameBoyVolumeChanged());
     cartridges.events.on('onCartridgeInserting', () => this._onCartridgeInserting());
     cartridges.events.on('onCartridgeInserted', (msg, cartridge) => this._onCartridgeInserted(cartridge));
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());
@@ -220,6 +225,7 @@ export default class GameBoyController {
     this._gameBoyDebug.events.on('insertCartridgeButtonClicked', (msg, cartridgeType) => this._onInsertCartridgeButtonClicked(cartridgeType));
     this._gameBoyDebug.events.on('audioEnabledChanged', () => this._onDebugSoundsEnabledChanged());
     this._gameBoyDebug.events.on('masterVolumeChanged', () => this._onMasterVolumeChanged());
+    this._gameBoyDebug.events.on('gameBoyVolumeChanged', () => this._onDebugGameBoyVolumeChanged());
   }
 
   _onPowerOn() {
@@ -232,6 +238,11 @@ export default class GameBoyController {
     this._gameBoyDebug.updateGameBoyPowerState();
     this._gameBoyDebug.updateGameBoyTurnOnButton();
     this._games.onPowerOff();
+  }
+
+  _onGameBoyVolumeChanged() {
+    this._games.onVolumeChanged();
+    this._gameBoyDebug.updateGameBoyVolume();
   }
 
   _onCartridgeInserting() {
@@ -299,5 +310,10 @@ export default class GameBoyController {
 
   _onMasterVolumeChanged() {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].onVolumeChanged(SOUNDS_CONFIG.masterVolume);
+  }
+
+  _onDebugGameBoyVolumeChanged() {
+    this._games.onVolumeChanged();
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].updateVolumeControlRotation();
   }
 }

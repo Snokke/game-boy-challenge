@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import Delayed from '../../../../core/helpers/delayed-call';
+import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
 
 export default class VolumeOverlay extends PIXI.Container {
   constructor() {
@@ -24,7 +25,7 @@ export default class VolumeOverlay extends PIXI.Container {
   }
 
   onVolumeChanged() {
-    const volume = GAME_BOY_CONFIG.volume;
+    const volume = SOUNDS_CONFIG.gameBoyVolume;
     this.setVolume(volume);
 
     this.show();

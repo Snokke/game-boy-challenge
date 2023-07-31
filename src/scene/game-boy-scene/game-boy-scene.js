@@ -86,7 +86,9 @@ export default class GameBoyScene extends THREE.Group {
   }
 
   _initGameBoyGames() {
-    this._gameBoyGames = new GameBoyGames(this._data.pixiApplication);
+    const pixiApplication = this._data.pixiApplication;
+
+    this._gameBoyGames = new GameBoyGames(pixiApplication);
   }
 
   _initGameBoyDebug() {

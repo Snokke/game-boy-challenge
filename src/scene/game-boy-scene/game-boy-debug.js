@@ -19,6 +19,7 @@ export default class GameBoyDebug extends THREE.Group {
     this._cartridgeTypeController = null;
     this._ejectCartridgeButton = null;
     this._audioEnabledController = null;
+    this._gameBoyVolumeController = null;
 
     this._init();
   }
@@ -57,6 +58,10 @@ export default class GameBoyDebug extends THREE.Group {
     this._audioEnabledController.refresh();
   }
 
+  updateGameBoyVolume() {
+    this._gameBoyVolumeController.refresh();
+  }
+
   _init() {
     this._initGeneralFolder();
     this._initGameBoyFolder();
@@ -66,7 +71,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initGeneralFolder() {
     const generalFolder = GUIHelper.getGui().addFolder({
       title: 'General',
-      expanded: false,
+      // expanded: false,
     });
 
     generalFolder.addInput(DEBUG_CONFIG, 'fpsMeter', {
@@ -97,10 +102,12 @@ export default class GameBoyDebug extends THREE.Group {
       this.events.post('masterVolumeChanged');
     });
 
-    generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
+    this._gameBoyVolumeController = generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
       label: 'Game Boy volume',
       min: 0,
       max: 1,
+    }).on('change', () => {
+      this.events.post('gameBoyVolumeChanged');
     });
 
     generalFolder.addSeparator();

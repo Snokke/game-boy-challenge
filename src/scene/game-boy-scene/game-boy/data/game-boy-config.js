@@ -30,7 +30,7 @@ const GAME_BOY_CONFIG = {
     rotationDragEnabled: true,
     debugRotationCursorEnabled: true,
     debugRotationDragEnabled:true,
-    returnTime: 2500,
+    returnTime: 5000,
     cursorRotationSpeed: 0.2,
     dragRotationSpeed: 3,
     standardLerpSpeed: 0.05,
@@ -39,7 +39,7 @@ const GAME_BOY_CONFIG = {
     zoomThresholdToDisableRotation: 2.3,
   },
   intro: {
-    enabled: true,
+    enabled: false,
     speed: 5,
     rotationX: -20,
   },
