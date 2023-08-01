@@ -43,15 +43,18 @@ const CARTRIDGES_CONFIG = {
 
 const CARTRIDGES_BY_TYPE_CONFIG = {
   [CARTRIDGE_TYPE.Tetris]: {
-    labelTexture: 'baked-cartridge-tetris',
+    texture: 'baked-cartridge-tetris',
+    textureInPocket: 'baked-cartridge-tetris-in-pocket',
     game: GAME_TYPE.Tetris,
   },
   [CARTRIDGE_TYPE.Zelda]: {
-    labelTexture: 'baked-cartridge-zelda',
+    texture: 'baked-cartridge-zelda',
+    textureInPocket: 'baked-cartridge-zelda-in-pocket',
     game: GAME_TYPE.Zelda,
   },
   [CARTRIDGE_TYPE.DuckTales]: {
-    labelTexture: 'baked-cartridge-ducktales',
+    texture: 'baked-cartridge-ducktales',
+    textureInPocket: 'baked-cartridge-ducktales-in-pocket',
     game: GAME_TYPE.DuckTales,
   },
 }

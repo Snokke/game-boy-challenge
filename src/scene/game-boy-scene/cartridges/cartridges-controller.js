@@ -167,9 +167,12 @@ export default class CartridgesController extends THREE.Group {
     this._insertedCartridge = null;
     this.events.post('cartridgeTypeChanged');
     this.events.post('cartridgeEjectSound');
+    this.events.post('cartridgeStartEjecting');
 
     const positions = CARTRIDGES_CONFIG.positions.eject;
     const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];
+
+    cartridge.setStandardTexture();
 
     const moveTween = new TWEEN.Tween(cartridge.position)
       .to({ x: positions.beforeEject.x, y: positions.beforeEject.y, z: positions.beforeEject.z }, ejectTime)
@@ -216,6 +219,8 @@ export default class CartridgesController extends THREE.Group {
 
     this._enableCartridges();
     this.events.post('onCartridgeInserted', cartridge);
+
+    cartridge.setInPocketTexture();
   }
 
   _onCartridgeEjected(cartridgeType) {

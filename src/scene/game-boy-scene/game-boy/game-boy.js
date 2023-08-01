@@ -301,6 +301,16 @@ export default class GameBoy extends THREE.Group {
     this._playSound(this._ejectCartridgeSound);
   }
 
+  setCartridgePocketStandardTexture() {
+    const cartridgePocket = this._parts[GAME_BOY_PART_TYPE.CartridgePocket];
+    cartridgePocket.material.map = this._cartridgePocketStandardTexture;
+  }
+
+  setCartridgePocketWithCartridgeTexture() {
+    const cartridgePocket = this._parts[GAME_BOY_PART_TYPE.CartridgePocket];
+    cartridgePocket.material.map = this._cartridgePocketWithCartridgeTexture;
+  }
+
   _updateRotation(dt) {
     if (DEBUG_CONFIG.orbitControls) {
       return;
@@ -598,6 +608,7 @@ export default class GameBoy extends THREE.Group {
 
   _addMaterials() {
     this._addBakedMaterial();
+    this._addCartridgePocketMaterial();
     this._addPowerIndicatorMaterial();
     this._addScreenMaterial();
   }
@@ -613,6 +624,21 @@ export default class GameBoy extends THREE.Group {
     this._allMeshes.forEach(mesh => {
       mesh.material = bakedMaterial;
     });
+  }
+
+  _addCartridgePocketMaterial() {
+    const cartridgePocketStandardTexture = this._cartridgePocketStandardTexture = Loader.assets['baked-cartridge-pocket'];
+    cartridgePocketStandardTexture.flipY = false;
+
+    const cartridgePocketWidthCartridgeTexture = this._cartridgePocketWithCartridgeTexture = Loader.assets['baked-cartridge-pocket-with-cartridge'];
+    cartridgePocketWidthCartridgeTexture.flipY = false;
+
+    const bakedMaterial = new THREE.MeshBasicMaterial({
+      map: cartridgePocketStandardTexture,
+    });
+
+    const cartridgePocket = this._parts[GAME_BOY_PART_TYPE.CartridgePocket];
+    cartridgePocket.material = bakedMaterial;
   }
 
   _addPowerIndicatorMaterial() {

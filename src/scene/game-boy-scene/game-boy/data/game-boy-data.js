@@ -13,6 +13,7 @@ const GAME_BOY_PART_TYPE = {
   PowerIndicator: 'power-indicator',
   Screen: 'screen',
   VolumeControl: 'volume-control',
+  CartridgePocket: 'cartridge-pocket',
 }
 
 const GAME_BOY_ACTIVE_PARTS = [
@@ -33,6 +34,7 @@ const GAME_BOY_DRAGGABLE_PARTS = [
   GAME_BOY_PART_TYPE.Body,
   GAME_BOY_PART_TYPE.PowerIndicator,
   GAME_BOY_PART_TYPE.Screen,
+  GAME_BOY_PART_TYPE.CartridgePocket,
 ]
 
 const GAME_BOY_CROSS_PARTS = [

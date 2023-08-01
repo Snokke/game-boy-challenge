@@ -203,6 +203,7 @@ export default class GameBoyController {
     cartridges.events.on('cartridgeTypeChanged', () => this._onCartridgeTypeChanged());
     cartridges.events.on('cartridgeInsertSound', () => gameBoy.playCartridgeInsertSound());
     cartridges.events.on('cartridgeEjectSound', () => gameBoy.playCartridgeEjectSound());
+    cartridges.events.on('cartridgeStartEjecting', (msg, percent) => gameBoy.setCartridgePocketStandardTexture());
     background.events.on('onClick', () => gameBoy.onBackgroundClick());
   }
 
@@ -265,6 +266,7 @@ export default class GameBoyController {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].addCartridge(cartridge);
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].enableRotation();
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].powerOn();
+    this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].setCartridgePocketStandardTexture();
 
     this._gameBoyDebug.enableEjectCartridgeButton();
   }

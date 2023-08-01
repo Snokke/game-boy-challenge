@@ -123,8 +123,6 @@ export default class GameBoyDebug extends THREE.Group {
     }).on('change', () => {
       this.events.post('rotationDragChanged');
     });
-
-    generalFolder.addSeparator();
   }
 
   _initGameBoyFolder() {

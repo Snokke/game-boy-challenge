@@ -45,15 +45,26 @@ export default class Cartridge extends THREE.Group {
     return this._isInserted;
   }
 
+  setStandardTexture() {
+    this._mesh.material.map = this._standardTexture;
+  }
+
+  setInPocketTexture() {
+    this._mesh.material.map = this._inPocketTexture;
+  }
+
   _init() {
     const model = Loader.assets['game-boy-cartridge'].scene.clone();
     this.add(model);
 
-    const texture = Loader.assets[this._config.labelTexture];
-    texture.flipY = false;
+    const standardTexture = this._standardTexture = Loader.assets[this._config.texture];
+    standardTexture.flipY = false;
+
+    const inPocketTexture = this._inPocketTexture = Loader.assets[this._config.textureInPocket];
+    inPocketTexture.flipY = false;
 
     const material = new THREE.MeshBasicMaterial({
-      map: texture,
+      map: standardTexture,
     });
 
     const mesh = this._mesh = model.children[0];

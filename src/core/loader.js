@@ -6,11 +6,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
 const textures = [
   'baked-game-boy.jpg',
   'baked-cartridge-tetris.jpg',
+  'baked-cartridge-tetris-in-pocket.jpg',
   'baked-cartridge-zelda.jpg',
+  'baked-cartridge-zelda-in-pocket.jpg',
   'baked-cartridge-ducktales.jpg',
+  'baked-cartridge-ducktales-in-pocket.jpg',
   'baked-power-indicator.jpg',
   'baked-screen.jpg',
   'baked-screen-shadow.png',
+  'baked-cartridge-pocket.jpg',
+  'baked-cartridge-pocket-with-cartridge.jpg',
+
   'background.jpg',
 ];
 
