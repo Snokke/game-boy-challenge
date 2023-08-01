@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import GameScreenAbstract from '../game-screen-abstract';
-import { SCREEN_TYPE } from '../../data/tetris-data';
+import GameScreenAbstract from '../../../shared/game-screen-abstract';
+import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import Field from './field/field';
@@ -14,7 +14,7 @@ export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
     super();
 
-    this._screenType = SCREEN_TYPE.Gameplay;
+    this._screenType = TETRIS_SCREEN_TYPE.Gameplay;
     this._field = null;
     this._gameOverPopup = null;
     this._pausePopup = null;

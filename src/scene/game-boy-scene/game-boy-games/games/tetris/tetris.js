@@ -2,7 +2,7 @@ import LicenseScreen from './screens/license-screen/license-screen';
 import TitleScreen from './screens/title-screen/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
-import { SCREEN_TYPE } from './data/tetris-data';
+import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
 import GameBoyAudio from '../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../game-boy/game-boy-audio/game-boy-audio-data';
 
@@ -24,7 +24,7 @@ export default class Tetris extends GameAbstract {
     super.show();
 
     this._reset();
-    this._showScreen(SCREEN_TYPE.License);
+    this._showScreen(TETRIS_SCREEN_TYPE.License);
 
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
   }
@@ -89,35 +89,35 @@ export default class Tetris extends GameAbstract {
     const licenseScreen = new LicenseScreen();
     this.addChild(licenseScreen);
 
-    this._screens[SCREEN_TYPE.License] = licenseScreen;
+    this._screens[TETRIS_SCREEN_TYPE.License] = licenseScreen;
   }
 
   _initTitleScreen() {
     const titleScreen = new TitleScreen();
     this.addChild(titleScreen);
 
-    this._screens[SCREEN_TYPE.Title] = titleScreen;
+    this._screens[TETRIS_SCREEN_TYPE.Title] = titleScreen;
   }
 
   _initGameplayScreen() {
     const gameplayScreen = new GameplayScreen();
     this.addChild(gameplayScreen);
 
-    this._screens[SCREEN_TYPE.Gameplay] = gameplayScreen;
+    this._screens[TETRIS_SCREEN_TYPE.Gameplay] = gameplayScreen;
   }
 
   _initSignals() {
-    this._screens[SCREEN_TYPE.License].events.on('onComplete', () => this._onLicenseScreenComplete());
-    this._screens[SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
+    this._screens[TETRIS_SCREEN_TYPE.License].events.on('onComplete', () => this._onLicenseScreenComplete());
+    this._screens[TETRIS_SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
   }
 
   _onLicenseScreenComplete() {
-    this._screens[SCREEN_TYPE.License].hide();
-    this._showScreen(SCREEN_TYPE.Title);
+    this._screens[TETRIS_SCREEN_TYPE.License].hide();
+    this._showScreen(TETRIS_SCREEN_TYPE.Title);
   }
 
   _onStartGame() {
-    this._screens[SCREEN_TYPE.Title].hide();
-    this._showScreen(SCREEN_TYPE.Gameplay);
+    this._screens[TETRIS_SCREEN_TYPE.Title].hide();
+    this._showScreen(TETRIS_SCREEN_TYPE.Gameplay);
   }
 }

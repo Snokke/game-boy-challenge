@@ -1,15 +1,15 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
-import GameScreenAbstract from '../game-screen-abstract';
+import GameScreenAbstract from '../../../shared/game-screen-abstract';
 import Delayed from '../../../../../../../core/helpers/delayed-call';
-import { SCREEN_TYPE } from '../../data/tetris-data';
+import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
 
 export default class LicenseScreen extends GameScreenAbstract {
   constructor() {
     super();
 
-    this._screenType = SCREEN_TYPE.License;
+    this._screenType = TETRIS_SCREEN_TYPE.License;
     this._delay = null;
 
     this._init();

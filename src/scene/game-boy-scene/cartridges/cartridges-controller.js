@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
 import Cartridge from './cartridge';
-import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
+import { CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
 import { MessageDispatcher } from 'black-engine';
 import Delayed from '../../../core/helpers/delayed-call';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';

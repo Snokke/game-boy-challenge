@@ -65,6 +65,7 @@ export default class GameBoy extends THREE.Group {
     this._updateSkipAllowed = SCENE_CONFIG.isMobile;
     this._updateScreenSkipFrames = 2;
     this._updateScreenCounter = this._updateScreenSkipFrames;
+    this._isFirstTextureUpdate = false
 
     this._init();
   }
@@ -378,7 +379,8 @@ export default class GameBoy extends THREE.Group {
         this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
       }
 
-      if (!GAME_BOY_CONFIG.powerOn) {
+      if (!this._isFirstTextureUpdate) {
+        this._isFirstTextureUpdate = true;
         GAME_BOY_CONFIG.updateTexture = false;
       }
     }
@@ -629,6 +631,10 @@ export default class GameBoy extends THREE.Group {
     this._initKeyboardEvents();
     this._initSounds();
     this._initGameBoyAudio();
+
+    // setTimeout(() => {
+    //   this.powerOn();
+    // }, 500);
   }
 
   _initGameBoyParts() {

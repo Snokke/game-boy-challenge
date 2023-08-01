@@ -1,7 +1,7 @@
-const SCREEN_TYPE = {
+const TETRIS_SCREEN_TYPE = {
   License: 'LICENSE',
   Title: 'TITLE',
   Gameplay: 'GAMEPLAY',
 }
 
-export { SCREEN_TYPE };
+export { TETRIS_SCREEN_TYPE };

@@ -1,7 +1,7 @@
 const GAME_TYPE = {
   Tetris: 'TETRIS',
   Zelda: 'ZELDA',
-  DuckTales: 'DUCK_TALES',
+  SpaceInvaders: 'SPACE_INVADERS',
 }
 
 export { GAME_TYPE };

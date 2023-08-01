@@ -55,7 +55,7 @@ export default class GameBoyGames {
     this._container.visible = true;
 
     this._loadingScreen.show();
-    // this.setGame(GAME_TYPE.Tetris);
+    // this.setGame(GAME_TYPE.SpaceInvaders);
     // this.startGame();
   }
 
@@ -182,7 +182,7 @@ export default class GameBoyGames {
     const activeGames = [
       GAME_TYPE.Tetris,
       GAME_TYPE.Zelda,
-      GAME_TYPE.DuckTales,
+      GAME_TYPE.SpaceInvaders,
     ];
 
     activeGames.forEach(gameType => {
