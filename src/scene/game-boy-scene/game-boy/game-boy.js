@@ -13,6 +13,7 @@ import Delayed from '../../../core/helpers/delayed-call';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 import GameBoyAudio from './game-boy-audio/game-boy-audio';
+import SCENE_CONFIG from '../../../core/configs/scene-config';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas, audioListener) {
@@ -57,6 +58,14 @@ export default class GameBoy extends THREE.Group {
     this._zeldaIntroVideo = null;
     this._isZeldaIntroPlaying = false;
 
+    this._isMobileZoomIn = false;
+    this._draggableParts = SCENE_CONFIG.isMobile ? GAME_BOY_DRAGGABLE_PARTS : [...GAME_BOY_DRAGGABLE_PARTS, GAME_BOY_PART_TYPE.Screen];
+    this._dragRotationSpeed = SCENE_CONFIG.isMobile ? GAME_BOY_CONFIG.rotation.mobileDragRotationSpeed : GAME_BOY_CONFIG.rotation.dragRotationSpeed;
+
+    this._updateSkipAllowed = SCENE_CONFIG.isMobile;
+    this._updateScreenSkipFrames = 2;
+    this._updateScreenCounter = this._updateScreenSkipFrames;
+
     this._init();
   }
 
@@ -77,6 +86,24 @@ export default class GameBoy extends THREE.Group {
       }
     }
 
+    if (SCENE_CONFIG.isMobile && objectPartType === GAME_BOY_PART_TYPE.Screen) {
+      const credits = document.querySelector('.credits');
+
+      if (this._isMobileZoomIn) {
+        this._isMobileZoomIn = false;
+        this.events.post('onZoomOut');
+
+        credits.classList.remove('hide');
+        credits.classList.add('show');
+      } else {
+        this._isMobileZoomIn = true;
+        this.events.post('onZoomIn');
+
+        credits.classList.remove('show');
+        credits.classList.add('hide');
+      }
+    }
+
     if (objectPartType === GAME_BOY_PART_TYPE.PowerButton || objectPartType === GAME_BOY_PART_TYPE.PowerButtonFrame) {
       this.powerButtonSwitch();
       this._resetReturnRotationTimer();
@@ -94,7 +121,7 @@ export default class GameBoy extends THREE.Group {
   onPointerMove(x, y) {
     this._pointerPosition.set(x, y);
 
-    if (this._isDragging || !this._isDefaultRotation || !GAME_BOY_CONFIG.rotation.rotationCursorEnabled || !GAME_BOY_CONFIG.rotation.debugRotationCursorEnabled) {
+    if (this._isDragging || !this._isDefaultRotation || !GAME_BOY_CONFIG.rotation.rotationCursorEnabled || !GAME_BOY_CONFIG.rotation.debugRotationCursorEnabled || SCENE_CONFIG.isMobile) {
       return;
     }
 
@@ -124,10 +151,11 @@ export default class GameBoy extends THREE.Group {
       this.events.post('onGameBoyVolumeChanged');
     }
 
-    if (GAME_BOY_DRAGGABLE_PARTS.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
+
+    if (this._draggableParts.includes(this._draggingObjectType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
       this._rotationObject.quaternion.copy(this._rotationQuaternion);
-      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
-      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * GAME_BOY_CONFIG.rotation.dragRotationSpeed * 0.001);
+      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -dragX * this._dragRotationSpeed * 0.001);
+      this._rotationObject.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -dragY * this._dragRotationSpeed * 0.001);
     }
   }
 
@@ -140,7 +168,7 @@ export default class GameBoy extends THREE.Group {
       this._stopReturnRotationTimer();
     }
 
-    if (GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
+    if (this._draggableParts.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled) {
       this._rotationQuaternion.copy(this.quaternion);
 
       this._isDragging = true;
@@ -184,7 +212,7 @@ export default class GameBoy extends THREE.Group {
   onPointerOver(object) {
     const objectPartType = object.userData['partType'];
 
-    if ((GAME_BOY_DRAGGABLE_PARTS.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled)
+    if ((this._draggableParts.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled)
       || (objectPartType === GAME_BOY_PART_TYPE.VolumeControl)) {
       Black.engine.containerElement.style.cursor = 'grab';
     }
@@ -339,7 +367,20 @@ export default class GameBoy extends THREE.Group {
 
   _updateScreenTexture() {
     if (GAME_BOY_CONFIG.updateTexture) {
-      this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+      if (this._updateSkipAllowed) {
+        if (this._updateScreenCounter >= this._updateScreenSkipFrames) {
+          this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+          this._updateScreenCounter = 0;
+        }
+
+        this._updateScreenCounter += 1;
+      } else {
+        this._parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uBitmapTexture.value.needsUpdate = true;
+      }
+
+      if (!GAME_BOY_CONFIG.powerOn) {
+        GAME_BOY_CONFIG.updateTexture = false;
+      }
     }
   }
 
@@ -601,12 +642,18 @@ export default class GameBoy extends THREE.Group {
       part.userData['sceneObjectType'] = this._sceneObjectType;
       part.userData['isActive'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
       part.userData['showOutline'] = GAME_BOY_ACTIVE_PARTS.includes(partType);
-      part.userData['isDraggable'] = GAME_BOY_DRAGGABLE_PARTS.includes(partType) || partType === GAME_BOY_PART_TYPE.VolumeControl;
+      part.userData['isDraggable'] = this._draggableParts.includes(partType) || partType === GAME_BOY_PART_TYPE.VolumeControl;
       part.userData['startPosition'] = part.position.clone();
 
       this._parts[partType] = part;
       this._allMeshes.push(part);
       this.add(part);
+    }
+
+    if (SCENE_CONFIG.isMobile) {
+      const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
+      screen.userData['isActive'] = true;
+      screen.userData['showOutline'] = false;
     }
 
     this._parts[GAME_BOY_PART_TYPE.VolumeControl].rotationZ = 0;

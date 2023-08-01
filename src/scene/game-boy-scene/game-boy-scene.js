@@ -8,6 +8,7 @@ import GameBoyDebug from './game-boy-debug';
 import CameraController from './camera-controller/camera-controller';
 import Background from './background/background';
 import { MessageDispatcher } from 'black-engine';
+import SCENE_CONFIG from '../../core/configs/scene-config';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {
@@ -22,6 +23,8 @@ export default class GameBoyScene extends THREE.Group {
     this._gameBoyGames = null;
     this._gameBoyDebug = null;
     this._activeObjects = {};
+
+    this._isSoundPlayed = false;
 
     this._init();
   }
@@ -64,6 +67,7 @@ export default class GameBoyScene extends THREE.Group {
     this._initBackground();
     this._configureRaycaster();
     this._initGameBoyController();
+    this._initEmptySound();
 
     this._initSignals();
   }
@@ -126,6 +130,22 @@ export default class GameBoyScene extends THREE.Group {
     this._data.background = this._background;
 
     this._gameBoyController = new GameBoyController(this._data);
+  }
+
+  _initEmptySound() {
+    if (SCENE_CONFIG.isMobile) {
+      window.addEventListener('touchstart', () => {
+        if (this._isSoundPlayed) {
+          return;
+        }
+
+        const sound = new THREE.PositionalAudio(this._data.audioListener);
+        sound.setVolume(0);
+        sound.play();
+
+        this._isSoundPlayed = true;
+      });
+    }
   }
 
   _initSignals() {

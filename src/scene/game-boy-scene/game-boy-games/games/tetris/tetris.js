@@ -25,8 +25,6 @@ export default class Tetris extends GameAbstract {
 
     this._reset();
     this._showScreen(SCREEN_TYPE.License);
-    // this._showScreen(SCREEN_TYPE.Title);
-    // this._showScreen(SCREEN_TYPE.Gameplay);
 
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
   }

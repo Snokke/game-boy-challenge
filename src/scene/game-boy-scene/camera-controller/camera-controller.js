@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
 import { MessageDispatcher } from 'black-engine';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
+import { CAMERA_CONTROLLER_CONFIG } from './camera-controller-config';
+import SCENE_CONFIG from '../../../core/configs/scene-config';
 
 export default class CameraController {
   constructor(camera) {
@@ -12,6 +14,7 @@ export default class CameraController {
 
     this._zoomObject = new THREE.Object3D();
     this._rotationDragPreviousState = true;
+    this._minDistance = SCENE_CONFIG.isMobile ? CAMERA_CONTROLLER_CONFIG.mobileMinDistance : CAMERA_CONTROLLER_CONFIG.minDistance;
 
     this._zoomDistance = this._camera.position.z;
 
@@ -32,19 +35,19 @@ export default class CameraController {
       return;
     }
 
-    const zoomDelta = delta * 0.4;
-    const minDistance = 3.2;
-    const maxDistance = 6;
+    const zoomDelta = delta * CAMERA_CONTROLLER_CONFIG.zoomSpeed;
+    const minDistance = this._minDistance;
+    const maxDistance = CAMERA_CONTROLLER_CONFIG.maxDistance;
 
     this._zoomDistance += zoomDelta;
     this._zoomDistance = THREE.MathUtils.clamp(this._zoomDistance, minDistance, maxDistance);
 
-    const cursorRotationCoeff = 3.2 - (THREE.MathUtils.clamp(this._zoomDistance, 3.2, 6) - 3.2);
+    const cursorRotationCoeff = minDistance - (THREE.MathUtils.clamp(this._zoomDistance, minDistance, maxDistance) - minDistance);
 
-    GAME_BOY_CONFIG.rotation.cursorRotationSpeed = 0.2 - (cursorRotationCoeff / 3.2) * 0.2;
+    GAME_BOY_CONFIG.rotation.cursorRotationSpeed = 0.2 - (cursorRotationCoeff / minDistance) * 0.2;
 
     this._zoomObject.position.z = this._zoomDistance;
-    this._zoomObject.position.y = (-this._zoomObject.position.z + 6 - 0.4) * 0.13;
+    this._zoomObject.position.y = (-this._zoomObject.position.z + maxDistance - 0.4) * 0.13;
 
     const zoomPercent = 1 - (this._zoomDistance - minDistance) / (maxDistance - minDistance);
     this.events.post('onZoom', zoomPercent);
@@ -67,11 +70,21 @@ export default class CameraController {
     }
   }
 
+  zoomIn() {
+    for (let i = 0; i < 10; i++) {
+      this.onWheelScroll(-1);
+    }
+  }
+
+  zoomOut() {
+    for (let i = 0; i < 10; i++) {
+      this.onWheelScroll(1);
+    }
+  }
+
   _init() {
     this._zoomObject.position.copy(this._camera.position);
 
-    // for (let i = 0; i < 10; i++) {
-    //   this.onWheelScroll(-1);
-    // }
+    // this.zoomIn();
   }
 }

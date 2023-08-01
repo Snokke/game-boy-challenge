@@ -5,6 +5,7 @@ import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGES_BY_TYPE_CONFIG } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
+import SCENE_CONFIG from '../../core/configs/scene-config';
 
 export default class GameBoyController {
   constructor(data) {
@@ -140,11 +141,15 @@ export default class GameBoyController {
   }
 
   _resetGlow() {
-    this._outlinePass.selectedObjects = [];
+    if (this._outlinePass) {
+      this._outlinePass.selectedObjects = [];
+    }
   }
 
   _setGlow(meshes) {
-    this._outlinePass.selectedObjects = meshes;
+    if (this._outlinePass) {
+      this._outlinePass.selectedObjects = meshes;
+    }
   }
 
   _powerOn() {
@@ -197,6 +202,8 @@ export default class GameBoyController {
     gameBoy.events.on('onPowerOn', () => this._onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._onPowerOff());
     gameBoy.events.on('onGameBoyVolumeChanged', () => this._onGameBoyVolumeChanged());
+    gameBoy.events.on('onZoomIn', () => this._cameraController.zoomIn());
+    gameBoy.events.on('onZoomOut', () => this._cameraController.zoomOut());
     cartridges.events.on('onCartridgeInserting', () => this._onCartridgeInserting());
     cartridges.events.on('onCartridgeInserted', (msg, cartridge) => this._onCartridgeInserted(cartridge));
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());

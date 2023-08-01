@@ -67,6 +67,8 @@ export default class BaseScene {
     this._scene3DDebugMenu.showAfterAssetsLoad();
     this._mainScene.afterAssetsLoad();
     this._setupBackgroundColor();
+
+    this._showTextToLandscape();
   }
 
   getOutlinePass() {
@@ -100,10 +102,10 @@ export default class BaseScene {
     canvas.width = GAME_BOY_CONFIG.screen.width;
     canvas.height = GAME_BOY_CONFIG.screen.height;
 
-    const view = canvas.transferControlToOffscreen();
+    // const view = canvas.transferControlToOffscreen();
 
     this._pixiApplication = new PIXI.Application({
-      view: view,
+      view: canvas,
       width: GAME_BOY_CONFIG.screen.width,
       height: GAME_BOY_CONFIG.screen.height,
       background: GAME_BOY_CONFIG.screen.tint,
@@ -143,7 +145,7 @@ export default class BaseScene {
     renderer.setSize(this._windowSizes.width, this._windowSizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio));
 
-    renderer.useLegacyLights = false;
+    // renderer.useLegacyLights = false;
     // renderer.outputEncoding = THREE.sRGBEncoding;
     // renderer.toneMapping = THREE.ACESFilmicToneMapping;
     // renderer.toneMappingExposure = 1;
@@ -276,6 +278,21 @@ export default class BaseScene {
     this._orbitControls = this._scene3DDebugMenu.getOrbitControls();
   }
 
+  _showTextToLandscape() {
+    if (SCENE_CONFIG.isMobile && window.innerWidth < window.innerHeight) {
+      const introText = document.querySelector('.rotate-to-landscape');
+      introText.innerHTML = 'To use cartridges rotate to landscape';
+
+      introText.classList.add('show');
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > window.innerHeight) {
+          introText.classList.add('hide');
+        }
+      });
+    }
+  }
+
   _initUpdate() {
     const clock = new THREE.Clock(true);
 
@@ -293,8 +310,6 @@ export default class BaseScene {
         }
 
         if (SCENE_CONFIG.isMobile || DEBUG_CONFIG.rendererStats) {
-          this._renderer.setRenderTarget(null);
-          this._renderer.clear();
           this._renderer.render(this._scene, this._camera);
         } else {
           this._effectComposer.render();
