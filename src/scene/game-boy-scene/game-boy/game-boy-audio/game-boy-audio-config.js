@@ -4,6 +4,9 @@ const GAME_BOY_SOUNDS_CONFIG = {
   [GAME_BOY_SOUND_TYPE.GameBoyLoad]: {
     fileName: 'game-boy-load',
   },
+  [GAME_BOY_SOUND_TYPE.ZeldaIntro]: {
+    fileName: 'zelda-intro-sound',
+  },
   [GAME_BOY_SOUND_TYPE.TetrisMusic]: {
     fileName: 'tetris-music',
   },

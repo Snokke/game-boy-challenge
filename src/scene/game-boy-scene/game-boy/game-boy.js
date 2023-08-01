@@ -54,6 +54,9 @@ export default class GameBoy extends THREE.Group {
     this._insertCartridgeSound = null;
     this._ejectCartridgeSound = null;
 
+    this._zeldaIntroVideo = null;
+    this._isZeldaIntroPlaying = false;
+
     this._init();
   }
 
@@ -311,6 +314,16 @@ export default class GameBoy extends THREE.Group {
     cartridgePocket.material.map = this._cartridgePocketWithCartridgeTexture;
   }
 
+  showZeldaIntro() {
+    this._isZeldaIntroPlaying = true;
+    GAME_BOY_CONFIG.updateTexture = false;
+
+    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
+    screen.material.uniforms.uBitmapTexture.value = this._zeldaVideoTexture;
+
+    this._zeldaIntroVideo.play();
+  }
+
   _updateRotation(dt) {
     if (DEBUG_CONFIG.orbitControls) {
       return;
@@ -474,6 +487,8 @@ export default class GameBoy extends THREE.Group {
       return;
     }
 
+    GameBoyAudio.onTurnOnGameBoy();
+
     this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = true;
     this.events.post('onPowerOn');
@@ -506,6 +521,12 @@ export default class GameBoy extends THREE.Group {
     if (GAME_BOY_CONFIG.powerOn === false) {
       return;
     }
+
+    if (this._isZeldaIntroPlaying) {
+      this._onZeldaIntroEnded();
+    }
+
+    GameBoyAudio.onTurnOffGameBoy();
 
     this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = false;
@@ -544,6 +565,17 @@ export default class GameBoy extends THREE.Group {
     if (this._powerIndicatorTween) {
       this._powerIndicatorTween.stop();
     }
+  }
+
+  _onZeldaIntroEnded() {
+    this._isZeldaIntroPlaying = false;
+    GAME_BOY_CONFIG.updateTexture = true;
+
+    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
+    screen.material.uniforms.uBitmapTexture.value = this._canvasTexture;
+
+    this._zeldaIntroVideo.pause();
+    this._zeldaIntroVideo.currentTime = 0;
   }
 
   _init() {
@@ -611,6 +643,7 @@ export default class GameBoy extends THREE.Group {
     this._addCartridgePocketMaterial();
     this._addPowerIndicatorMaterial();
     this._addScreenMaterial();
+    this._initZeldaIntroVideo();
   }
 
   _addBakedMaterial() {
@@ -660,7 +693,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   _addScreenMaterial() {
-    const canvasTexture = new THREE.Texture(this._pixiCanvas);
+    const canvasTexture = this._canvasTexture = new THREE.Texture(this._pixiCanvas);
     canvasTexture.flipY = false;
     canvasTexture.magFilter = THREE.NearestFilter;
 
@@ -679,6 +712,22 @@ export default class GameBoy extends THREE.Group {
 
     const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
     screen.material = material;
+  }
+
+  _initZeldaIntroVideo() {
+    const videoElement = this._zeldaIntroVideo = document.createElement('video');
+    videoElement.muted = true;
+    videoElement.controls = true;
+    videoElement.playsInline = true;
+    videoElement.src = '/video/zelda-intro.mp4';
+
+    videoElement.addEventListener('ended', () => {
+      this._onZeldaIntroEnded();
+    });
+
+    const videoTexture = this._zeldaVideoTexture = new THREE.VideoTexture(videoElement);
+    videoTexture.flipY = false;
+    videoTexture.magFilter = THREE.NearestFilter;
   }
 
   _initCrossMeshes() {
@@ -787,6 +836,10 @@ export default class GameBoy extends THREE.Group {
   _initGameBoyAudio() {
     const audioGroup = new THREE.Group();
     this.add(audioGroup);
+
+    audioGroup.position.x = 0.7;
+    audioGroup.position.y = -1.5;
+    audioGroup.position.z = 0.3;
 
     new GameBoyAudio(this._audioListener, audioGroup);
   }

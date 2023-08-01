@@ -60,6 +60,7 @@ const sounds = [
   'eject-cartridge.mp3',
   'game-boy-load.mp3',
   'tetris-music.mp3',
+  'zelda-intro-sound.mp3',
 ];
 
 const loadingPercentElement = document.querySelector('.loading-percent');

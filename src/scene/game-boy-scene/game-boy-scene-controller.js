@@ -166,6 +166,7 @@ export default class GameBoyController {
     this._initIntroSignal();
     this._initActiveObjectsSignals();
     this._initCameraControllerSignals();
+    this._initGamesSignals();
     this._initDebugSignals();
   }
 
@@ -212,6 +213,12 @@ export default class GameBoyController {
 
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
     this._cameraController.events.on('onZoom', (msg, zoomPercent) => cartridges.onZoomChanged(zoomPercent));
+  }
+
+  _initGamesSignals() {
+    const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
+
+    this._games.events.on('onZeldaStart', () => gameBoy.showZeldaIntro());
   }
 
   _initDebugSignals() {

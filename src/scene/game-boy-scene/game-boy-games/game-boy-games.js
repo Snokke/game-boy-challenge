@@ -9,9 +9,12 @@ import { GAMES_CLASSES } from './data/games-classes';
 import VolumeOverlay from './overlay/volume-overlay';
 import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
+import { MessageDispatcher } from 'black-engine';
 
 export default class GameBoyGames {
   constructor(application) {
+
+    this.events = new MessageDispatcher();
 
     this._application = application;
 
@@ -213,6 +216,10 @@ export default class GameBoyGames {
 
   _initSignals() {
     this._loadingScreen.events.on('onComplete', () => this._onLoadingComplete());
+
+    this._games[GAME_TYPE.Zelda].events.on('onShow', () => {
+      this.events.post('onZeldaStart');
+    });
   }
 
   _onLoadingComplete() {

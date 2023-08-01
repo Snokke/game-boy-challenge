@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GAME_BOY_SOUND_TYPE } from './game-boy-audio-data';
 import { GAME_BOY_SOUNDS_CONFIG } from './game-boy-audio-config';
 import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
+import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
 import Loader from '../../../../core/loader';
 
 export default class GameBoyAudio {
@@ -13,6 +14,7 @@ export default class GameBoyAudio {
     this._globalVolume = SOUNDS_CONFIG.masterVolume;
     this._gameBoyVolume = SOUNDS_CONFIG.gameBoyVolume;
     this._isSoundsEnabled = true;
+    this._isGameBoyEnabled = false;
     this.sounds = {};
 
     this._initSounds();
@@ -25,6 +27,10 @@ export default class GameBoyAudio {
       const soundType = GAME_BOY_SOUND_TYPE[value];
       this._initSound(soundType);
     }
+
+    // const sound = this.sounds[GAME_BOY_SOUND_TYPE.GameBoyLoad];
+    // const audioHelper = new PositionalAudioHelper(sound, 1);
+    // this._audioGroup.add(audioHelper);
   }
 
   _initSound(soundType) {
@@ -36,6 +42,8 @@ export default class GameBoyAudio {
     this.sounds[soundType] = sound;
 
     sound.setRefDistance(10);
+    sound.setDirectionalCone(130, 180, 0.2);
+
     sound.setVolume(this._globalVolume * this._gameBoyVolume);
 
     Loader.events.on('onAudioLoaded', () => {
@@ -44,7 +52,7 @@ export default class GameBoyAudio {
   }
 
   _updateVolume() {
-    if (this._isSoundsEnabled) {
+    if (this._isSoundsEnabled && this._isGameBoyEnabled) {
       for (const value in GAME_BOY_SOUND_TYPE) {
         const soundType = GAME_BOY_SOUND_TYPE[value];
         const sound = this.sounds[soundType];
@@ -58,6 +66,17 @@ export default class GameBoyAudio {
       const soundType = GAME_BOY_SOUND_TYPE[value];
       const sound = this.sounds[soundType];
       sound.setVolume(0);
+    }
+  }
+
+  _stopAllSounds() {
+    for (const value in GAME_BOY_SOUND_TYPE) {
+      const soundType = GAME_BOY_SOUND_TYPE[value];
+      const sound = this.sounds[soundType];
+
+      if (sound.isPlaying) {
+        sound.stop();
+      }
     }
   }
 
@@ -89,6 +108,17 @@ export default class GameBoyAudio {
   static disableSound() {
     GameBoyAudio.instance._isSoundsEnabled = false;
     GameBoyAudio.instance._setVolumeZero();
+  }
+
+  static onTurnOnGameBoy() {
+    GameBoyAudio.instance._isGameBoyEnabled = true;
+    GameBoyAudio.instance._updateVolume();
+  }
+
+  static onTurnOffGameBoy() {
+    GameBoyAudio.instance._isGameBoyEnabled = false;
+    GameBoyAudio.instance._setVolumeZero();
+    GameBoyAudio.instance._stopAllSounds();
   }
 }
 
