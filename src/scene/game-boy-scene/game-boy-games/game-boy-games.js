@@ -55,7 +55,8 @@ export default class GameBoyGames {
     this._container.visible = true;
 
     // this._loadingScreen.show();
-    this.setGame(GAME_TYPE.SpaceInvaders);
+    // this.setGame(GAME_TYPE.SpaceInvaders);
+    this.setGame(GAME_TYPE.Tetris);
     this.startGame();
   }
 

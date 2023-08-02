@@ -87,7 +87,7 @@ export default class NextShape extends PIXI.Container {
           const block = new PIXI.Sprite(blockTexture);
           this.addChild(block);
 
-          block.tint = GAME_BOY_CONFIG.screen.tint;
+          block.tint = config.tint;
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;
@@ -96,6 +96,11 @@ export default class NextShape extends PIXI.Container {
     }
 
     this._height = this._blocksView.length * TETRIS_CONFIG.blockSize;
+
+    if (this._type === SHAPE_TYPE.Invisible) {
+      this._height = this._blocksView.length * TETRIS_CONFIG.blockSize * 3;
+    }
+
     this._width = this._blocksView[0].length * TETRIS_CONFIG.blockSize;
     this._shapePivot = config.pivot;
     this._updateShapeBlocksPosition();

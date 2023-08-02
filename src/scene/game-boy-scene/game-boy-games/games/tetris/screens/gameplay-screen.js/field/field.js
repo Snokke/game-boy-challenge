@@ -176,8 +176,12 @@ export default class Field extends PIXI.Container {
         const shapeBlock = shapeBlocksView[row][column];
 
         if (shapeBlock !== null) {
-          if ((shapePosition.x - pivot.x + column + 1 > TETRIS_CONFIG.field.width - 1)
-            || (this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column + 1] !== null)) {
+          const checkFieldEdge = shapePosition.x - pivot.x + column + 1 > TETRIS_CONFIG.field.width - 1;
+          const checkFieldMap = this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column + 1] !== null;
+          const isInvisibleShape = this._currentShape.getType() === SHAPE_TYPE.Invisible;
+          const check = isInvisibleShape ? checkFieldEdge : (checkFieldMap || checkFieldEdge);
+
+          if (check) {
             return;
           }
         }
@@ -202,8 +206,12 @@ export default class Field extends PIXI.Container {
         const shapeBlock = shapeBlocksView[row][column];
 
         if (shapeBlock !== null) {
-          if ((shapePosition.x - pivot.x + column - 1 < 0)
-            || (this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column - 1] !== null)) {
+          const checkFieldEdge = shapePosition.x - pivot.x + column - 1 < 0;
+          const checkFieldMap = this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column - 1] !== null;
+          const isInvisibleShape = this._currentShape.getType() === SHAPE_TYPE.Invisible;
+          const check = isInvisibleShape ? checkFieldEdge : (checkFieldMap || checkFieldEdge);
+
+          if (check) {
             return;
           }
         }
@@ -228,9 +236,15 @@ export default class Field extends PIXI.Container {
         const shapeBlock = shapeBlocksView[row][column];
 
         if (shapeBlock !== null) {
-          if ((shapePosition.y - pivot.y + row + 1 > TETRIS_CONFIG.field.height - 1)
-            || (this._fieldMap[shapePosition.y - pivot.y + row + 1][shapePosition.x - pivot.x + column] !== null)) {
+          const checkEdgeAndFieldMap = ((shapePosition.y - pivot.y + row + 1 > TETRIS_CONFIG.field.height - 1)
+            || (this._fieldMap[shapePosition.y - pivot.y + row + 1][shapePosition.x - pivot.x + column] !== null));
 
+          const checkEdge = shapePosition.y - pivot.y + row + 1 > TETRIS_CONFIG.field.height - 1;
+
+          const isInvisibleShape = this._currentShape.getType() === SHAPE_TYPE.Invisible;
+          const check = isInvisibleShape ? checkEdge : checkEdgeAndFieldMap;
+
+          if (check) {
             if (this._currentShape.getBlockPosition().y === TETRIS_CONFIG.shapeSpawnPosition.y) {
               this.events.emit('onLose');
 
@@ -455,12 +469,21 @@ export default class Field extends PIXI.Container {
         const shapeBlock = shapeBlocksView[row][column];
 
         if (shapeBlock !== null) {
-          if ((shapePosition.x - pivot.x + column < 0)
+          const checkEdgeAndField = (shapePosition.x - pivot.x + column < 0)
             || (shapePosition.x - pivot.x + column > TETRIS_CONFIG.field.width - 1)
             || (shapePosition.y - pivot.y + row < 0)
             || (shapePosition.y - pivot.y + row > TETRIS_CONFIG.field.height - 1)
-            || (this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column] !== null)) {
+            || (this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column] !== null);
 
+          const checkEdge = (shapePosition.x - pivot.x + column < 0)
+            || (shapePosition.x - pivot.x + column > TETRIS_CONFIG.field.width - 1)
+            || (shapePosition.y - pivot.y + row < 0)
+            || (shapePosition.y - pivot.y + row > TETRIS_CONFIG.field.height - 1);
+
+          const isInvisibleShape = this._currentShape.getType() === SHAPE_TYPE.Invisible;
+          const check = isInvisibleShape ? checkEdge : checkEdgeAndField;
+
+          if (check) {
             if (rotateType === ROTATE_TYPE.Clockwise) {
               this._rotateShapeCounterClockwise();
             } else {
@@ -492,6 +515,11 @@ export default class Field extends PIXI.Container {
 
         if (shapeBlock !== null) {
           const newBlock = this._createBlockCopy(shapeBlock);
+          const oldBlock = this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column];
+
+          if (oldBlock !== null) {
+            this._fieldMapContainer.removeChild(oldBlock);
+          }
 
           this._fieldMap[shapePosition.y - pivot.y + row][shapePosition.x - pivot.x + column] = newBlock;
           this._fieldMapContainer.addChild(newBlock);
@@ -532,10 +560,20 @@ export default class Field extends PIXI.Container {
   }
 
   _getRandomShapeType() {
-    const shapeTypes = Object.keys(SHAPE_TYPE);
+    const standardShapeTypes = [
+      SHAPE_TYPE.I,
+      SHAPE_TYPE.J,
+      SHAPE_TYPE.L,
+      SHAPE_TYPE.O,
+      SHAPE_TYPE.S,
+      SHAPE_TYPE.T,
+      SHAPE_TYPE.Z,
+    ];
+
+    const shapeTypes = TETRIS_CONFIG.allowInvisibleShape ? [...standardShapeTypes, SHAPE_TYPE.Invisible] : [...standardShapeTypes];
     const randomIndex = Math.floor(Math.random() * shapeTypes.length);
 
-    return SHAPE_TYPE[shapeTypes[randomIndex]];
+    return shapeTypes[randomIndex];
   }
 
   _calculateFallInterval() {

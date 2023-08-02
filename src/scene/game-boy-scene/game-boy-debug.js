@@ -209,7 +209,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
-      expanded: false,
+      // expanded: false,
     });
 
     this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
@@ -262,6 +262,12 @@ export default class GameBoyDebug extends THREE.Group {
       disabled: true,
     }).on('click', () => {
       this.events.post('restartTetrisButtonClicked', selectedLevel);
+    });
+
+    tetrisFolder.addSeparator();
+
+    tetrisFolder.addInput(TETRIS_CONFIG, 'allowInvisibleShape', {
+      label: 'Invisible shape',
     });
 
     const tetrisCheatsFolder = tetrisFolder.addFolder({

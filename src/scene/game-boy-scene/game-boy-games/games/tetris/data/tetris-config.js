@@ -19,6 +19,7 @@ const TETRIS_CONFIG = {
   scoreForSoftDrop: 1,
   bestScore: 0,
   isMusicAllowed: true,
+  allowInvisibleShape: true,
 }
 
 const LEVELS_CONFIG = [

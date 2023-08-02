@@ -3,6 +3,8 @@ import { TETRIS_CONFIG } from '../../../../data/tetris-config';
 import Loader from '../../../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../../../game-boy/data/game-boy-config';
 import { DIRECTION_SEQUENCE, ROTATE_TYPE, SHAPE_CONFIG, SHAPE_DIRECTION, SHAPE_TYPE } from './shape-config';
+import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+
 
 export default class Shape extends PIXI.Container {
   constructor(type) {
@@ -215,7 +217,7 @@ export default class Shape extends PIXI.Container {
           const block = new PIXI.Sprite(blockTexture);
           this.addChild(block);
 
-          block.tint = GAME_BOY_CONFIG.screen.tint;
+          block.tint = config.tint;
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;
@@ -225,6 +227,17 @@ export default class Shape extends PIXI.Container {
 
     this._shapePivot = config.pivot;
     this._updateShapeBlocksPosition();
+
+    if (this._type === SHAPE_TYPE.Invisible) {
+      this.alpha = 0.7;
+
+      this._blinkTween = new TWEEN.Tween(this)
+        .to({ alpha: 0.3 }, 700)
+        .easing(TWEEN.Easing.Sinusoidal.InOut)
+        .yoyo(true)
+        .repeat(Infinity)
+        .start()
+    }
   }
 
   _updateShapeBlocksPosition() {
