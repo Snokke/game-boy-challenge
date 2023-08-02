@@ -81,6 +81,14 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._level.text = TETRIS_CONFIG.startLevel.toString();
   }
 
+  disableFalling() {
+    this._field.switchFalling();
+  }
+
+  clearBottomLine() {
+    this._field.clearBottomLine();
+  }
+
   _onPauseClick() {
     this._isPaused = !this._isPaused;
 
@@ -231,6 +239,11 @@ export default class GameplayScreen extends GameScreenAbstract {
   _onScoreChange(score) {
     if (score >= 999999) {
       score = 999999;
+    }
+
+    if (score > TETRIS_CONFIG.bestScore) {
+      TETRIS_CONFIG.bestScore = score;
+      this.events.emit('onBestScoreChange');
     }
 
     this._score.text = score;

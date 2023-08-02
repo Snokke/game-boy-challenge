@@ -51,7 +51,7 @@ const GAME_BOY_BUTTONS_CONFIG = {
     moveDistance: 0.055,
     moveSpeed: 0.5,
     keyRepeat: false,
-    keyCode: ['KeyX'],
+    keyCode: ['KeyX', 'Space'],
   },
   [BUTTON_TYPE.B]: {
     moveDistance: 0.055,
@@ -75,28 +75,28 @@ const GAME_BOY_BUTTONS_CONFIG = {
     rotateAngle: -8,
     moveSpeed: 1,
     keyRepeat: true,
-    keyCode: ['ArrowLeft'],
+    keyCode: ['ArrowLeft', 'KeyA'],
   },
   [BUTTON_TYPE.CrossRight]: {
     rotateAxis: 'y',
     rotateAngle: 8,
     moveSpeed: 1,
     keyRepeat: true,
-    keyCode: ['ArrowRight'],
+    keyCode: ['ArrowRight', 'KeyD'],
   },
   [BUTTON_TYPE.CrossUp]: {
     rotateAxis: 'x',
     rotateAngle: -8,
     moveSpeed: 1,
     keyRepeat: true,
-    keyCode: ['ArrowUp'],
+    keyCode: ['ArrowUp', 'KeyW'],
   },
   [BUTTON_TYPE.CrossDown]: {
     rotateAxis: 'x',
     rotateAngle: 8,
     moveSpeed: 1,
     keyRepeat: true,
-    keyCode: ['ArrowDown'],
+    keyCode: ['ArrowDown', 'KeyS'],
   },
 }
 

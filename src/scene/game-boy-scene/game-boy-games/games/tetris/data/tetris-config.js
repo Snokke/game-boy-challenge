@@ -17,7 +17,7 @@ const TETRIS_CONFIG = {
   originalTetrisFramesPerSecond: 59.73,
   scorePerLine: [40, 100, 300, 1200],
   scoreForSoftDrop: 1,
-  bestScore: '0',
+  bestScore: 0,
 }
 
 const LEVELS_CONFIG = [

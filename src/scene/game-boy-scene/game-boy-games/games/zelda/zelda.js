@@ -13,7 +13,6 @@ export default class Zelda extends GameAbstract {
   show() {
     super.show();
 
-    this.events.emit('onShow');
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.ZeldaIntro);
   }
 }

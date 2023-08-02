@@ -5,10 +5,14 @@ import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
 import GameBoyAudio from '../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../game-boy/game-boy-audio/game-boy-audio-data';
+import { MessageDispatcher } from 'black-engine';
+import { TETRIS_CONFIG } from './data/tetris-config';
 
 export default class Tetris extends GameAbstract {
   constructor() {
     super();
+
+    this.events = new MessageDispatcher();
 
     this._screens = {};
     this._currentScreenType = null;
@@ -32,10 +36,7 @@ export default class Tetris extends GameAbstract {
   hide() {
     super.hide();
 
-    for (let screenType in this._screens) {
-      this._screens[screenType].hide();
-    }
-
+    this._hideAllScreens();
     this._reset();
   }
 
@@ -61,9 +62,33 @@ export default class Tetris extends GameAbstract {
     }
   }
 
+  startGameAtLevel(level) {
+    TETRIS_CONFIG.startLevel = level;
+
+    this.stopTweens();
+    this._hideAllScreens();
+    this._reset();
+
+    this._showScreen(TETRIS_SCREEN_TYPE.Gameplay);
+  }
+
+  disableFalling() {
+    this._screens[TETRIS_SCREEN_TYPE.Gameplay].disableFalling();
+  }
+
+  clearBottomLine() {
+    this._screens[TETRIS_SCREEN_TYPE.Gameplay].clearBottomLine();
+  }
+
   _reset() {
     for (let screenType in this._screens) {
       this._screens[screenType].reset();
+    }
+  }
+
+  _hideAllScreens() {
+    for (let screenType in this._screens) {
+      this._screens[screenType].hide();
     }
   }
 
@@ -109,6 +134,7 @@ export default class Tetris extends GameAbstract {
   _initSignals() {
     this._screens[TETRIS_SCREEN_TYPE.License].events.on('onComplete', () => this._onLicenseScreenComplete());
     this._screens[TETRIS_SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
+    this._screens[TETRIS_SCREEN_TYPE.Gameplay].events.on('onBestScoreChange', () => this.events.post('onBestScoreChange'));
   }
 
   _onLicenseScreenComplete() {

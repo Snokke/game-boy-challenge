@@ -2,10 +2,13 @@ import { Black, MessageDispatcher } from 'black-engine';
 import * as THREE from 'three';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
-import { CARTRIDGES_BY_TYPE_CONFIG } from './cartridges/data/cartridges-config';
+import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
 import SCENE_CONFIG from '../../core/configs/scene-config';
+import { CARTRIDGE_STATE } from './game-boy/data/game-boy-data';
+import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
+import { GAME_TYPE } from './game-boy-games/data/games-config';
 
 export default class GameBoyController {
   constructor(data) {
@@ -223,9 +226,9 @@ export default class GameBoyController {
   }
 
   _initGamesSignals() {
-    const gameBoy = this._activeObjects[SCENE_OBJECT_TYPE.GameBoy];
-
-    this._games.events.on('onZeldaStart', () => gameBoy.showZeldaIntro());
+    this._games.events.on('onBestScoreChange', () => this._onTetrisBestScoreChange());
+    this._games.events.on('gameStarted', (msg, gameType) => this._onGameStarted(gameType));
+    this._games.events.on('gameStopped', (msg, gameType) => this._onGameStopped(gameType));
   }
 
   _initDebugSignals() {
@@ -241,6 +244,9 @@ export default class GameBoyController {
     this._gameBoyDebug.events.on('audioEnabledChanged', () => this._onDebugSoundsEnabledChanged());
     this._gameBoyDebug.events.on('masterVolumeChanged', () => this._onMasterVolumeChanged());
     this._gameBoyDebug.events.on('gameBoyVolumeChanged', () => this._onDebugGameBoyVolumeChanged());
+    this._gameBoyDebug.events.on('restartTetrisButtonClicked', (msg, level) => this._restartTetrisButtonClicked(level));
+    this._gameBoyDebug.events.on('tetrisDisableFalling', () => this._onTetrisDisableFalling());
+    this._gameBoyDebug.events.on('tetrisClearBottomLine', () => this._onTetrisClearBottomLine());
   }
 
   _onPowerOn() {
@@ -283,12 +289,20 @@ export default class GameBoyController {
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].setCartridgePocketStandardTexture();
 
     this._gameBoyDebug.enableEjectCartridgeButton();
+
+    if (cartridgeType === CARTRIDGE_TYPE.Tetris) {
+      TETRIS_CONFIG.cartridgeState = CARTRIDGE_STATE.Inserted;
+      this._gameBoyDebug.updateTetrisCartridgeState();
+    }
   }
 
   _onCartridgeEjected() {
     this._games.setNoGame();
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].enableRotation();
     this._gameBoyDebug.disableEjectCartridgeButton();
+
+    TETRIS_CONFIG.cartridgeState = CARTRIDGE_STATE.NotInserted;
+    this._gameBoyDebug.updateTetrisCartridgeState();
   }
 
   _onCartridgeTypeChanged() {
@@ -331,5 +345,37 @@ export default class GameBoyController {
   _onDebugGameBoyVolumeChanged() {
     this._games.onVolumeChanged();
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].updateVolumeControlRotation();
+  }
+
+  _onTetrisBestScoreChange() {
+    this._gameBoyDebug.updateTetrisBestScore(TETRIS_CONFIG.bestScore);
+  }
+
+  _onGameStarted(gameType) {
+    if (gameType === GAME_TYPE.Zelda) {
+      this._activeObjects[SCENE_OBJECT_TYPE.GameBoy].showZeldaIntro();
+    }
+
+    if (gameType === GAME_TYPE.Tetris) {
+      this._gameBoyDebug.enableTetrisButtons();
+    }
+  }
+
+  _onGameStopped(gameType) {
+    if (gameType === GAME_TYPE.Tetris) {
+      this._gameBoyDebug.disableTetrisButtons();
+    }
+  }
+
+  _restartTetrisButtonClicked(level) {
+    this._games.restartTetris(level);
+  }
+
+  _onTetrisDisableFalling() {
+    this._games.disableTetrisFalling();
+  }
+
+  _onTetrisClearBottomLine() {
+    this._games.clearTetrisBottomLine();
   }
 }

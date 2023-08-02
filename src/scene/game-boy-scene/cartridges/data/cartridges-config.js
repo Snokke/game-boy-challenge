@@ -55,7 +55,7 @@ const CARTRIDGES_BY_TYPE_CONFIG = {
   [CARTRIDGE_TYPE.DuckTales]: {
     texture: 'baked-cartridge-ducktales',
     textureInPocket: 'baked-cartridge-ducktales-in-pocket',
-    game: GAME_TYPE.DuckTales,
+    game: GAME_TYPE.SpaceInvaders,
   },
 }
 

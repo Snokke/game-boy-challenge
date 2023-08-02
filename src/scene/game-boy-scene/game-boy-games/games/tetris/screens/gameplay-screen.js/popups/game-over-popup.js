@@ -63,6 +63,10 @@ export default class GameOverPopup extends PIXI.Container {
     this._wallContainer.visible = false;
     this._gameOverContainer.visible = false;
 
+    for (let i = 0; i < this._blockLines.length; i += 1) {
+      this._blockLines[i].visible = false;
+    }
+
     this._isGameOverShowed = false;
   }
 

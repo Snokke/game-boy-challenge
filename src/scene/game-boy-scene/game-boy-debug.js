@@ -20,6 +20,13 @@ export default class GameBoyDebug extends THREE.Group {
     this._ejectCartridgeButton = null;
     this._audioEnabledController = null;
     this._gameBoyVolumeController = null;
+    this._tetrisCartridgeStateController = null;
+    this._bestScoreController = null;
+    this._restartTetrisButton = null;
+    this._disableFallingButton = null;
+    // this._clearBottomLineButton = null;
+
+    this._isTetrisFallingDisabled = false;
 
     this._init();
   }
@@ -62,6 +69,27 @@ export default class GameBoyDebug extends THREE.Group {
     this._gameBoyVolumeController.refresh();
   }
 
+  updateTetrisCartridgeState() {
+    this._tetrisCartridgeStateController.refresh();
+  }
+
+  updateTetrisBestScore(score) {
+    this._bestScoreObject.value = score.toString();
+    this._bestScoreController.refresh();
+  }
+
+  enableTetrisButtons() {
+    this._restartTetrisButton.disabled = false;
+    this._disableFallingButton.disabled = false;
+    // this._clearBottomLineButton.disabled = false;
+  }
+
+  disableTetrisButtons() {
+    this._restartTetrisButton.disabled = true;
+    this._disableFallingButton.disabled = true;
+    // this._clearBottomLineButton.disabled = true;
+  }
+
   _init() {
     this._initGeneralFolder();
     this._initGameBoyFolder();
@@ -71,7 +99,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initGeneralFolder() {
     const generalFolder = GUIHelper.getGui().addFolder({
       title: 'General',
-      // expanded: false,
+      expanded: false,
     });
 
     generalFolder.addInput(DEBUG_CONFIG, 'fpsMeter', {
@@ -176,28 +204,28 @@ export default class GameBoyDebug extends THREE.Group {
     }).on('click', () => {
       this.events.post('ejectCartridgeButtonClicked');
     });
-
-    gameBoyFolder.addSeparator();
   }
 
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
-      expanded: false,
+      // expanded: false,
     });
 
-    tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
+    this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
       label: 'Cartridge state',
       disabled: true,
     });
 
-    tetrisFolder.addInput(TETRIS_CONFIG, 'bestScore', {
+    this._bestScoreObject = { value: '0' };
+    this._bestScoreController = tetrisFolder.addInput(this._bestScoreObject, 'value', {
       label: 'Best score',
       disabled: true,
     });
 
     tetrisFolder.addSeparator();
 
+    let selectedLevel = 0;
     tetrisFolder.addBlade({
       view: 'list',
       label: 'Start level',
@@ -225,14 +253,15 @@ export default class GameBoyDebug extends THREE.Group {
         { text: '20', value: 20 },
       ],
       value: 0,
-    }).on('change', (backlightType) => {
-      // selectedBacklightType = backlightType.value;
+    }).on('change', (level) => {
+      selectedLevel = level.value;
     });
 
-    tetrisFolder.addButton({
+    this._restartTetrisButton = tetrisFolder.addButton({
       title: 'Restart game',
+      disabled: true,
     }).on('click', () => {
-
+      this.events.post('restartTetrisButtonClicked', selectedLevel);
     });
 
     const tetrisCheatsFolder = tetrisFolder.addFolder({
@@ -240,16 +269,26 @@ export default class GameBoyDebug extends THREE.Group {
       expanded: false,
     });
 
-    tetrisCheatsFolder.addButton({
+    this._disableFallingButton = tetrisCheatsFolder.addButton({
       title: 'Disable falling',
+      disabled: true,
     }).on('click', () => {
+      this._isTetrisFallingDisabled = !this._isTetrisFallingDisabled;
 
+      if (this._isTetrisFallingDisabled) {
+        this._disableFallingButton.title = 'Enable falling';
+      } else {
+        this._disableFallingButton.title = 'Disable falling';
+      }
+
+      this.events.post('tetrisDisableFalling');
     });
 
-    tetrisCheatsFolder.addButton({
-      title: 'Clear bottom line',
-    }).on('click', () => {
-
-    });
+    // this._clearBottomLineButton = tetrisCheatsFolder.addButton({
+    //   title: 'Clear bottom line',
+    //   disabled: true,
+    // }).on('click', () => {
+    //   this.events.post('tetrisClearBottomLine');
+    // });
   }
 }

@@ -32,10 +32,16 @@ export default class Field extends PIXI.Container {
     this._isPressUpForFallFast = true;
     this._isShapeFallFast = false;
 
+    this._isFallingDisabled = false;
+
     this._init();
   }
 
   update(dt) {
+    if (this._isFallingDisabled && !this._isShapeFallFast) {
+      return;
+    }
+
     this._shapeFallTime += dt * 1000;
 
     if (this._shapeFallTime >= this._shapeFallInterval) {
@@ -126,6 +132,33 @@ export default class Field extends PIXI.Container {
         timer.stop();
       }
     });
+  }
+
+  switchFalling() {
+    this._isFallingDisabled = !this._isFallingDisabled;
+  }
+
+  clearBottomLine() {
+    const towerHeight = this._getTowerHeight();
+
+    if (towerHeight === 0) {
+      return;
+    }
+
+    const filledRows = [];
+
+    for (let i = 0; i < this._fieldMap.length; i++) {
+      let value = false;
+
+      if (i === this._fieldMap.length - 1) {
+        value = true;
+      }
+
+      filledRows.push(value);
+    }
+
+    console.log(filledRows);
+    this._showFilledRowsAnimation(filledRows);
   }
 
   _moveShapeRight() {
@@ -499,6 +532,27 @@ export default class Field extends PIXI.Container {
 
     const framesPerRow = LEVELS_CONFIG[level].framesPerRow;
     return framesPerRow / TETRIS_CONFIG.originalTetrisFramesPerSecond * 1000;
+  }
+
+  _getTowerHeight() {
+    let towerLinesCount = 0;
+
+    for (let row = 0; row < TETRIS_CONFIG.field.height; row++) {
+      let isTowerLine = false;
+
+      for (let column = 0; column < TETRIS_CONFIG.field.width; column++) {
+        if (this._fieldMap[row][column] !== null) {
+          isTowerLine = true;
+          break;
+        }
+      }
+
+      if (isTowerLine) {
+        towerLinesCount++;
+      }
+    }
+
+    return towerLinesCount;
   }
 
   _init() {

@@ -1,3 +1,3 @@
 # Game Boy Challenge
 
-🔥 **Live: [game-boy-challenge.vercel.app](https://game-boy-challenge.vercel.app)**
+🔥 **Live: [snakemgl-game-boy-challenge.vercel.app](https://snakemgl-game-boy-challenge.vercel.app/)**

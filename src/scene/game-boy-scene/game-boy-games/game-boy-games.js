@@ -78,7 +78,7 @@ export default class GameBoyGames {
         GAME_BOY_CONFIG.updateTexture = false;
 
         if (this._gameType) {
-          this._games[this._gameType].hide();
+          this._hideCurrentGame();
         }
       });
   }
@@ -121,7 +121,29 @@ export default class GameBoyGames {
   }
 
   startGame() {
+    this._showCurrentGame();
+  }
+
+  restartTetris(level) {
+    this._games[GAME_TYPE.Tetris].startGameAtLevel(level);
+  }
+
+  disableTetrisFalling() {
+    this._games[GAME_TYPE.Tetris].disableFalling();
+  }
+
+  clearTetrisBottomLine() {
+    this._games[GAME_TYPE.Tetris].clearBottomLine();
+  }
+
+  _showCurrentGame() {
     this._games[this._gameType].show();
+    this.events.post('gameStarted', this._gameType);
+  }
+
+  _hideCurrentGame() {
+    this._games[this._gameType].hide();
+    this.events.post('gameStopped', this._gameType);
   }
 
   _hideAllGames() {
@@ -216,10 +238,7 @@ export default class GameBoyGames {
 
   _initSignals() {
     this._loadingScreen.events.on('onComplete', () => this._onLoadingComplete());
-
-    this._games[GAME_TYPE.Zelda].events.on('onShow', () => {
-      this.events.post('onZeldaStart');
-    });
+    this._games[GAME_TYPE.Tetris].events.on('onBestScoreChange', () => this.events.post('onBestScoreChange'));
   }
 
   _onLoadingComplete() {
