@@ -182,7 +182,11 @@ export default class GameBoyController {
     const introText = document.querySelector('.intro-text');
 
     if (GAME_BOY_CONFIG.intro.enabled) {
-      introText.innerHTML = 'Click on screen to start';
+      introText.innerHTML = 'Click to start';
+
+      if (SCENE_CONFIG.isMobile) {
+        introText.classList.add('fastHide');
+      }
     }
 
     window.addEventListener('pointerdown', () => {

@@ -93,11 +93,23 @@ div { -webkit-user-select: none !important; }
   bottom: 40px;
   left: 50%;
   color: #000000;
-  font-size: 35px;
+  font-size: 30px;
   font-family: sans-serif;
   transform: translateX(-50%);
+  opacity: 0.5;
+  width: 200px;
 }
 
+.intro-text.hide
+{
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.intro-text.fastHide
+{
+  display: none;
+}
 
 .rotate-to-landscape
 {
