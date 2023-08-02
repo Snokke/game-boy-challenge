@@ -22,7 +22,9 @@ export default class SpaceInvaders extends GameAbstract {
     super.show();
 
     this._reset();
-    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+
+    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
   }
 
   hide() {

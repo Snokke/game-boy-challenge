@@ -54,13 +54,14 @@ const pixiAssets = [
   'fonts/tetris.ttf',
 
   // Space invaders
-  // 'ui_assets/space-invaders/title-screen.png',
   'ui_assets/space-invaders/title-screen-clean.png',
   'ui_assets/space-invaders/space-invaders-logo.png',
   'ui_assets/space-invaders/start-text.png',
   'ui_assets/space-invaders/player.png',
   'ui_assets/space-invaders/enemy01-frame01.png',
   'ui_assets/space-invaders/enemy01-frame02.png',
+
+  'fonts/dogicapixel.ttf',
 ];
 
 const sounds = [
