@@ -67,8 +67,8 @@ div { -webkit-user-select: none !important; }
 .credits
 {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 15px;
+  right: 15px;
   color: #000000;
   font-size: 16px;
   font-family: sans-serif;
@@ -125,4 +125,53 @@ div { -webkit-user-select: none !important; }
 .rotate-to-landscape.hide
 {
   display: none;
+}
+
+.keyboard-icon
+{
+  position: absolute;
+  bottom: 45px;
+  right: 15px;
+  width: 90px;
+  content: url(ui_assets/keyboard-icon.png);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.keyboard-icon.hide
+{
+  display: none;
+}
+
+.keyboard-shortcuts
+{
+  position: absolute;
+  bottom: 105px;
+  right: 15px;
+  width: 175px;
+  color: #000000;
+  font-size: 16px;
+  font-family: sans-serif;
+  opacity: 0.5;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 10px 28px;
+  display: none;
+}
+
+.keyboard-shortcuts.hide
+{
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.keyboard-shortcuts.show
+{
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.keyboard-shortcuts.fastShow
+{
+  display: block;
 }

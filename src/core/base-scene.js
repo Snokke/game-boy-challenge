@@ -38,6 +38,7 @@ export default class BaseScene {
     this._isAssetsLoaded = false;
 
     SCENE_CONFIG.isMobile = isMobile(window.navigator).any;
+    this._isKeyboardShortcutsShown = true;
 
     this._init();
   }
@@ -69,6 +70,7 @@ export default class BaseScene {
     this._setupBackgroundColor();
 
     this._showTextToLandscape();
+    this._keyboardControls();
   }
 
   getOutlinePass() {
@@ -289,6 +291,44 @@ export default class BaseScene {
         if (window.innerWidth > window.innerHeight) {
           introText.classList.add('hide');
         }
+      });
+    }
+  }
+
+  _keyboardControls() {
+    if (SCENE_CONFIG.isMobile) {
+      const keyboardIcon = document.querySelector('.keyboard-icon');
+      keyboardIcon.classList.add('hide');
+    } else {
+      const keyboardIcon = document.querySelector('.keyboard-icon');
+      const keyboardShortcuts = document.querySelector('.keyboard-shortcuts');
+      keyboardShortcuts.classList.add('fastShow');
+
+      keyboardIcon.addEventListener('click', () => {
+        this._isKeyboardShortcutsShown = !this._isKeyboardShortcutsShown;
+
+        if (this._isKeyboardShortcutsShown) {
+          keyboardShortcuts.classList.remove('hide');
+          keyboardShortcuts.classList.add('show');
+        } else {
+          keyboardShortcuts.classList.remove('show');
+          keyboardShortcuts.classList.add('hide');
+        }
+      });
+      const list = document.createElement('ul');
+      keyboardShortcuts.appendChild(list);
+
+      const items = [
+        'Arrows, WASD — D-pad',
+        'Z, Space — A',
+        'X — B',
+        'Enter — START',
+      ];
+
+      items.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `${item}`;
+        list.appendChild(listItem);
       });
     }
   }
