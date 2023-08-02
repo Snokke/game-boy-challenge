@@ -4,7 +4,7 @@ import { GAME_TYPE } from '../../game-boy-games/data/games-config';
 const CARTRIDGE_TYPE = {
   Tetris: 'TETRIS',
   Zelda: 'ZELDA',
-  DuckTales: 'DUCK_TALES',
+  SpaceInvaders: 'SPACE_INVADERS',
 }
 
 const CARTRIDGES_CONFIG = {
@@ -32,7 +32,7 @@ const CARTRIDGES_CONFIG = {
       amplitude: 0.03,
       speed: 0.4,
     },
-    [CARTRIDGE_TYPE.DuckTales]: {
+    [CARTRIDGE_TYPE.SpaceInvaders]: {
       startPosition: new THREE.Vector3(-2.7, 1.2, -0.3),
       rotation: new THREE.Vector3(0, -5, -2),
       amplitude: 0.04,
@@ -52,9 +52,9 @@ const CARTRIDGES_BY_TYPE_CONFIG = {
     textureInPocket: 'baked-cartridge-zelda-in-pocket',
     game: GAME_TYPE.Zelda,
   },
-  [CARTRIDGE_TYPE.DuckTales]: {
-    texture: 'baked-cartridge-ducktales',
-    textureInPocket: 'baked-cartridge-ducktales-in-pocket',
+  [CARTRIDGE_TYPE.SpaceInvaders]: {
+    texture: 'baked-cartridge-space-invaders',
+    textureInPocket: 'baked-cartridge-space-invaders-in-pocket',
     game: GAME_TYPE.SpaceInvaders,
   },
 }

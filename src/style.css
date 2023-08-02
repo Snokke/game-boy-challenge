@@ -146,7 +146,7 @@ div { -webkit-user-select: none !important; }
 .keyboard-shortcuts
 {
   position: absolute;
-  bottom: 105px;
+  bottom: 103px;
   right: 15px;
   width: 175px;
   color: #000000;
@@ -157,6 +157,7 @@ div { -webkit-user-select: none !important; }
   border-radius: 5px;
   padding: 10px 28px;
   display: none;
+  opacity: 0;
 }
 
 .keyboard-shortcuts.hide

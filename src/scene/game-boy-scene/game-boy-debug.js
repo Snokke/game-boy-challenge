@@ -185,7 +185,7 @@ export default class GameBoyDebug extends THREE.Group {
       options: [
         { text: 'Tetris', value: CARTRIDGE_TYPE.Tetris },
         { text: 'Legend of Zelda', value: CARTRIDGE_TYPE.Zelda },
-        { text: 'Duck Tales', value: CARTRIDGE_TYPE.DuckTales },
+        { text: 'Space Invaders', value: CARTRIDGE_TYPE.SpaceInvaders },
       ],
       value: CARTRIDGE_TYPE.Tetris,
     }).on('change', (cartridgeType) => {

@@ -38,7 +38,7 @@ export default class BaseScene {
     this._isAssetsLoaded = false;
 
     SCENE_CONFIG.isMobile = isMobile(window.navigator).any;
-    this._isKeyboardShortcutsShown = true;
+    this._isKeyboardShortcutsShown = false;
 
     this._init();
   }
@@ -323,6 +323,7 @@ export default class BaseScene {
         'Z, Space — A',
         'X — B',
         'Enter — START',
+        'Scroll — Zoom',
       ];
 
       items.forEach(item => {
