@@ -69,8 +69,16 @@ const sounds = [
   'insert-cartridge.mp3',
   'eject-cartridge.mp3',
   'game-boy-load.mp3',
-  'tetris-music.mp3',
   'zelda-intro-sound.mp3',
+
+  // tetris
+  'tetris-music.mp3',
+  'move-side.mp3',
+  'rotate-shape.mp3',
+  'shape-fall.mp3',
+  'line-clear.mp3',
+  'tetris-pause.mp3',
+  'tetris-game-over.mp3',
 ];
 
 const loadingPercentElement = document.querySelector('.loading-percent');

@@ -18,6 +18,7 @@ const TETRIS_CONFIG = {
   scorePerLine: [40, 100, 300, 1200],
   scoreForSoftDrop: 1,
   bestScore: 0,
+  isMusicAllowed: true,
 }
 
 const LEVELS_CONFIG = [

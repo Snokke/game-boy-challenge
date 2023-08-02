@@ -9,6 +9,8 @@ import GameOverPopup from './popups/game-over-popup';
 import PausePopup from './popups/pause-popup';
 import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
+import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
+import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -43,6 +45,11 @@ export default class GameplayScreen extends GameScreenAbstract {
       if (buttonType === BUTTON_TYPE.Start) {
         this._onPauseClick();
       }
+    }
+
+    if (buttonType === BUTTON_TYPE.Select) {
+      GameBoyAudio.switchSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
+      TETRIS_CONFIG.isMusicAllowed = !TETRIS_CONFIG.isMusicAllowed;
     }
 
     if (this._gameOver) {
@@ -221,6 +228,7 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _onLose() {
+    GameBoyAudio.stopSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
     this._isGameActive = false;
     this._gameOver = true;
 
@@ -260,5 +268,9 @@ export default class GameplayScreen extends GameScreenAbstract {
   _onGameOverPopupClick() {
     this._gameOverPopup.hide();
     this._startGame();
+
+    if (TETRIS_CONFIG.isMusicAllowed) {
+      GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
+    }
   }
 }

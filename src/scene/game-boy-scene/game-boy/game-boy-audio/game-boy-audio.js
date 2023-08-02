@@ -45,6 +45,7 @@ export default class GameBoyAudio {
     sound.setDirectionalCone(130, 180, 0.2);
 
     sound.setVolume(this._globalVolume * this._gameBoyVolume);
+    sound.setLoop(config.repeat);
 
     Loader.events.on('onAudioLoaded', () => {
       sound.setBuffer(Loader.assets[config.fileName]);
@@ -88,6 +89,24 @@ export default class GameBoyAudio {
     }
 
     sound.play();
+  }
+
+  static switchSound(type) {
+    const sound = GameBoyAudio.instance.sounds[type];
+
+    if (sound.isPlaying) {
+      sound.stop();
+    } else {
+      sound.play();
+    }
+  }
+
+  static stopSound(type) {
+    const sound = GameBoyAudio.instance.sounds[type];
+
+    if (sound.isPlaying) {
+      sound.stop();
+    }
   }
 
   static changeGlobalVolume(volume) {

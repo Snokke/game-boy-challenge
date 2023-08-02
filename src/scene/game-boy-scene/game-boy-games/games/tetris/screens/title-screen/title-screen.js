@@ -5,6 +5,9 @@ import GameScreenAbstract from '../../../shared/game-screen-abstract';
 import Delayed from '../../../../../../../core/helpers/delayed-call';
 import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
 import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
+import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
+import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
+import { TETRIS_CONFIG } from '../../data/tetris-config';
 
 export default class TitleScreen extends GameScreenAbstract {
   constructor() {
@@ -20,12 +23,18 @@ export default class TitleScreen extends GameScreenAbstract {
   show() {
     super.show();
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
     this._blinkArrow();
   }
 
   onButtonPress(buttonType) {
     if (buttonType === BUTTON_TYPE.Start || buttonType === BUTTON_TYPE.A || buttonType === BUTTON_TYPE.B) {
       this.events.emit('onStartGame');
+    }
+
+    if (buttonType === BUTTON_TYPE.Select) {
+      GameBoyAudio.switchSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
+      TETRIS_CONFIG.isMusicAllowed = !TETRIS_CONFIG.isMusicAllowed;
     }
   }
 

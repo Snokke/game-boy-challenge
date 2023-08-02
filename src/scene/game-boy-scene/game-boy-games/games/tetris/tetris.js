@@ -3,8 +3,6 @@ import TitleScreen from './screens/title-screen/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
-import GameBoyAudio from '../../../game-boy/game-boy-audio/game-boy-audio';
-import { GAME_BOY_SOUND_TYPE } from '../../../game-boy/game-boy-audio/game-boy-audio-data';
 import { MessageDispatcher } from 'black-engine';
 import { TETRIS_CONFIG } from './data/tetris-config';
 
@@ -29,8 +27,6 @@ export default class Tetris extends GameAbstract {
 
     this._reset();
     this._showScreen(TETRIS_SCREEN_TYPE.License);
-
-    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
   }
 
   hide() {

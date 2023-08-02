@@ -62,6 +62,10 @@ export default class Shape extends PIXI.Container {
     return this._distanceFallen;
   }
 
+  getDirection() {
+    return this._direction;
+  }
+
   rotate(rotateType) {
     if (SHAPE_CONFIG[this._type].availableDirections.length === 0) {
       return;

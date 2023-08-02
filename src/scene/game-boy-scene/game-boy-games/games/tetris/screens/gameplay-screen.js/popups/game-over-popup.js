@@ -4,6 +4,8 @@ import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config
 import Loader from '../../../../../../../../core/loader';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
+import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
+import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
 export default class GameOverPopup extends PIXI.Container {
   constructor() {
@@ -73,6 +75,7 @@ export default class GameOverPopup extends PIXI.Container {
   _showWall() {
     this._wallContainer.visible = true;
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisGameOver);
     this._wallShowAnimation();
   }
 

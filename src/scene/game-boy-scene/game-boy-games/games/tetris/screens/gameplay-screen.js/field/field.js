@@ -4,6 +4,8 @@ import Shape from './shape/shape';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import { ROTATE_TYPE, SHAPE_TYPE } from './shape/shape-config';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
+import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
+import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
 export default class Field extends PIXI.Container {
   constructor() {
@@ -157,7 +159,6 @@ export default class Field extends PIXI.Container {
       filledRows.push(value);
     }
 
-    console.log(filledRows);
     this._showFilledRowsAnimation(filledRows);
   }
 
@@ -183,6 +184,7 @@ export default class Field extends PIXI.Container {
       }
     }
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.MoveSide);
     this._currentShape.moveRight();
   }
 
@@ -208,6 +210,7 @@ export default class Field extends PIXI.Container {
       }
     }
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.MoveSide);
     this._currentShape.moveLeft();
   }
 
@@ -233,6 +236,8 @@ export default class Field extends PIXI.Container {
 
               return;
             }
+
+            GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.ShapeFall);
 
             this._addShapeToFieldMap();
             this._removeCurrentShape();
@@ -295,6 +300,8 @@ export default class Field extends PIXI.Container {
   }
 
   _showFilledRowsAnimation(filledRows) {
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.LineClear);
+
     const usedFilledRowAnimationShape = [];
 
     for (let row = 0; row < filledRows.length; row++) {
@@ -421,6 +428,8 @@ export default class Field extends PIXI.Container {
       return;
     }
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
+
     this._currentShape.rotate(ROTATE_TYPE.Clockwise);
     this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
   }
@@ -429,6 +438,8 @@ export default class Field extends PIXI.Container {
     if (this._currentShape === null) {
       return;
     }
+
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
 
     this._currentShape.rotate(ROTATE_TYPE.CounterClockwise);
     this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
