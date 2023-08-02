@@ -320,8 +320,8 @@ export default class BaseScene {
 
       const items = [
         'Arrows, WASD — D-pad',
-        'Z, Space — A',
-        'X — B',
+        'Z, Space — A button',
+        'X — B button',
         'Enter — START',
         'Scroll — Zoom',
       ];
