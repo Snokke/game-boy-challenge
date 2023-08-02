@@ -40,7 +40,7 @@ const GAME_BOY_CONFIG = {
     zoomThresholdToDisableRotation: 2.3,
   },
   intro: {
-    enabled: true,
+    enabled: false,
     speed: 5,
     rotationX: -20,
   },

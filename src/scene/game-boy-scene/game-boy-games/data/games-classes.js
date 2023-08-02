@@ -6,8 +6,8 @@ import { GAME_TYPE } from "./games-config";
 const GAMES_CLASSES = {
   [GAME_TYPE.Tetris]: Tetris,
   [GAME_TYPE.Zelda]: Zelda,
-  [GAME_TYPE.SpaceInvaders]: null,
-  // [GAME_TYPE.SpaceInvaders]: SpaceInvaders,
+  // [GAME_TYPE.SpaceInvaders]: null,
+  [GAME_TYPE.SpaceInvaders]: SpaceInvaders,
 }
 
 export { GAMES_CLASSES };

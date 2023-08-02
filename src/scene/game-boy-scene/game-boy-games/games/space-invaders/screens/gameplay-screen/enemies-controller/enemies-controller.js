@@ -2,10 +2,13 @@ import * as PIXI from 'pixi.js';
 import { ENEMY_CONFIG, ENEMY_MOVEMENT_DIRECTION, ENEMY_TYPE } from './data/enemy-config';
 import Enemy from './enemy';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
+import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
 export default class EnemiesController extends PIXI.Container {
   constructor() {
     super();
+
+    this.events = new PIXI.utils.EventEmitter();
 
     this._movementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
     this._previousMovementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
@@ -34,16 +37,20 @@ export default class EnemiesController extends PIXI.Container {
   }
 
   removeEnemy(enemy) {
-    const row = this._enemies.findIndex(enemies => enemies.includes(enemy));
-    const column = this._enemies[row].findIndex(item => item === enemy);
+    enemy.kill();
 
-    this.removeChild(enemy);
+    Delayed.call(300, () => {
+      const row = this._enemies.findIndex(enemies => enemies.includes(enemy));
+      const column = this._enemies[row].findIndex(item => item === enemy);
 
-    this._enemies[row].splice(column, 1);
+      this.removeChild(enemy);
 
-    if (this._enemies[row].length === 0) {
-      this._enemies.splice(row, 1);
-    }
+      this._enemies[row].splice(column, 1);
+
+      if (this._enemies[row].length === 0) {
+        this._enemies.splice(row, 1);
+      }
+    });
   }
 
   _createEnemies() {
@@ -104,8 +111,16 @@ export default class EnemiesController extends PIXI.Container {
           enemy.setDirection(direction);
           enemy.moveDown();
           enemy.increaseSpeed();
+
+          this._checkEnemyReachedBottom(enemy);
         }
       }
+    }
+  }
+
+  _checkEnemyReachedBottom(enemy) {
+    if (enemy.y >= SPACE_INVADERS_CONFIG.field.height - enemy.height + 4) {
+      this.events.emit('enemyReachedBottom');
     }
   }
 }

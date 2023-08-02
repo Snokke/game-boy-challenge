@@ -9,6 +9,9 @@ import EnemiesController from "./enemies-controller/enemies-controller";
 import Missile from "./missile/missile";
 import { MISSILE_CONFIG, MISSILE_TYPE } from "./missile/missile-config";
 import { ENEMY_CONFIG } from "./enemies-controller/data/enemy-config";
+import Delayed from "../../../../../../../core/helpers/delayed-call";
+import PlayerLives from "./player-lives";
+import Score from "./score";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -20,18 +23,28 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._playerMissiles = [];
     this._enemyMissiles = [];
 
+    this._isGameActive = false;
+    this._playerShootReloadTime = 0;
+
     this._init();
   }
 
   update(dt) {
+    if (!this._isGameActive) {
+      return;
+    }
+
     this._updatePlayerMovement(dt);
     this._enemiesController.update(dt);
     this._updateMissiles(dt);
+
+    this._playerShootReloadTime += dt * 1000;
   }
 
   show() {
     super.show();
 
+    this._isGameActive = true;
     this._enemiesController.spawnEnemies();
   }
 
@@ -81,11 +94,15 @@ export default class GameplayScreen extends GameScreenAbstract {
 
   _updateMissiles(dt) {
     this._playerMissiles.forEach(missile => {
+      if (!missile.isActive()) {
+        return;
+      }
+
       const offset = Math.round(MISSILE_CONFIG.speed * dt * 60);
       missile.y -= offset;
 
       if (missile.y < GAME_BOY_CONFIG.screen.height - SPACE_INVADERS_CONFIG.field.height - 1) {
-        this._removePlayerMissile(missile);
+        this._showMissileExplode(missile);
       }
 
       const enemies = this._enemiesController.getEnemies();
@@ -94,7 +111,7 @@ export default class GameplayScreen extends GameScreenAbstract {
         for (let column = 0; column < ENEMY_CONFIG.columns; column++) {
           const enemy = enemies[row][column];
 
-          if (enemy && enemy.getBounds().contains(missile.x, missile.y)) {
+          if (enemy && enemy.isActive() && enemy.getBounds().contains(missile.x, missile.y)) {
             this._enemiesController.removeEnemy(enemy);
             this._removePlayerMissile(missile);
           }
@@ -104,12 +121,29 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _playerShoot() {
+    if (this._playerShootReloadTime < SPACE_INVADERS_CONFIG.player.reloadTime) {
+      return;
+    }
+
+    this._playerShootReloadTime = 0;
+
     const playerPosition = new PIXI.Point(this._player.x + 3, this._player.y - 7);
     const missile = this._createMissile(UNIT_TYPE.Player, playerPosition);
+    missile.activate();
     this._playerMissiles.push(missile);
   }
 
+  _showMissileExplode(missile) {
+    missile.deactivate();
+    missile.explode();
+
+    Delayed.call(300, () => {
+      this._removePlayerMissile(missile);
+    });
+  }
+
   _removePlayerMissile(missile) {
+    missile.deactivate();
     const index = this._playerMissiles.indexOf(missile);
     this._playerMissiles.splice(index, 1);
     this._fieldContainer.removeChild(missile);
@@ -131,11 +165,24 @@ export default class GameplayScreen extends GameScreenAbstract {
     return missile;
   }
 
+  _gameOver() {
+    if (!this._isGameActive) {
+      return;
+    }
+
+    this._isGameActive = false;
+
+    this.events.emit('onGameOver');
+  }
+
   _init() {
     this._initFieldContainer();
     this._initPlayer();
     this._initEnemiesController();
     this._initScore();
+    this._initPlayerLives();
+
+    this._initSignals();
   }
 
   _initFieldContainer() {
@@ -149,8 +196,8 @@ export default class GameplayScreen extends GameScreenAbstract {
     const player = this._player = new Player();
     this._fieldContainer.addChild(player);
 
-    player.y = GAME_BOY_CONFIG.screen.height - 8;
     player.x = GAME_BOY_CONFIG.screen.width * 0.5 - 8;
+    player.y = GAME_BOY_CONFIG.screen.height - 8;
   }
 
   _initEnemiesController() {
@@ -159,26 +206,23 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initScore() {
-    const caption = new PIXI.Text('SCORE', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
-    }));
+    const score = this._score = new Score();
+    this.addChild(score);
 
-    this.addChild(caption);
+    score.x = 10;
+    score.y = 2;
+  }
 
-    caption.x = 20;
-    caption.y = 2;
+  _initPlayerLives() {
+    const playerLives = this._playerLives = new PlayerLives();
+    this.addChild(playerLives);
 
-    const scoreText = new PIXI.Text('00000', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
-    }));
+    playerLives.x = 120;
+    playerLives.y = 2;
+  }
 
-    this.addChild(scoreText);
-
-    scoreText.x = 64;
-    scoreText.y = 2;
+  _initSignals() {
+    this._playerLives.events.on('gameOver', () => this._gameOver());
+    this._enemiesController.events.on('enemyReachedBottom', () => this._gameOver());
   }
 }

@@ -42,13 +42,19 @@ export default class Enemy extends PIXI.Container {
     this._isActive = true;
   }
 
+  isActive() {
+    return this._isActive;
+  }
+
   show() {
     this.visible = true;
   }
 
   kill() {
-    this.visible = false;
     this._isActive = false;
+
+    const texture = Loader.assets['ui_assets/space-invaders/enemy-kill'];
+    this._view.texture = texture;
   }
 
   setDirection(direction) {

@@ -632,9 +632,9 @@ export default class GameBoy extends THREE.Group {
     this._initSounds();
     this._initGameBoyAudio();
 
-    // setTimeout(() => {
-    //   this.powerOn();
-    // }, 500);
+    setTimeout(() => {
+      this.powerOn();
+    }, 500);
   }
 
   _initGameBoyParts() {

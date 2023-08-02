@@ -29,6 +29,13 @@ export default class TitleScreen extends GameScreenAbstract {
     this._showLogo();
   }
 
+  hide() {
+    super.hide();
+
+    this.stopTweens();
+    this.reset();
+  }
+
   onButtonPress(buttonType) {
     if (!this._isButtonsEnabled) {
       return;

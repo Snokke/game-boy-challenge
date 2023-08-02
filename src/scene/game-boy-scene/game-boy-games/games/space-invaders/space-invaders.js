@@ -23,8 +23,9 @@ export default class SpaceInvaders extends GameAbstract {
 
     this._reset();
 
-    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
-    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
+    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.GameOver);
   }
 
   hide() {
@@ -104,10 +105,22 @@ export default class SpaceInvaders extends GameAbstract {
 
   _initSignals() {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onGameOver', () => this._onGameOver());
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.GameOver].events.on('onGameOverEnd', () => this._onGameOverScreenEnd());
   }
 
   _onStartGame() {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Title].hide();
     this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
+  }
+
+  _onGameOver() {
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].hide();
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.GameOver);
+  }
+
+  _onGameOverScreenEnd() {
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.GameOver].hide();
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
   }
 }

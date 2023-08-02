@@ -1,6 +1,8 @@
 const SPACE_INVADERS_CONFIG = {
   player: {
     speed: 2,
+    reloadTime: 500,
+    livesAtStart: 3,
   },
   field: {
     width: 158,

@@ -11,9 +11,30 @@ export default class Missile extends PIXI.Container {
     this._owner = owner;
     this._config = MISSILES_CONFIG[type];
 
+    this._isMissileActive = false;
     this._textureIndex = 0;
 
     this._init();
+  }
+
+  activate() {
+    this._isMissileActive = true;
+  }
+
+  deactivate() {
+    this._isMissileActive = false;
+  }
+
+  isActive() {
+    return this._isMissileActive;
+  }
+
+  explode() {
+    const texture = Loader.assets['ui_assets/space-invaders/player-missile-explode'];
+    this._view.texture = texture;
+
+    this._view.x -= 2;
+    this._view.y -= 5;
   }
 
   _init() {
