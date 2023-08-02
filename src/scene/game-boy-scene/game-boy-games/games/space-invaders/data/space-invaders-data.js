@@ -4,10 +4,19 @@ const SPACE_INVADERS_SCREEN_TYPE = {
   GameOver: 'GAME_OVER',
 }
 
-const MOVEMENT_STATE = {
+const PLAYER_MOVEMENT_STATE = {
   Left: 'LEFT',
   Right: 'RIGHT',
   None: 'NONE',
 }
 
-export { SPACE_INVADERS_SCREEN_TYPE, MOVEMENT_STATE };
+const UNIT_TYPE = {
+  Player: 'PLAYER',
+  Enemy: 'ENEMY',
+}
+
+export {
+  SPACE_INVADERS_SCREEN_TYPE,
+  PLAYER_MOVEMENT_STATE,
+  UNIT_TYPE
+};

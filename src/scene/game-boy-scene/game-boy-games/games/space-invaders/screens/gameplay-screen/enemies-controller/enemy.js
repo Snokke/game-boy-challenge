@@ -1,11 +1,14 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
-import { ENEMIES_CONFIG } from './data/enemy-config';
+import { ENEMIES_CONFIG, ENEMY_MOVEMENT_DIRECTION } from './data/enemy-config';
 import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
+import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
 export default class Enemy extends PIXI.Container {
   constructor(type) {
     super();
+
+    this.events = new PIXI.utils.EventEmitter();
 
     this._type = type;
     this._config = ENEMIES_CONFIG[type];
@@ -14,8 +17,10 @@ export default class Enemy extends PIXI.Container {
     this._textureIndex = 0;
     this._isActive = false;
 
+    this._speed = 1;
     this._moveTime = 0;
-    this._moveInterval = 500;
+    this._moveInterval = 500 / this._speed;
+    this._moveDirection = ENEMY_MOVEMENT_DIRECTION.Right;
 
     this._init();
   }
@@ -46,8 +51,35 @@ export default class Enemy extends PIXI.Container {
     this._isActive = false;
   }
 
+  setDirection(direction) {
+    this._moveDirection = direction;
+  }
+
+  moveDown() {
+    this.y += 12;
+  }
+
+  increaseSpeed() {
+    this._speed += 2;
+    this._moveInterval = 500 / this._speed;
+  }
+
   _move() {
-    this.x += 1;
+    if (this.x >= SPACE_INVADERS_CONFIG.field.width - this.width) {
+      this.events.emit('changeDirectionToLeft');
+    }
+
+    if (this.x <= 0) {
+      this.events.emit('changeDirectionToRight');
+    }
+
+    if (this._moveDirection === ENEMY_MOVEMENT_DIRECTION.Right) {
+      this.x += 1;
+    }
+
+    if (this._moveDirection === ENEMY_MOVEMENT_DIRECTION.Left) {
+      this.x -= 1;
+    }
 
     this._updateTexture();
   }

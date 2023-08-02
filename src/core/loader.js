@@ -60,6 +60,9 @@ const pixiAssets = [
   'ui_assets/space-invaders/player.png',
   'ui_assets/space-invaders/enemy01-frame01.png',
   'ui_assets/space-invaders/enemy01-frame02.png',
+  'ui_assets/space-invaders/player-missile.png',
+  'ui_assets/space-invaders/player-missile-explode.png',
+  'ui_assets/space-invaders/enemy-kill.png',
 
   'fonts/dogicapixel.ttf',
 ];

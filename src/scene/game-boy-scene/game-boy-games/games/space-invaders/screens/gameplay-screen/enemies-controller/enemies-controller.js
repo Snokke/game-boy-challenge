@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ENEMY_CONFIG, ENEMY_TYPE } from './data/enemy-config';
+import { ENEMY_CONFIG, ENEMY_MOVEMENT_DIRECTION, ENEMY_TYPE } from './data/enemy-config';
 import Enemy from './enemy';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
 
@@ -7,6 +7,8 @@ export default class EnemiesController extends PIXI.Container {
   constructor() {
     super();
 
+    this._movementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
+    this._previousMovementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
     this._enemies = [];
   }
 
@@ -14,7 +16,10 @@ export default class EnemiesController extends PIXI.Container {
     for (let row = 0; row < ENEMY_CONFIG.rows; row++) {
       for (let column = 0; column < ENEMY_CONFIG.columns; column++) {
         const enemy = this._enemies[row][column];
-        enemy.update(dt);
+
+        if (enemy) {
+          enemy.update(dt);
+        }
       }
     }
   }
@@ -22,6 +27,23 @@ export default class EnemiesController extends PIXI.Container {
   spawnEnemies() {
     this._createEnemies();
     this._showEnemies();
+  }
+
+  getEnemies() {
+    return this._enemies;
+  }
+
+  removeEnemy(enemy) {
+    const row = this._enemies.findIndex(enemies => enemies.includes(enemy));
+    const column = this._enemies[row].findIndex(item => item === enemy);
+
+    this.removeChild(enemy);
+
+    this._enemies[row].splice(column, 1);
+
+    if (this._enemies[row].length === 0) {
+      this._enemies.splice(row, 1);
+    }
   }
 
   _createEnemies() {
@@ -32,10 +54,12 @@ export default class EnemiesController extends PIXI.Container {
         const enemy = new Enemy(ENEMY_TYPE.Enemy01);
         this.addChild(enemy);
 
-        enemy.x = 20 + column * 16;
-        enemy.y = 25 + row * 8;
+        enemy.x = 12 + column * 16;
+        enemy.y = 32 + row * 8;
 
         this._enemies[row].push(enemy);
+
+        this._initSignals(enemy);
       }
     }
   }
@@ -54,6 +78,33 @@ export default class EnemiesController extends PIXI.Container {
         });
 
         index++;
+      }
+    }
+  }
+
+  _initSignals(enemy) {
+    enemy.events.on('changeDirectionToLeft', () => this._onChangeDirection(ENEMY_MOVEMENT_DIRECTION.Left));
+    enemy.events.on('changeDirectionToRight', () => this._onChangeDirection(ENEMY_MOVEMENT_DIRECTION.Right));
+  }
+
+  _onChangeDirection(direction) {
+    this._movementDirection = direction;
+
+    if (this._previousMovementDirection === this._movementDirection) {
+      return;
+    }
+
+    this._previousMovementDirection = this._movementDirection;
+
+    for (let row = ENEMY_CONFIG.rows - 1; row > 0; row--) {
+      for (let column = ENEMY_CONFIG.columns - 1; column > 0; column--) {
+        const enemy = this._enemies[row][column];
+
+        if (enemy) {
+          enemy.setDirection(direction);
+          enemy.moveDown();
+          enemy.increaseSpeed();
+        }
       }
     }
   }

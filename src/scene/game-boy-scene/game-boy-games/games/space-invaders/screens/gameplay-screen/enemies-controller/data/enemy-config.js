@@ -23,8 +23,14 @@ const ENEMIES_CONFIG = {
   },
 }
 
+const ENEMY_MOVEMENT_DIRECTION = {
+  Left: 'LEFT',
+  Right: 'RIGHT',
+}
+
 export {
   ENEMIES_CONFIG,
   ENEMY_TYPE,
   ENEMY_CONFIG,
+  ENEMY_MOVEMENT_DIRECTION,
 };

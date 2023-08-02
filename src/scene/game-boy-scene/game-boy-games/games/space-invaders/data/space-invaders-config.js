@@ -4,7 +4,7 @@ const SPACE_INVADERS_CONFIG = {
   },
   field: {
     width: 158,
-    height: 144,
+    height: 130,
   },
 }
 
