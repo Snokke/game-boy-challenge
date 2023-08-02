@@ -133,7 +133,7 @@ div { -webkit-user-select: none !important; }
   bottom: 45px;
   right: 15px;
   width: 90px;
-  content: url(ui_assets/keyboard-icon.png);
+  content: url(/ui_assets/keyboard-icon.png);
   opacity: 0.5;
   cursor: pointer;
 }
