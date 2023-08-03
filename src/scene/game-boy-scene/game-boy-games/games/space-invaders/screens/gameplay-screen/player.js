@@ -29,6 +29,9 @@ export default class Player extends PIXI.Container {
 
   reset() {
     this._moveState = PLAYER_MOVEMENT_STATE.None;
+    this._isActive = true;
+    this._view.visible = true;
+    this._playerHit.visible = false;
   }
 
   showHit() {

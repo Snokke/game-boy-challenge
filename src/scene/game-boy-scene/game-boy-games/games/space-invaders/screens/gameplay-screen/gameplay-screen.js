@@ -13,6 +13,8 @@ import Delayed from "../../../../../../../core/helpers/delayed-call";
 import PlayerLives from "./ui-elements/player-lives";
 import Score from "./ui-elements/score";
 import EnemyMissile from "./missile/enemy-missile";
+import { GAME_BOY_SOUND_TYPE } from "../../../../../game-boy/game-boy-audio/game-boy-audio-data";
+import GameBoyAudio from "../../../../../game-boy/game-boy-audio/game-boy-audio";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -158,6 +160,7 @@ export default class GameplayScreen extends GameScreenAbstract {
             this._removePlayerMissile(missile);
 
             this._enemiesController.updateBottomEnemies();
+            GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.EnemyKilled);
           }
         }
       }
@@ -190,6 +193,8 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._playerLives.loseLife();
     this._player.showHit();
 
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.PlayerKilled);
+
     Delayed.call(1000, () => {
       this._player.hideHit();
       this._setPlayerStartPosition();
@@ -201,6 +206,8 @@ export default class GameplayScreen extends GameScreenAbstract {
     if (!this._player.isActive() || this._playerShootReloadTime < SPACE_INVADERS_CONFIG.player.reloadTime) {
       return;
     }
+
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.PlayerShoot);
 
     this._playerShootReloadTime = 0;
 
@@ -280,6 +287,20 @@ export default class GameplayScreen extends GameScreenAbstract {
     this.events.emit('onGameOver');
   }
 
+  _enemyReachedBottom() {
+    if (this._isGamePaused) {
+      return;
+    }
+
+    this._isGamePaused = true;
+    this._player.showHit();
+    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.PlayerKilled);
+
+    Delayed.call(1000, () => {
+      this._gameOver();
+    });
+  }
+
   _setPlayerStartPosition() {
     this._player.x = GAME_BOY_CONFIG.screen.width * 0.5 - 8;
     this._player.y = GAME_BOY_CONFIG.screen.height - 8;
@@ -331,7 +352,7 @@ export default class GameplayScreen extends GameScreenAbstract {
 
   _initSignals() {
     this._playerLives.events.on('gameOver', () => this._gameOver());
-    this._enemiesController.events.on('enemyReachedBottom', () => this._gameOver());
+    this._enemiesController.events.on('enemyReachedBottom', () => this._enemyReachedBottom());
     this._enemiesController.events.on('enemyShoot', (enemy) => this._enemyShoot(enemy));
     this._enemiesController.events.on('allEnemiesKilled', () => this._allEnemiesKilled());
   }

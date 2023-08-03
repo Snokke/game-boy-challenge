@@ -37,6 +37,20 @@ const GAME_BOY_SOUNDS_CONFIG = {
     fileName: 'tetris-game-over',
     repeat: false,
   },
+
+  // Space Invaders
+  [GAME_BOY_SOUND_TYPE.PlayerShoot]: {
+    fileName: 'player-shoot',
+    repeat: false,
+  },
+  [GAME_BOY_SOUND_TYPE.EnemyKilled]: {
+    fileName: 'enemy-killed',
+    repeat: false,
+  },
+  [GAME_BOY_SOUND_TYPE.PlayerKilled]: {
+    fileName: 'player-killed',
+    repeat: false,
+  },
 }
 
 export { GAME_BOY_SOUNDS_CONFIG };

@@ -54,9 +54,9 @@ export default class GameBoyGames {
     this._container.alpha = 1;
     this._container.visible = true;
 
-    // this._loadingScreen.show();
-    this.setGame(GAME_TYPE.SpaceInvaders);
-    this.startGame();
+    this._loadingScreen.show();
+    // this.setGame(GAME_TYPE.SpaceInvaders);
+    // this.startGame();
   }
 
   onPowerOff() {

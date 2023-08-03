@@ -88,6 +88,11 @@ const sounds = [
   'line-clear.mp3',
   'tetris-pause.mp3',
   'tetris-game-over.mp3',
+
+  // space invaders
+  'player-shoot.mp3',
+  'enemy-killed.mp3',
+  'player-killed.mp3',
 ];
 
 const loadingPercentElement = document.querySelector('.loading-percent');

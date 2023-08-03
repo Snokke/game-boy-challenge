@@ -76,6 +76,8 @@ export default class EnemiesController extends PIXI.Container {
 
       this._enemies = [];
     }
+
+    this._previousMovementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
   }
 
   removeEnemy(enemy) {
@@ -198,7 +200,7 @@ export default class EnemiesController extends PIXI.Container {
   }
 
   _checkEnemyReachedBottom(enemy) {
-    if (enemy.y >= SPACE_INVADERS_CONFIG.field.height - enemy.height + 4) {
+    if (enemy.y >= SPACE_INVADERS_CONFIG.field.height - enemy.height + 6) {
       this.events.emit('enemyReachedBottom');
     }
   }

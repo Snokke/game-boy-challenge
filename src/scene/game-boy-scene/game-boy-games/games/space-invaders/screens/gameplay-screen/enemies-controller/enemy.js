@@ -81,7 +81,7 @@ export default class Enemy extends PIXI.Container {
   }
 
   increaseSpeed() {
-    this._speed += 2;
+    this._speed += 1;
 
     if (this._speed > 15) {
       this._speed = 15;
