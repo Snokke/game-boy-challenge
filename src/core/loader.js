@@ -63,6 +63,12 @@ const pixiAssets = [
   'ui_assets/space-invaders/player-missile.png',
   'ui_assets/space-invaders/player-missile-explode.png',
   'ui_assets/space-invaders/enemy-kill.png',
+  'ui_assets/space-invaders/enemy-missile-electric-01.png',
+  'ui_assets/space-invaders/enemy-missile-electric-02.png',
+  'ui_assets/space-invaders/enemy-missile-electric-03.png',
+  'ui_assets/space-invaders/enemy-missile-electric-04.png',
+  'ui_assets/space-invaders/enemy-missile-explode.png',
+  'ui_assets/space-invaders/player-hit.png',
 
   'fonts/dogicapixel.ttf',
 ];

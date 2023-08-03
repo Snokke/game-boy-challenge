@@ -87,14 +87,42 @@ export default class EnemiesController extends PIXI.Container {
 
       this.removeChild(enemy);
 
-      this._enemies[row].splice(column, 1);
-
-      if (this._enemies[row].length === 0) {
-        this._enemies.splice(row, 1);
-      }
+      this._enemies[row][column] = null;
     });
 
     this._removeEnemyTimers.push(removeEnemyTimer);
+
+    if (!this._checkIsAnyEnemyAlive()) {
+      this.events.emit('allEnemiesKilled');
+    }
+  }
+
+  updateBottomEnemies() {
+    for (let column = 0; column < this._enemies[0].length; column++) {
+      for (let row = this._enemies.length - 1; row >= 0; row--) {
+        const enemy = this._enemies[row][column];
+
+        if (enemy && enemy.isActive()) {
+          enemy.enableShooting();
+          // enemy.setTint(0xff0000);
+          break;
+        }
+      }
+    }
+  }
+
+  _checkIsAnyEnemyAlive() {
+    for (let row = 0; row < ENEMY_CONFIG.rows; row++) {
+      for (let column = 0; column < ENEMY_CONFIG.columns; column++) {
+        const enemy = this._enemies[row][column];
+
+        if (enemy && enemy.isActive()) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   _createEnemies() {
@@ -105,7 +133,7 @@ export default class EnemiesController extends PIXI.Container {
         const enemy = new Enemy(ENEMY_TYPE.Enemy01);
         this.addChild(enemy);
 
-        enemy.x = 12 + column * 16;
+        enemy.x = 20 + column * 16;
         enemy.y = 32 + row * 8;
 
         this._enemies[row].push(enemy);
@@ -120,8 +148,8 @@ export default class EnemiesController extends PIXI.Container {
 
     let index = 0;
 
-    for (let row = ENEMY_CONFIG.rows - 1; row > 0; row--) {
-      for (let column = ENEMY_CONFIG.columns - 1; column > 0; column--) {
+    for (let row = ENEMY_CONFIG.rows - 1; row >= 0; row--) {
+      for (let column = ENEMY_CONFIG.columns - 1; column >= 0; column--) {
         const timer = Delayed.call(delay * index, () => {
           const enemy = this._enemies[row][column];
           enemy.activate();
@@ -133,11 +161,16 @@ export default class EnemiesController extends PIXI.Container {
         index++;
       }
     }
+
+    Delayed.call(delay * index, () => {
+      this.updateBottomEnemies();
+    });
   }
 
   _initSignals(enemy) {
     enemy.events.on('changeDirectionToLeft', () => this._onChangeDirection(ENEMY_MOVEMENT_DIRECTION.Left));
     enemy.events.on('changeDirectionToRight', () => this._onChangeDirection(ENEMY_MOVEMENT_DIRECTION.Right));
+    enemy.events.on('shoot', () => this.events.emit('enemyShoot', enemy));
   }
 
   _onChangeDirection(direction) {
@@ -149,8 +182,8 @@ export default class EnemiesController extends PIXI.Container {
 
     this._previousMovementDirection = this._movementDirection;
 
-    for (let row = ENEMY_CONFIG.rows - 1; row > 0; row--) {
-      for (let column = ENEMY_CONFIG.columns - 1; column > 0; column--) {
+    for (let row = ENEMY_CONFIG.rows - 1; row >= 0; row--) {
+      for (let column = ENEMY_CONFIG.columns - 1; column >= 0; column--) {
         const enemy = this._enemies[row][column];
 
         if (enemy) {

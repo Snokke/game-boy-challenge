@@ -8,6 +8,7 @@ const SPACE_INVADERS_CONFIG = {
     width: 158,
     height: 130,
   },
+  currentRound: 1,
 }
 
 export { SPACE_INVADERS_CONFIG };

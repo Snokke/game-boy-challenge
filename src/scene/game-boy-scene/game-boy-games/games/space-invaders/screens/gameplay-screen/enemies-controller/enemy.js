@@ -17,10 +17,17 @@ export default class Enemy extends PIXI.Container {
     this._textureIndex = 0;
     this._isActive = false;
 
-    this._speed = 1;
+    this._speed = 0.5 + SPACE_INVADERS_CONFIG.currentRound * 0.5;
+
+    if (this._speed > 10) {
+      this._speed = 10;
+    }
+
     this._moveTime = 0;
     this._moveInterval = 500 / this._speed;
     this._moveDirection = ENEMY_MOVEMENT_DIRECTION.Right;
+
+    this._isShootingEnabled = false;
 
     this._init();
   }
@@ -35,6 +42,10 @@ export default class Enemy extends PIXI.Container {
     if (this._moveTime >= this._moveInterval) {
       this._moveTime = 0;
       this._move();
+    }
+
+    if (this._isShootingEnabled) {
+      this._checkToShoot();
     }
   }
 
@@ -71,7 +82,28 @@ export default class Enemy extends PIXI.Container {
 
   increaseSpeed() {
     this._speed += 2;
+
+    if (this._speed > 15) {
+      this._speed = 15;
+    }
+
     this._moveInterval = 500 / this._speed;
+  }
+
+  setTint(color) {
+    this._view.tint = color;
+  }
+
+  enableShooting() {
+    this._isShootingEnabled = true;
+  }
+
+  _checkToShoot() {
+    const chance = Math.random() * 1000;
+
+    if (chance > 998) {
+      this.events.emit('shoot');
+    }
   }
 
   _move() {

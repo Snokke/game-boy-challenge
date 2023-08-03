@@ -1,7 +1,9 @@
 import GameAbstract from "../game-abstract";
+import { SPACE_INVADERS_CONFIG } from "./data/space-invaders-config";
 import { SPACE_INVADERS_SCREEN_TYPE } from "./data/space-invaders-data";
 import GameOverScreen from "./screens/game-over-screen";
 import GameplayScreen from "./screens/gameplay-screen/gameplay-screen";
+import RoundScreen from "./screens/round-screen";
 import TitleScreen from "./screens/title-screen";
 
 export default class SpaceInvaders extends GameAbstract {
@@ -23,8 +25,8 @@ export default class SpaceInvaders extends GameAbstract {
 
     this._reset();
 
-    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
-    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
+    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Round);
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
   }
 
   hide() {
@@ -60,6 +62,8 @@ export default class SpaceInvaders extends GameAbstract {
   }
 
   _reset() {
+    SPACE_INVADERS_CONFIG.currentRound = 1;
+
     for (let screenType in this._screens) {
       this._screens[screenType].reset();
     }
@@ -78,6 +82,7 @@ export default class SpaceInvaders extends GameAbstract {
   _initScreens() {
     this._initTitleScreen();
     this._initGameplayScreen();
+    this._initRoundScreen();
     this._initGameOverScreen();
   }
 
@@ -95,6 +100,13 @@ export default class SpaceInvaders extends GameAbstract {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay] = gameplayScreen;
   }
 
+  _initRoundScreen() {
+    const roundScreen = new RoundScreen();
+    this.addChild(roundScreen);
+
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Round] = roundScreen;
+  }
+
   _initGameOverScreen() {
     const gameOverScreen = new GameOverScreen();
     this.addChild(gameOverScreen);
@@ -104,16 +116,37 @@ export default class SpaceInvaders extends GameAbstract {
 
   _initSignals() {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Round].events.on('onRoundEnd', () => this._onRoundEnd());
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onGameOver', () => this._onGameOver());
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onAllEnemiesKilled', () => this._onNextRound());
     this._screens[SPACE_INVADERS_SCREEN_TYPE.GameOver].events.on('onGameOverEnd', () => this._onGameOverScreenEnd());
   }
 
   _onStartGame() {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Title].hide();
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Round].updateRound();
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].resetLivesScores();
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Round);
+  }
+
+  _onRoundEnd() {
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Round].hide();
     this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
   }
 
+  _onNextRound() {
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].hide();
+
+    SPACE_INVADERS_CONFIG.currentRound++;
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].reset();
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Round].updateRound();
+
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Round);
+  }
+
   _onGameOver() {
+    SPACE_INVADERS_CONFIG.currentRound = 1;
+
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].hide();
     this._showScreen(SPACE_INVADERS_SCREEN_TYPE.GameOver);
   }
