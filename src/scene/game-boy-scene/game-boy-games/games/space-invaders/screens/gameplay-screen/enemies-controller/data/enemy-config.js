@@ -14,12 +14,14 @@ const ENEMIES_CONFIG = {
       'ui_assets/space-invaders/enemy01-frame01',
       'ui_assets/space-invaders/enemy01-frame02',
     ],
+    score: 10,
   },
   [ENEMY_TYPE.Enemy02]: {
     textures: [
       'ui_assets/space-invaders/enemy01-frame01',
       'ui_assets/space-invaders/enemy01-frame02',
     ],
+    score: 20,
   },
 }
 

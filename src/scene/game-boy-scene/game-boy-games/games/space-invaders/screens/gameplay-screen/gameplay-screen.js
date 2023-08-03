@@ -8,10 +8,10 @@ import { SPACE_INVADERS_CONFIG } from "../../data/space-invaders-config";
 import EnemiesController from "./enemies-controller/enemies-controller";
 import Missile from "./missile/missile";
 import { MISSILE_CONFIG, MISSILE_TYPE } from "./missile/missile-config";
-import { ENEMY_CONFIG } from "./enemies-controller/data/enemy-config";
+import { ENEMIES_CONFIG, ENEMY_CONFIG } from "./enemies-controller/data/enemy-config";
 import Delayed from "../../../../../../../core/helpers/delayed-call";
-import PlayerLives from "./player-lives";
-import Score from "./score";
+import PlayerLives from "./ui-elements/player-lives";
+import Score from "./ui-elements/score";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -72,6 +72,35 @@ export default class GameplayScreen extends GameScreenAbstract {
     }
   }
 
+  stopTweens() {
+    this._enemiesController.stopTweens();
+  }
+
+  reset() {
+    this._enemiesController.reset();
+    this._player.reset();
+    this._playerLives.reset();
+    this._score.reset();
+    this._removeAllPlayerMissiles();
+    this._removeAllEnemyMissiles();
+  }
+
+  _removeAllPlayerMissiles() {
+    this._playerMissiles.forEach(missile => {
+      this._fieldContainer.removeChild(missile);
+    });
+
+    this._playerMissiles = [];
+  }
+
+  _removeAllEnemyMissiles() {
+    this._enemyMissiles.forEach(missile => {
+      this._fieldContainer.removeChild(missile);
+    });
+
+    this._enemyMissiles = [];
+  }
+
   _updatePlayerMovement(dt) {
     if (this._player.getMovementState() === PLAYER_MOVEMENT_STATE.Left) {
       const offset = Math.round(SPACE_INVADERS_CONFIG.player.speed * dt * 60);
@@ -112,6 +141,10 @@ export default class GameplayScreen extends GameScreenAbstract {
           const enemy = enemies[row][column];
 
           if (enemy && enemy.isActive() && enemy.getBounds().contains(missile.x, missile.y)) {
+            const enemyType = enemy.getType();
+            const score = ENEMIES_CONFIG[enemyType].score;
+            this._score.addScore(score);
+
             this._enemiesController.removeEnemy(enemy);
             this._removePlayerMissile(missile);
           }

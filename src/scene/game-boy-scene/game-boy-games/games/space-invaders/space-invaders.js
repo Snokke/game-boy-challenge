@@ -23,9 +23,8 @@ export default class SpaceInvaders extends GameAbstract {
 
     this._reset();
 
-    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
-    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
-    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.GameOver);
+    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Gameplay);
   }
 
   hide() {
@@ -121,6 +120,7 @@ export default class SpaceInvaders extends GameAbstract {
 
   _onGameOverScreenEnd() {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.GameOver].hide();
+    this._reset();
     this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
   }
 }

@@ -13,6 +13,8 @@ export default class EnemiesController extends PIXI.Container {
     this._movementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
     this._previousMovementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
     this._enemies = [];
+    this._removeEnemyTimers = [];
+    this._showEnemiesTimers = [];
   }
 
   update(dt) {
@@ -36,10 +38,50 @@ export default class EnemiesController extends PIXI.Container {
     return this._enemies;
   }
 
+  stopTweens() {
+    for (let i = 0; i < this._removeEnemyTimers.length; i++) {
+      const timer = this._removeEnemyTimers[i];
+
+      if (timer) {
+        timer.stop();
+      }
+    }
+
+    this._removeEnemyTimers = [];
+
+    for (let i = 0; i < this._showEnemiesTimers.length; i++) {
+      const timer = this._showEnemiesTimers[i];
+
+      if (timer) {
+        timer.stop();
+      }
+    }
+
+    this._showEnemiesTimers = [];
+  }
+
+  reset() {
+    this.stopTweens();
+
+    if (this._enemies.length !== 0) {
+      for (let row = 0; row < ENEMY_CONFIG.rows; row++) {
+        for (let column = 0; column < ENEMY_CONFIG.columns; column++) {
+          const enemy = this._enemies[row][column];
+
+          if (enemy) {
+            this.removeChild(enemy);
+          }
+        }
+      }
+
+      this._enemies = [];
+    }
+  }
+
   removeEnemy(enemy) {
     enemy.kill();
 
-    Delayed.call(300, () => {
+    const removeEnemyTimer = Delayed.call(300, () => {
       const row = this._enemies.findIndex(enemies => enemies.includes(enemy));
       const column = this._enemies[row].findIndex(item => item === enemy);
 
@@ -51,6 +93,8 @@ export default class EnemiesController extends PIXI.Container {
         this._enemies.splice(row, 1);
       }
     });
+
+    this._removeEnemyTimers.push(removeEnemyTimer);
   }
 
   _createEnemies() {
@@ -78,11 +122,13 @@ export default class EnemiesController extends PIXI.Container {
 
     for (let row = ENEMY_CONFIG.rows - 1; row > 0; row--) {
       for (let column = ENEMY_CONFIG.columns - 1; column > 0; column--) {
-        Delayed.call(delay * index, () => {
+        const timer = Delayed.call(delay * index, () => {
           const enemy = this._enemies[row][column];
           enemy.activate();
           enemy.show();
         });
+
+        this._showEnemiesTimers.push(timer);
 
         index++;
       }

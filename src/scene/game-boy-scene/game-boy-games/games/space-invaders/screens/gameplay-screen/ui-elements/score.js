@@ -1,17 +1,24 @@
 import * as PIXI from 'pixi.js';
-import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
+import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 
 export default class Score extends PIXI.Container {
   constructor() {
     super();
 
     this._scoreText = null;
+    this._score = 0;
 
     this._init();
   }
 
-  setScore(score) {
-    this._scoreText.text = score.toString().padStart(5, '0');
+  addScore(score) {
+    this._score += score;
+    this._scoreText.text = this._score.toString().padStart(5, '0');
+  }
+
+  reset() {
+    this._score = 0;
+    this._scoreText.text = '00000';
   }
 
   _init() {

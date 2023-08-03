@@ -292,6 +292,10 @@ export default class BaseScene {
           introText.classList.add('hide');
         }
       });
+
+      introText.addEventListener('click', () => {
+        introText.classList.add('hide');
+      });
     }
   }
 

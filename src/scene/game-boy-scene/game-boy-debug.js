@@ -209,7 +209,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
-      // expanded: false,
+      expanded: false,
     });
 
     this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {

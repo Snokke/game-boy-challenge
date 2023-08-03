@@ -1,13 +1,14 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
+import { PLAYER_MOVEMENT_STATE } from '../../data/space-invaders-data';
 
 export default class Player extends PIXI.Container {
   constructor() {
     super();
 
     this._view = null;
-    this._moveState = null;
+    this._moveState = PLAYER_MOVEMENT_STATE.None;
 
     this._init();
   }
@@ -18,6 +19,10 @@ export default class Player extends PIXI.Container {
 
   getMovementState() {
     return this._moveState;
+  }
+
+  reset() {
+    this._moveState = PLAYER_MOVEMENT_STATE.None;
   }
 
   _init() {

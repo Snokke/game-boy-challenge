@@ -50,6 +50,10 @@ export default class Enemy extends PIXI.Container {
     this.visible = true;
   }
 
+  getType() {
+    return this._type;
+  }
+
   kill() {
     this._isActive = false;
 

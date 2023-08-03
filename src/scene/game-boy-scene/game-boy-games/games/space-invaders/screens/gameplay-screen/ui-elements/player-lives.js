@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import Loader from '../../../../../../../core/loader';
-import { SPACE_INVADERS_CONFIG } from '../../data/space-invaders-config';
-import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
+import Loader from '../../../../../../../../core/loader';
+import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
+import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 
 export default class PlayerLives extends PIXI.Container {
   constructor() {
@@ -24,6 +24,19 @@ export default class PlayerLives extends PIXI.Container {
     if (this._lives === 0) {
       this.events.emit('gameOver');
     }
+  }
+
+  reset() {
+    this._lives = SPACE_INVADERS_CONFIG.player.livesAtStart;
+
+    for (let i = 0; i < this._livesViews.length; i++) {
+      const lifeView = this._livesViews[i];
+      this.removeChild(lifeView);
+    }
+
+    this._livesViews = [];
+
+    this._init();
   }
 
   _init() {
