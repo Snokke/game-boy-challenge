@@ -23,6 +23,9 @@ export default class CartridgesController extends THREE.Group {
     this._cartridgeDisableFloating = {};
     this._insertedCartridge = null;
 
+    this._isInsertingActive = false;
+    this._isEjectingActive = false;
+
     this._init();
   }
 
@@ -123,6 +126,7 @@ export default class CartridgesController extends THREE.Group {
     cartridge.setInserted();
 
     this._insertedCartridge = cartridge;
+    this._isInsertingActive = true;
 
     this._cartridgeDisableFloating[cartridgeType] = true;
     cartridge.lastRotation = cartridge.rotation.clone();
@@ -163,6 +167,7 @@ export default class CartridgesController extends THREE.Group {
     const cartridgeType = cartridge.getType();
     cartridge.setNotInserted();
 
+    this._isEjectingActive = true;
     GAME_BOY_CONFIG.currentCartridge = 'NONE';
     this._insertedCartridge = null;
     this.events.post('cartridgeTypeChanged');
@@ -213,17 +218,18 @@ export default class CartridgesController extends THREE.Group {
   }
 
   _onCartridgeInserted(cartridge) {
+    this._isInsertingActive = false;
     const cartridgeType = cartridge.getType();
     GAME_BOY_CONFIG.currentCartridge = cartridgeType;
     this.events.post('cartridgeTypeChanged');
+    this.events.post('onCartridgeInserted', cartridge);
+    cartridge.setInPocketTexture();
 
     this._enableCartridges();
-    this.events.post('onCartridgeInserted', cartridge);
-
-    cartridge.setInPocketTexture();
   }
 
   _onCartridgeEjected(cartridgeType) {
+    this._isEjectingActive = false;
     this._cartridgeDisableFloating[cartridgeType] = false;
     this._enableCartridges();
     this.events.post('onCartridgeEjected');
@@ -236,35 +242,18 @@ export default class CartridgesController extends THREE.Group {
   }
 
   _enableCartridges() {
+    if (this._isInsertingActive || this._isEjectingActive) {
+      return;
+    }
+
     this._cartridgesArray.forEach(cartridge => {
       cartridge.enableActivity();
     });
   }
 
-  onPointerOver(object) {
-    // const objectPartType = object.userData['partType'];
-    // this._moveOtherCartridgesToStartPosition(objectPartType);
+  onPointerOver(object) { }
 
-    // if (this._isCartridgeShown[objectPartType] || objectPartType === CARTRIDGE_TYPE.Tetris) {
-    //   return;
-    // }
-
-    // this._isCartridgeShown[objectPartType] = true;
-    // this.stopTween(objectPartType);
-
-    // this._showCartridgeObjects[objectPartType].position.copy(object.position);
-
-    // this._showCartridgeTween[objectPartType] = new TWEEN.Tween(this._showCartridgeObjects[objectPartType].position)
-    //   .to({ y: object.position.y + 1 }, 500)
-    //   .easing(TWEEN.Easing.Sinusoidal.Out)
-    //   .start();
-  }
-
-  onPointerOut() {
-    // for (const cartridgeType in this._isCartridgeShown) {
-    //   this._moveCartridgeToInitPosition(cartridgeType);
-    // }
-  }
+  onPointerOut() { }
 
   _moveOtherCartridgesToStartPosition(cartridgeType) {
     for (const type in this._isCartridgeShown) {
