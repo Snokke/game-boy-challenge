@@ -85,6 +85,8 @@ export default class CameraController {
   _init() {
     this._zoomObject.position.copy(this._camera.position);
 
-    // this.zoomIn();
+    if (DEBUG_CONFIG.startState.zoomIn) {
+      this.zoomIn();
+    }
   }
 }

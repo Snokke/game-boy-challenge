@@ -5,6 +5,8 @@ import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
 import { MessageDispatcher } from 'black-engine';
 import { TETRIS_CONFIG } from './data/tetris-config';
+import DEBUG_CONFIG from '../../../../../core/configs/debug-config';
+import { GAME_TYPE } from '../../data/games-config';
 
 export default class Tetris extends GameAbstract {
   constructor() {
@@ -26,8 +28,12 @@ export default class Tetris extends GameAbstract {
     super.show();
 
     this._reset();
-    this._showScreen(TETRIS_SCREEN_TYPE.License);
-    // this._showScreen(TETRIS_SCREEN_TYPE.Gameplay);
+
+    if (DEBUG_CONFIG.startState.loadGame === GAME_TYPE.Tetris && DEBUG_CONFIG.startState.startScreen) {
+      this._showScreen(DEBUG_CONFIG.startState.startScreen);
+    } else {
+      this._showScreen(TETRIS_SCREEN_TYPE.License);
+    }
   }
 
   hide() {

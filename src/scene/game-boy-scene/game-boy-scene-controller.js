@@ -32,7 +32,7 @@ export default class GameBoyController {
     this._dragPointerDownPosition = new THREE.Vector2();
     this._draggingObject = null;
 
-    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
+    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled && !DEBUG_CONFIG.startState.disableIntro;
 
     this._init();
   }
@@ -181,7 +181,7 @@ export default class GameBoyController {
   _initIntroSignal() {
     const introText = document.querySelector('.intro-text');
 
-    if (GAME_BOY_CONFIG.intro.enabled) {
+    if (GAME_BOY_CONFIG.intro.enabled && !DEBUG_CONFIG.startState.disableIntro) {
       introText.innerHTML = 'Click to start';
 
       if (SCENE_CONFIG.isMobile) {

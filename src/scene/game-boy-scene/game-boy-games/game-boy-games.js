@@ -10,6 +10,7 @@ import VolumeOverlay from './overlay/volume-overlay';
 import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 import { MessageDispatcher } from 'black-engine';
+import DEBUG_CONFIG from '../../../core/configs/debug-config';
 
 export default class GameBoyGames {
   constructor(application) {
@@ -54,9 +55,12 @@ export default class GameBoyGames {
     this._container.alpha = 1;
     this._container.visible = true;
 
-    this._loadingScreen.show();
-    // this.setGame(GAME_TYPE.SpaceInvaders);
-    // this.startGame();
+    if (DEBUG_CONFIG.startState.loadGame) {
+      this.setGame(DEBUG_CONFIG.startState.loadGame);
+      this.startGame();
+    } else {
+      this._loadingScreen.show();
+    }
   }
 
   onPowerOff() {

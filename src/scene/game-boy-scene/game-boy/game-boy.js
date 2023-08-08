@@ -43,7 +43,7 @@ export default class GameBoy extends THREE.Group {
     this._isDragging = false;
     this._draggingObjectType = null;
     this._pressedButtonType = null;
-    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled;
+    this._isIntroActive = GAME_BOY_CONFIG.intro.enabled && !DEBUG_CONFIG.startState.disableIntro;
     this._rotationLerpSpeed = GAME_BOY_CONFIG.rotation.standardLerpSpeed;
     this._buttonRepeatTime = 0;
     this._firstRepeatTimer = null;
@@ -632,9 +632,11 @@ export default class GameBoy extends THREE.Group {
     this._initSounds();
     this._initGameBoyAudio();
 
-    // setTimeout(() => {
-    //   this.powerOn();
-    // }, 500);
+    if (DEBUG_CONFIG.startState.enableGameBoy) {
+      setTimeout(() => {
+        this.powerOn();
+      }, 500);
+    }
   }
 
   _initGameBoyParts() {

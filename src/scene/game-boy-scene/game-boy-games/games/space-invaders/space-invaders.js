@@ -1,3 +1,5 @@
+import DEBUG_CONFIG from "../../../../../core/configs/debug-config";
+import { GAME_TYPE } from "../../data/games-config";
 import GameAbstract from "../game-abstract";
 import { SPACE_INVADERS_CONFIG } from "./data/space-invaders-config";
 import { SPACE_INVADERS_SCREEN_TYPE } from "./data/space-invaders-data";
@@ -25,8 +27,11 @@ export default class SpaceInvaders extends GameAbstract {
 
     this._reset();
 
-    // this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Round);
-    this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+    if (DEBUG_CONFIG.startState.loadGame === GAME_TYPE.SpaceInvaders && DEBUG_CONFIG.startState.startScreen) {
+      this._showScreen(DEBUG_CONFIG.startState.startScreen);
+    } else {
+      this._showScreen(SPACE_INVADERS_SCREEN_TYPE.Title);
+    }
   }
 
   hide() {
