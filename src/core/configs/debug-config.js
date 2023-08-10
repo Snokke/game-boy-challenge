@@ -3,16 +3,17 @@ import { SPACE_INVADERS_SCREEN_TYPE } from "../../scene/game-boy-scene/game-boy-
 import { TETRIS_SCREEN_TYPE } from "../../scene/game-boy-scene/game-boy-games/games/tetris/data/tetris-data";
 
 const DEBUG_CONFIG = {
-  fpsMeter: false,
+  fpsMeter: true,
   rendererStats: false,
   orbitControls: false,
   startState: {
     disableIntro: true,
     zoomIn: true,
     enableGameBoy: true,
-    loadGame: GAME_TYPE.SpaceInvaders,
-    // startScreen: TETRIS_SCREEN_TYPE.Title,
-    startScreen: SPACE_INVADERS_SCREEN_TYPE.Round,
+    loadGame: GAME_TYPE.Tetris,
+    // loadGame: GAME_TYPE.Tetris,
+    // startScreen: SPACE_INVADERS_SCREEN_TYPE.Round,
+    startScreen: TETRIS_SCREEN_TYPE.License,
   },
 };
 

@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { TETRIS_CONFIG } from '../../../data/tetris-config';
-import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 import Loader from '../../../../../../../../core/loader';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
@@ -157,7 +156,6 @@ export default class GameOverPopup extends PIXI.Container {
     const gameOverFrame = new PIXI.Sprite(texture);
     this._gameOverContainer.addChild(gameOverFrame);
 
-    gameOverFrame.tint = GAME_BOY_CONFIG.screen.tint;
     gameOverFrame.anchor.set(0.5);
 
     gameOverFrame.x = this._width * 0.5;
@@ -192,7 +190,7 @@ export default class GameOverPopup extends PIXI.Container {
     const text = new PIXI.Text(string, new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     text.anchor.set(0.5, 0);
@@ -210,7 +208,6 @@ export default class GameOverPopup extends PIXI.Container {
       const block = new PIXI.Sprite(texture);
       blockLineContainer.addChild(block);
 
-      block.tint = GAME_BOY_CONFIG.screen.tint;
       block.x = i * TETRIS_CONFIG.blockSize;
     }
 

@@ -62,14 +62,12 @@ export default class TitleScreen extends GameScreenAbstract {
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);
-    screen.tint = GAME_BOY_CONFIG.screen.tint;
   }
 
   _initStartText() {
     const text = new PIXI.Text('Start game', new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
     }));
 
     this.addChild(text);
@@ -84,7 +82,7 @@ export default class TitleScreen extends GameScreenAbstract {
     const arrow = this._arrow = new PIXI.Graphics();
     this.addChild(arrow);
 
-    arrow.beginFill(GAME_BOY_CONFIG.screen.blackColor);
+    arrow.beginFill(0x000000);
     arrow.moveTo(0, 0);
     arrow.lineTo(4, 3);
     arrow.lineTo(0, 6);

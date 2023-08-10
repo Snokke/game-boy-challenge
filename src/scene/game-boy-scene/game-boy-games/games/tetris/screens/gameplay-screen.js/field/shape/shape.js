@@ -192,7 +192,6 @@ export default class Shape extends PIXI.Container {
           const block = new PIXI.Sprite(texture);
           this.addChild(block);
 
-          block.tint = GAME_BOY_CONFIG.screen.tint;
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;
@@ -217,7 +216,10 @@ export default class Shape extends PIXI.Container {
           const block = new PIXI.Sprite(blockTexture);
           this.addChild(block);
 
-          block.tint = config.tint;
+          if (config.tint) {
+            block.tint = config.tint;
+          }
+
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;

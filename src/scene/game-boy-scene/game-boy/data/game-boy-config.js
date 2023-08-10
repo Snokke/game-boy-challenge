@@ -5,8 +5,9 @@ const GAME_BOY_CONFIG = {
   updateTexture: true,
   currentCartridge: 'NONE',
   screen: {
-    width: 160,
-    height: 144,
+    width: 160 * 1,
+    height: 144 * 1,
+    scale: 1,
     tint: '#96a06e',
     blackColor: 0x282a1e,
     whiteColor: 0x96a06e,
@@ -88,7 +89,7 @@ const GAME_BOY_BUTTONS_CONFIG = {
     rotateAxis: 'x',
     rotateAngle: -8,
     moveSpeed: 1,
-    keyRepeat: true,
+    keyRepeat: false,
     keyCode: ['ArrowUp', 'KeyW'],
   },
   [BUTTON_TYPE.CrossDown]: {

@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 import { TETRIS_CONFIG } from '../../../data/tetris-config';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
@@ -42,7 +41,7 @@ export default class PausePopup extends PIXI.Container {
     const text = new PIXI.Text(string, new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(text);

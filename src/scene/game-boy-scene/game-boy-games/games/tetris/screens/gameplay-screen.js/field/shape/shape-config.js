@@ -35,7 +35,6 @@ const SHAPE_CONFIG = {
   [SHAPE_TYPE.I]: {
     textureEdge: 'ui_assets/tetris/block-i-edge',
     textureMiddle: 'ui_assets/tetris/block-i-middle',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1, 1, 1],
     ],
@@ -47,7 +46,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.J]: {
     texture: 'ui_assets/tetris/block-j',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1, 1],
       [0, 0, 1],
@@ -62,7 +60,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.L]: {
     texture: 'ui_assets/tetris/block-l',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1, 1],
       [1, 0, 0],
@@ -77,7 +74,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.O]: {
     texture: 'ui_assets/tetris/block-o',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1],
       [1, 1],
@@ -87,7 +83,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.S]: {
     texture: 'ui_assets/tetris/block-s',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [0, 1, 1],
       [1, 1, 0],
@@ -100,7 +95,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.T]: {
     texture: 'ui_assets/tetris/block-t',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1, 1],
       [0, 1, 0],
@@ -115,7 +109,6 @@ const SHAPE_CONFIG = {
   },
   [SHAPE_TYPE.Z]: {
     texture: 'ui_assets/tetris/block-z',
-    tint: GAME_BOY_CONFIG.screen.tint,
     blocksView: [
       [1, 1, 0],
       [0, 1, 1],

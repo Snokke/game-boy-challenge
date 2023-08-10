@@ -112,6 +112,8 @@ export default class BaseScene {
       height: GAME_BOY_CONFIG.screen.height,
       background: GAME_BOY_CONFIG.screen.tint,
     });
+
+    // globalThis.__PIXI_APP__ = this._pixiApplication;
   }
 
   _initThreeJS() {

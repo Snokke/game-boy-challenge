@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
-import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
 import Delayed from '../../../../../../../core/helpers/delayed-call';
 import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
@@ -34,6 +33,5 @@ export default class LicenseScreen extends GameScreenAbstract {
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);
-    screen.tint = GAME_BOY_CONFIG.screen.tint;
   }
 }

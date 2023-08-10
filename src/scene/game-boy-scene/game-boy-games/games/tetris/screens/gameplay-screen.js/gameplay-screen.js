@@ -132,7 +132,6 @@ export default class GameplayScreen extends GameScreenAbstract {
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);
-    screen.tint = GAME_BOY_CONFIG.screen.tint;
   }
 
   _initField() {
@@ -144,7 +143,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     const linesCount = this._linesCount = new PIXI.Text('0', new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(linesCount);
@@ -158,7 +157,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     const level = this._level = new PIXI.Text(TETRIS_CONFIG.startLevel, new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(level);
@@ -172,7 +171,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     const score = this._score = new PIXI.Text('0', new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(score);

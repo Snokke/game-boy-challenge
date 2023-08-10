@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
 import Loader from '../../../../../../../core/loader';
-import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import { SHAPE_CONFIG, SHAPE_TYPE } from './field/shape/shape-config';
 
 export default class NextShape extends PIXI.Container {
@@ -60,7 +59,6 @@ export default class NextShape extends PIXI.Container {
           const block = new PIXI.Sprite(texture);
           this.addChild(block);
 
-          block.tint = GAME_BOY_CONFIG.screen.tint;
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;
@@ -87,7 +85,10 @@ export default class NextShape extends PIXI.Container {
           const block = new PIXI.Sprite(blockTexture);
           this.addChild(block);
 
-          block.tint = config.tint;
+          if (config.tint) {
+            block.tint = config.tint;
+          }
+
           this._blocksView[row][column] = block;
         } else {
           this._blocksView[row][column] = null;

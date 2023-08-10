@@ -171,8 +171,11 @@ export default class GameBoyGames {
     this._initScreens();
     this._initGames();
     this._initOverlays();
+    this._addColorMatrixFilter();
 
     this._initSignals();
+
+    this._container.scale.set(GAME_BOY_CONFIG.screen.scale);
   }
 
   _initRootContainer() {
@@ -194,6 +197,26 @@ export default class GameBoyGames {
 
   _initOverlays() {
     this._initVolumeOverlay();
+  }
+
+  _addColorMatrixFilter() {
+    const brightness = 0.2;
+
+    const tint = 0x646e3c;
+    const r = tint >> 16 & 0xFF;
+    const g = tint >> 8 & 0xFF;
+    const b = tint & 0xFF;
+
+    const colorMatrix = [
+      r / 255, 0, 0, 0, brightness,
+      0, g / 255, 0, 0, brightness,
+      0, 0, b / 255, 0, brightness,
+      0, 0, 0, 1, 0
+    ];
+
+    const filter = new PIXI.ColorMatrixFilter();
+    filter.matrix = colorMatrix;
+    this._container.filters = [filter];
   }
 
   _initVolumeOverlay() {
