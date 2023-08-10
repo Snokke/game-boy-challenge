@@ -24,7 +24,6 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
     this.addChild(stopSign);
 
     stopSign.anchor.set(0.5);
-    stopSign.tint = GAME_BOY_CONFIG.screen.tint;
 
     stopSign.x = GAME_BOY_CONFIG.screen.width * 0.5;
     stopSign.y = GAME_BOY_CONFIG.screen.height * 0.5 - 20;
@@ -49,7 +48,7 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
     const text = new PIXI.Text(string, new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     text.anchor.set(0.5, 0);

@@ -9,8 +9,6 @@ const GAME_BOY_CONFIG = {
     height: 144 * 1,
     scale: 1,
     tint: '#96a06e',
-    blackColor: 0x282a1e,
-    whiteColor: 0x96a06e,
   },
   powerButton: {
     moveDistance: 0.114,

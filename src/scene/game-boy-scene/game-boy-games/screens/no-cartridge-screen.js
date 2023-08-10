@@ -19,7 +19,7 @@ export default class NoCartridgeScreen extends ScreenAbstract {
     const text = new PIXI.Text('insert cartridge', new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x00000,
     }));
 
     this.addChild(text);

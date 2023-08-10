@@ -68,14 +68,14 @@ export default class VolumeOverlay extends PIXI.Container {
     const frame = new PIXI.Graphics();
     this.addChild(frame);
 
-    frame.beginFill(GAME_BOY_CONFIG.screen.blackColor);
+    frame.beginFill(0x000000);
     frame.drawRect(0, 0, this._width, this._height);
     frame.endFill();
 
     const background = new PIXI.Graphics();
     this.addChild(background);
 
-    background.beginFill(GAME_BOY_CONFIG.screen.whiteColor);
+    background.beginFill(0xffffff);
     background.drawRect(0, 0, this._width - borderThickness * 2, this._height - borderThickness * 2);
     background.endFill();
 
@@ -87,7 +87,7 @@ export default class VolumeOverlay extends PIXI.Container {
     const text = new PIXI.Text('VOLUME', new PIXI.TextStyle({
       fontFamily: 'tetris',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(text);
@@ -102,7 +102,7 @@ export default class VolumeOverlay extends PIXI.Container {
       const volumePart = new PIXI.Graphics();
       this.addChild(volumePart);
 
-      volumePart.beginFill(GAME_BOY_CONFIG.screen.blackColor);
+      volumePart.beginFill(0x000000);
       volumePart.drawRect(0, 0, 4, 7);
       volumePart.endFill();
 
