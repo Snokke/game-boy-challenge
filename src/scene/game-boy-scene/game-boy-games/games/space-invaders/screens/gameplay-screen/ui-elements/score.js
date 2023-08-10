@@ -25,7 +25,7 @@ export default class Score extends PIXI.Container {
     const caption = new PIXI.Text('SCORE', new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(caption);
@@ -33,7 +33,7 @@ export default class Score extends PIXI.Container {
     const scoreText = this._scoreText = new PIXI.Text('00000', new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(scoreText);

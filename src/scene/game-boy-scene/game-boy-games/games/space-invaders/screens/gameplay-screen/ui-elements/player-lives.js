@@ -52,9 +52,7 @@ export default class PlayerLives extends PIXI.Container {
 
   _createLifeView() {
     const texture = Loader.assets['ui_assets/space-invaders/player'];
-
     const view = new PIXI.Sprite(texture);
-    view.tint = GAME_BOY_CONFIG.screen.tint;
 
     return view;
   }

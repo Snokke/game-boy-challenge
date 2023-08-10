@@ -30,7 +30,7 @@ export default class GameOverScreen extends GameScreenAbstract {
     const text = new PIXI.Text('GAME OVER', new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(text);

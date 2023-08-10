@@ -51,6 +51,5 @@ export default class EnemyMissile extends PIXI.Container {
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);
-    view.tint = GAME_BOY_CONFIG.screen.tint;
   }
 }

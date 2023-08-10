@@ -97,7 +97,6 @@ export default class TitleScreen extends GameScreenAbstract {
 
     const logo = this._logo = new PIXI.Sprite(texture);
     this.addChild(logo);
-    logo.tint = GAME_BOY_CONFIG.screen.tint;
 
     logo.x = 9;
     logo.y = 145;
@@ -108,7 +107,6 @@ export default class TitleScreen extends GameScreenAbstract {
 
     const titleScreenClean = this._titleScreenClean = new PIXI.Sprite(texture);
     this.addChild(titleScreenClean);
-    titleScreenClean.tint = GAME_BOY_CONFIG.screen.tint;
 
     titleScreenClean.visible = false;
   }
@@ -118,7 +116,6 @@ export default class TitleScreen extends GameScreenAbstract {
 
     const startText = this._startText = new PIXI.Sprite(texture);
     this.addChild(startText);
-    startText.tint = GAME_BOY_CONFIG.screen.tint;
 
     startText.x = 41;
     startText.y = 83;

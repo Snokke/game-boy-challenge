@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
 import { ENEMIES_CONFIG, ENEMY_MOVEMENT_DIRECTION } from './data/enemy-config';
-import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
 export default class Enemy extends PIXI.Container {
@@ -143,6 +142,5 @@ export default class Enemy extends PIXI.Container {
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);
-    view.tint = GAME_BOY_CONFIG.screen.tint;
   }
 }

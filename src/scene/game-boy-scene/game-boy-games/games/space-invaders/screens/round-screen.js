@@ -44,7 +44,7 @@ export default class RoundScreen extends GameScreenAbstract {
     const roundText = new PIXI.Text('ROUND', new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(roundText);
@@ -53,7 +53,7 @@ export default class RoundScreen extends GameScreenAbstract {
     const roundNumber = this._roundNumber = new PIXI.Text(roundString, new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(roundNumber);
@@ -61,7 +61,7 @@ export default class RoundScreen extends GameScreenAbstract {
     const readyText = new PIXI.Text('READY!', new PIXI.TextStyle({
       fontFamily: 'dogicapixel',
       fontSize: 8,
-      fill: GAME_BOY_CONFIG.screen.blackColor,
+      fill: 0x000000,
     }));
 
     this.addChild(readyText);

@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
-import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import { PLAYER_MOVEMENT_STATE } from '../../data/space-invaders-data';
 
 export default class Player extends PIXI.Container {
@@ -56,7 +55,6 @@ export default class Player extends PIXI.Container {
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);
-    view.tint = GAME_BOY_CONFIG.screen.tint;
   }
 
   _initHit() {
@@ -64,7 +62,6 @@ export default class Player extends PIXI.Container {
 
     const playerHit = this._playerHit = new PIXI.Sprite(texture);
     this.addChild(playerHit);
-    playerHit.tint = GAME_BOY_CONFIG.screen.tint;
 
     playerHit.visible = false;
   }
