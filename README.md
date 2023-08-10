@@ -1,3 +1,3 @@
 # Game Boy Challenge
 
-🔥 **Live: [interactive-game-boy.vercel.app](https://interactive-game-boy.vercel.app/)**
+🔥 **Live: [gameboy.andriibabintsev.com](https://gameboy.andriibabintsev.com/)**

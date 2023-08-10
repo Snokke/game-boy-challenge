@@ -3,11 +3,11 @@ import { SPACE_INVADERS_SCREEN_TYPE } from "../../scene/game-boy-scene/game-boy-
 import { TETRIS_SCREEN_TYPE } from "../../scene/game-boy-scene/game-boy-games/games/tetris/data/tetris-data";
 
 const DEBUG_CONFIG = {
-  fpsMeter: true,
+  fpsMeter: false,
   rendererStats: false,
   orbitControls: false,
   startState: {
-    disableIntro: true,
+    disableIntro: false,
     // zoomIn: true,
     // enableGameBoy: true,
     // loadGame: GAME_TYPE.Tetris,
