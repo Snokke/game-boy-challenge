@@ -111,7 +111,10 @@ export default class BaseScene {
       width: GAME_BOY_CONFIG.screen.width,
       height: GAME_BOY_CONFIG.screen.height,
       background: GAME_BOY_CONFIG.screen.tint,
+      backgroundAlpha: 0,
     });
+
+    this._pixiApplication.renderer.background.alpha = 1;
 
     // globalThis.__PIXI_APP__ = this._pixiApplication;
   }

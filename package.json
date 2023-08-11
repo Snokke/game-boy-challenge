@@ -18,7 +18,6 @@
   "dependencies": {
     "@vercel/analytics": "^1.0.1",
     "black-engine": "^0.5.16",
-    "console-remote-client": "^2.1.18",
     "ismobilejs": "^1.1.1",
     "pixi.js": "^7.2.4",
     "three": "^0.150.0",

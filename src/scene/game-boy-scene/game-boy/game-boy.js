@@ -16,12 +16,13 @@ import GameBoyAudio from './game-boy-audio/game-boy-audio';
 import SCENE_CONFIG from '../../../core/configs/scene-config';
 
 export default class GameBoy extends THREE.Group {
-  constructor(pixiCanvas, audioListener) {
+  constructor(pixiCanvas, pixiApplication, audioListener) {
     super();
 
     this.events = new MessageDispatcher();
 
     this._pixiCanvas = pixiCanvas;
+    this._pixiApplication = pixiApplication;
     this._audioListener = audioListener;
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
@@ -345,10 +346,7 @@ export default class GameBoy extends THREE.Group {
 
   showZeldaIntro() {
     this._isZeldaIntroPlaying = true;
-    GAME_BOY_CONFIG.updateTexture = false;
-
-    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
-    screen.material.uniforms.uBitmapTexture.value = this._zeldaVideoTexture;
+    this._pixiApplication.renderer.background.alpha = 0;
 
     this._zeldaIntroVideo.play();
   }
@@ -612,10 +610,7 @@ export default class GameBoy extends THREE.Group {
 
   _onZeldaIntroEnded() {
     this._isZeldaIntroPlaying = false;
-    GAME_BOY_CONFIG.updateTexture = true;
-
-    const screen = this._parts[GAME_BOY_PART_TYPE.Screen];
-    screen.material.uniforms.uBitmapTexture.value = this._canvasTexture;
+    this._pixiApplication.renderer.background.alpha = 1;
 
     this._zeldaIntroVideo.pause();
     this._zeldaIntroVideo.currentTime = 0;
@@ -697,8 +692,8 @@ export default class GameBoy extends THREE.Group {
     this._addBakedMaterial();
     this._addCartridgePocketMaterial();
     this._addPowerIndicatorMaterial();
-    this._addScreenMaterial();
     this._initZeldaIntroVideo();
+    this._addScreenMaterial();
   }
 
   _addBakedMaterial() {
@@ -758,8 +753,9 @@ export default class GameBoy extends THREE.Group {
     const material = new THREE.ShaderMaterial({
       uniforms:
       {
-        uTexture: { value: bakedTexture },
+        uVideoTexture: { value: this._zeldaVideoTexture },
         uBitmapTexture: { value: canvasTexture },
+        uTexture: { value: bakedTexture },
       },
       vertexShader: mixTextureBitmapVertexShader,
       fragmentShader: mixTextureBitmapFragmentShader,
