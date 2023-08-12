@@ -11,15 +11,15 @@ const ENEMY_TYPE = {
 const ENEMIES_CONFIG = {
   [ENEMY_TYPE.Enemy01]: {
     textures: [
-      'ui_assets/space-invaders/enemy01-frame01',
-      'ui_assets/space-invaders/enemy01-frame02',
+      'enemy01-frame01.png',
+      'enemy01-frame02.png',
     ],
     score: 10,
   },
   [ENEMY_TYPE.Enemy02]: {
     textures: [
-      'ui_assets/space-invaders/enemy01-frame01',
-      'ui_assets/space-invaders/enemy01-frame02',
+      'enemy01-frame01.png',
+      'enemy01-frame02.png',
     ],
     score: 20,
   },

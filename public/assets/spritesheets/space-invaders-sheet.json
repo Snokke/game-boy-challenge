@@ -1,0 +1,136 @@
+{"frames": {
+
+"enemy-kill.png":
+{
+	"frame": {"x":225,"y":107,"w":8,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":7},
+	"sourceSize": {"w":8,"h":7}
+},
+"enemy-missile-electric-01.png":
+{
+	"frame": {"x":234,"y":1,"w":3,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":7},
+	"sourceSize": {"w":3,"h":7}
+},
+"enemy-missile-electric-02.png":
+{
+	"frame": {"x":234,"y":10,"w":3,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":7},
+	"sourceSize": {"w":3,"h":7}
+},
+"enemy-missile-electric-03.png":
+{
+	"frame": {"x":234,"y":19,"w":3,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":7},
+	"sourceSize": {"w":3,"h":7}
+},
+"enemy-missile-electric-04.png":
+{
+	"frame": {"x":234,"y":28,"w":3,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":7},
+	"sourceSize": {"w":3,"h":7}
+},
+"enemy-missile-explode.png":
+{
+	"frame": {"x":233,"y":134,"w":8,"h":4},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":4},
+	"sourceSize": {"w":8,"h":4}
+},
+"enemy01-frame01.png":
+{
+	"frame": {"x":225,"y":116,"w":8,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":7},
+	"sourceSize": {"w":8,"h":7}
+},
+"enemy01-frame02.png":
+{
+	"frame": {"x":225,"y":125,"w":8,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":7},
+	"sourceSize": {"w":8,"h":7}
+},
+"player-hit.png":
+{
+	"frame": {"x":225,"y":80,"w":16,"h":8},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":8},
+	"sourceSize": {"w":16,"h":8}
+},
+"player-missile-explode.png":
+{
+	"frame": {"x":225,"y":134,"w":6,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":6,"h":8},
+	"sourceSize": {"w":6,"h":8}
+},
+"player-missile.png":
+{
+	"frame": {"x":234,"y":37,"w":3,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":7},
+	"sourceSize": {"w":3,"h":7}
+},
+"player.png":
+{
+	"frame": {"x":225,"y":98,"w":9,"h":7},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":7},
+	"sourceSize": {"w":9,"h":7}
+},
+"space-invaders-logo.png":
+{
+	"frame": {"x":162,"y":1,"w":143,"h":61},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":143,"h":61},
+	"sourceSize": {"w":143,"h":61}
+},
+"start-text.png":
+{
+	"frame": {"x":225,"y":1,"w":77,"h":7},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":77,"h":7},
+	"sourceSize": {"w":77,"h":7}
+},
+"title-screen-clean.png":
+{
+	"frame": {"x":1,"y":1,"w":159,"h":144},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":159,"h":144},
+	"sourceSize": {"w":160,"h":144}
+}},
+"animations": {
+	"enemy-missile-electric": ["enemy-missile-electric-01.png","enemy-missile-electric-02.png","enemy-missile-electric-03.png","enemy-missile-electric-04.png"],
+	"enemy01-frame": ["enemy01-frame01.png","enemy01-frame02.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "space-invaders-sheet.png",
+	"format": "RGBA8888",
+	"size": {"w":238,"h":146},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:fe2ac2983e21f74685e625913b7b4442:e16db42579996303db64adbde75d74b3:e5467e72355ab70bb93be2f3c4313ea1$"
+}
+}

@@ -35,7 +35,7 @@ export default class SoundIcon extends DisplayObject {
   }
 
   _getTexture() {
-    return SOUNDS_CONFIG.enabled ? 'sound-icon' : 'sound-icon-mute';
+    return SOUNDS_CONFIG.enabled ? 'other/sound-icon' : 'other/sound-icon-mute';
   }
 
   _initSignals() {

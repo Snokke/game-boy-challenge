@@ -93,7 +93,8 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _initLogo() {
-    const texture = Loader.assets['ui_assets/space-invaders/space-invaders-logo'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['space-invaders-logo.png'];
 
     const logo = this._logo = new PIXI.Sprite(texture);
     this.addChild(logo);
@@ -103,7 +104,8 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _initTitleScreenClean() {
-    const texture = Loader.assets['ui_assets/space-invaders/title-screen-clean'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['title-screen-clean.png'];
 
     const titleScreenClean = this._titleScreenClean = new PIXI.Sprite(texture);
     this.addChild(titleScreenClean);
@@ -112,7 +114,8 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _initStartText() {
-    const texture = Loader.assets['ui_assets/space-invaders/start-text'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['start-text.png'];
 
     const startText = this._startText = new PIXI.Sprite(texture);
     this.addChild(startText);

@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
-import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 
 export default class PlayerLives extends PIXI.Container {
   constructor() {
@@ -51,7 +50,8 @@ export default class PlayerLives extends PIXI.Container {
   }
 
   _createLifeView() {
-    const texture = Loader.assets['ui_assets/space-invaders/player'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['player.png'];
     const view = new PIXI.Sprite(texture);
 
     return view;

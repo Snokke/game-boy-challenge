@@ -128,7 +128,8 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initBackground() {
-    const texture = Loader.assets['ui_assets/tetris/gameplay-screen'];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const texture = spriteSheet.textures['gameplay-screen.png'];
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);

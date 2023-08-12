@@ -67,7 +67,8 @@ export default class Enemy extends PIXI.Container {
   kill() {
     this._isActive = false;
 
-    const texture = Loader.assets['ui_assets/space-invaders/enemy-kill'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['enemy-kill.png'];
     this._view.texture = texture;
   }
 
@@ -127,7 +128,8 @@ export default class Enemy extends PIXI.Container {
 
   _updateTexture() {
     this._textureIndex = (this._textureIndex + 1) % this._config.textures.length;
-    const texture = Loader.assets[this._config.textures[this._textureIndex]];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
     this._view.texture = texture;
   }
 
@@ -138,7 +140,8 @@ export default class Enemy extends PIXI.Container {
   }
 
   _initView() {
-    const texture = Loader.assets[this._config.textures[this._textureIndex]];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);

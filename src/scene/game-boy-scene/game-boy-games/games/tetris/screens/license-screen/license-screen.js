@@ -29,7 +29,8 @@ export default class LicenseScreen extends GameScreenAbstract {
   }
 
   _init() {
-    const texture = Loader.assets['ui_assets/tetris/license-screen'];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const texture = spriteSheet.textures['license-screen.png'];
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);

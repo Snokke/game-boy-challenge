@@ -63,7 +63,7 @@ export default class LoadingScreen extends ScreenAbstract {
   }
 
   _initLogo() {
-    const texture = Loader.assets['ui_assets/nintendo-logo-screen'];
+    const texture = Loader.assets['assets/other/nintendo-logo-screen'];
 
     const logo = this._logo = new PIXI.Sprite(texture);
     logo.anchor.set(0.5);

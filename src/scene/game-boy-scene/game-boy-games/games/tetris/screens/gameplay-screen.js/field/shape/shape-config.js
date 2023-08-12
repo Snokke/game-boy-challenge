@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { GAME_BOY_CONFIG } from '../../../../../../../game-boy/data/game-boy-config';
 
 const SHAPE_TYPE = {
   I: 'I',
@@ -33,8 +32,8 @@ const ROTATE_TYPE = {
 
 const SHAPE_CONFIG = {
   [SHAPE_TYPE.I]: {
-    textureEdge: 'ui_assets/tetris/block-i-edge',
-    textureMiddle: 'ui_assets/tetris/block-i-middle',
+    textureEdge: 'block-i-edge.png',
+    textureMiddle: 'block-i-middle.png',
     blocksView: [
       [1, 1, 1, 1],
     ],
@@ -45,7 +44,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.J]: {
-    texture: 'ui_assets/tetris/block-j',
+    texture: 'block-j.png',
     blocksView: [
       [1, 1, 1],
       [0, 0, 1],
@@ -59,7 +58,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.L]: {
-    texture: 'ui_assets/tetris/block-l',
+    texture: 'block-l.png',
     blocksView: [
       [1, 1, 1],
       [1, 0, 0],
@@ -73,7 +72,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.O]: {
-    texture: 'ui_assets/tetris/block-o',
+    texture: 'block-o.png',
     blocksView: [
       [1, 1],
       [1, 1],
@@ -82,7 +81,7 @@ const SHAPE_CONFIG = {
     availableDirections: [],
   },
   [SHAPE_TYPE.S]: {
-    texture: 'ui_assets/tetris/block-s',
+    texture: 'block-s.png',
     blocksView: [
       [0, 1, 1],
       [1, 1, 0],
@@ -94,7 +93,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.T]: {
-    texture: 'ui_assets/tetris/block-t',
+    texture: 'block-t.png',
     blocksView: [
       [1, 1, 1],
       [0, 1, 0],
@@ -108,7 +107,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.Z]: {
-    texture: 'ui_assets/tetris/block-z',
+    texture: 'block-z.png',
     blocksView: [
       [1, 1, 0],
       [0, 1, 1],
@@ -120,7 +119,7 @@ const SHAPE_CONFIG = {
     ],
   },
   [SHAPE_TYPE.Invisible]: {
-    texture: 'ui_assets/tetris/block-o',
+    texture: 'block-o.png',
     tint: '#ec8976',
     blocksView: [
       [1, 1, 1],

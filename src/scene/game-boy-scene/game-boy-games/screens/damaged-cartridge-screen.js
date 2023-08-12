@@ -18,7 +18,7 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
   }
 
   _initStopSign() {
-    const texture = Loader.assets['ui_assets/stop-sign'];
+    const texture = Loader.assets['assets/other/stop-sign'];
 
     const stopSign = new PIXI.Sprite(texture);
     this.addChild(stopSign);

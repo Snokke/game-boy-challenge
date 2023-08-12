@@ -26,52 +26,59 @@ const models = [
 ];
 
 const images = [
-  'overlay.png',
-  'sound-icon.png',
-  'sound-icon-mute.png',
+  'other/overlay.png',
+  'other/sound-icon.png',
+  'other/sound-icon-mute.png',
 ];
 
 const pixiAssets = [
   // Tetris
-  'ui_assets/nintendo-logo-screen.png',
-  'ui_assets/stop-sign.png',
+  'assets/other/nintendo-logo-screen.png',
+  'assets/other/stop-sign.png',
 
-  'ui_assets/tetris/title-screen.png',
-  'ui_assets/tetris/license-screen.png',
-  'ui_assets/tetris/gameplay-screen.png',
-  'ui_assets/tetris/game-over-block.png',
-  'ui_assets/tetris/game-over-frame.png',
+  // 'assets/tetris/title-screen.png',
+  // 'assets/tetris/license-screen.png',
+  // 'assets/tetris/gameplay-screen.png',
+  // 'assets/tetris/game-over-block.png',
+  // 'assets/tetris/game-over-frame.png',
 
-  'ui_assets/tetris/block-i-edge.png',
-  'ui_assets/tetris/block-i-middle.png',
-  'ui_assets/tetris/block-j.png',
-  'ui_assets/tetris/block-l.png',
-  'ui_assets/tetris/block-o.png',
-  'ui_assets/tetris/block-s.png',
-  'ui_assets/tetris/block-t.png',
-  'ui_assets/tetris/block-z.png',
+  // 'assets/tetris/block-i-edge.png',
+  // 'assets/tetris/block-i-middle.png',
+  // 'assets/tetris/block-j.png',
+  // 'assets/tetris/block-l.png',
+  // 'assets/tetris/block-o.png',
+  // 'assets/tetris/block-s.png',
+  // 'assets/tetris/block-t.png',
+  // 'assets/tetris/block-z.png',
 
   'fonts/tetris.ttf',
 
   // Space invaders
-  'ui_assets/space-invaders/title-screen-clean.png',
-  'ui_assets/space-invaders/space-invaders-logo.png',
-  'ui_assets/space-invaders/start-text.png',
-  'ui_assets/space-invaders/player.png',
-  'ui_assets/space-invaders/enemy01-frame01.png',
-  'ui_assets/space-invaders/enemy01-frame02.png',
-  'ui_assets/space-invaders/player-missile.png',
-  'ui_assets/space-invaders/player-missile-explode.png',
-  'ui_assets/space-invaders/enemy-kill.png',
-  'ui_assets/space-invaders/enemy-missile-electric-01.png',
-  'ui_assets/space-invaders/enemy-missile-electric-02.png',
-  'ui_assets/space-invaders/enemy-missile-electric-03.png',
-  'ui_assets/space-invaders/enemy-missile-electric-04.png',
-  'ui_assets/space-invaders/enemy-missile-explode.png',
-  'ui_assets/space-invaders/player-hit.png',
+  // 'assets/space-invaders/title-screen-clean.png',
+  // 'assets/space-invaders/space-invaders-logo.png',
+  // 'assets/space-invaders/start-text.png',
+  // 'assets/space-invaders/player.png',
+  // 'assets/space-invaders/enemy01-frame01.png',
+  // 'assets/space-invaders/enemy01-frame02.png',
+  // 'assets/space-invaders/player-missile.png',
+  // 'assets/space-invaders/player-missile-explode.png',
+  // 'assets/space-invaders/enemy-kill.png',
+  // 'assets/space-invaders/enemy-missile-electric-01.png',
+  // 'assets/space-invaders/enemy-missile-electric-02.png',
+  // 'assets/space-invaders/enemy-missile-electric-03.png',
+  // 'assets/space-invaders/enemy-missile-electric-04.png',
+  // 'assets/space-invaders/enemy-missile-explode.png',
+  // 'assets/space-invaders/player-hit.png',
 
   'fonts/dogicapixel.ttf',
+
+  'assets/spritesheets/tetris-sheet.json',
+  'assets/spritesheets/space-invaders-sheet.json',
 ];
+
+// const spritesheets = [
+//   'assets/spritesheets/tetris.json',
+// ]
 
 const sounds = [
   'power-switch.mp3',
@@ -116,7 +123,7 @@ export default class Loader extends GameObject {
   }
 
   _loadBlackAssets() {
-    const imagesBasePath = '/ui_assets/';
+    const imagesBasePath = '/assets/';
 
     images.forEach((textureFilename) => {
       const imageFullPath = `${imagesBasePath}${textureFilename}`;

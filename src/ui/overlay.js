@@ -18,7 +18,7 @@ export default class Overlay extends DisplayObject {
   }
 
   _initView() {
-    const view = this._view = new Sprite('overlay');
+    const view = this._view = new Sprite('other/overlay');
     this.add(view);
 
     view.alpha = 0;

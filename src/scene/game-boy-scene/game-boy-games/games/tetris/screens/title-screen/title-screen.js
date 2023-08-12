@@ -58,7 +58,8 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _initBackground() {
-    const texture = Loader.assets['ui_assets/tetris/title-screen'];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const texture = spriteSheet.textures['title-screen.png'];
 
     const screen = new PIXI.Sprite(texture);
     this.addChild(screen);

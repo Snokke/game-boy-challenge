@@ -151,7 +151,8 @@ export default class GameOverPopup extends PIXI.Container {
   }
 
   _initGameOverFrame() {
-    const texture = Loader.assets['ui_assets/tetris/game-over-frame'];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const texture = spriteSheet.textures['game-over-frame.png'];
 
     const gameOverFrame = new PIXI.Sprite(texture);
     this._gameOverContainer.addChild(gameOverFrame);
@@ -202,7 +203,8 @@ export default class GameOverPopup extends PIXI.Container {
     const blockLineContainer = new PIXI.Container();
     this.addChild(blockLineContainer);
 
-    const texture = Loader.assets['ui_assets/tetris/game-over-block'];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const texture = spriteSheet.textures['game-over-block.png'];
 
     for (let i = 0; i < TETRIS_CONFIG.field.width; i++) {
       const block = new PIXI.Sprite(texture);

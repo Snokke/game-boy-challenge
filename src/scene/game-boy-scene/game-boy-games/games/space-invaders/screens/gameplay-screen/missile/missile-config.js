@@ -6,16 +6,16 @@ const MISSILE_TYPE = {
 const MISSILES_CONFIG = {
   [MISSILE_TYPE.Player]: {
     textures: [
-      'ui_assets/space-invaders/player-missile',
+      'player-missile.png',
     ],
     speed: 2,
   },
   [MISSILE_TYPE.Electric]: {
     textures: [
-      'ui_assets/space-invaders/enemy-missile-electric-01',
-      'ui_assets/space-invaders/enemy-missile-electric-02',
-      'ui_assets/space-invaders/enemy-missile-electric-03',
-      'ui_assets/space-invaders/enemy-missile-electric-04',
+      'enemy-missile-electric-01.png',
+      'enemy-missile-electric-02.png',
+      'enemy-missile-electric-03.png',
+      'enemy-missile-electric-04.png',
     ],
     speed: 1,
   },

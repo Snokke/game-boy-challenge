@@ -47,8 +47,9 @@ export default class NextShape extends PIXI.Container {
     const config = SHAPE_CONFIG[this._type];
     const blocksView = config.blocksView;
 
-    const blockTexture = Loader.assets[config.textureMiddle];
-    const edgeTexture = Loader.assets[config.textureEdge];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const blockTexture = spriteSheet.textures[config.textureMiddle];
+    const edgeTexture = spriteSheet.textures[config.textureEdge];
 
     for (let row = 0; row < blocksView.length; row++) {
       this._blocksView[row] = [];
@@ -75,7 +76,8 @@ export default class NextShape extends PIXI.Container {
   _initShape() {
     const config = SHAPE_CONFIG[this._type];
     const blocksView = config.blocksView;
-    const blockTexture = Loader.assets[config.texture];
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
+    const blockTexture = spriteSheet.textures[config.texture];
 
     for (let row = 0; row < blocksView.length; row++) {
       this._blocksView[row] = [];

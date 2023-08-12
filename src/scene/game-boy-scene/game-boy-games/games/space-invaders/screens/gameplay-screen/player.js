@@ -51,14 +51,16 @@ export default class Player extends PIXI.Container {
   }
 
   _initView() {
-    const texture = Loader.assets['ui_assets/space-invaders/player'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['player.png'];
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);
   }
 
   _initHit() {
-    const texture = Loader.assets['ui_assets/space-invaders/player-hit'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['player-hit.png'];
 
     const playerHit = this._playerHit = new PIXI.Sprite(texture);
     this.addChild(playerHit);

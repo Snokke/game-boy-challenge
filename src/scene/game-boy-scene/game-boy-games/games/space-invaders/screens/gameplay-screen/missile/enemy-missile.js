@@ -34,7 +34,8 @@ export default class EnemyMissile extends PIXI.Container {
   }
 
   explode() {
-    const texture = Loader.assets['ui_assets/space-invaders/enemy-missile-explode'];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures['enemy-missile-explode.png'];
     this._view.texture = texture;
 
     this._view.x -= 2;
@@ -42,12 +43,14 @@ export default class EnemyMissile extends PIXI.Container {
 
   updateTexture() {
     this._textureIndex = (this._textureIndex + 1) % this._config.textures.length;
-    const texture = Loader.assets[this._config.textures[this._textureIndex]];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
     this._view.texture = texture;
   }
 
   _init() {
-    const texture = Loader.assets[this._config.textures[this._textureIndex]];
+    const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
+    const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
 
     const view = this._view = new PIXI.Sprite(texture);
     this.addChild(view);
