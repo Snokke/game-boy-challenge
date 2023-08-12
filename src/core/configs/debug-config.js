@@ -8,12 +8,12 @@ const DEBUG_CONFIG = {
   orbitControls: false,
   startState: {
     disableIntro: true,
-    // zoomIn: true,
-    // enableGameBoy: true,
-    // loadGame: GAME_TYPE.Tetris,
+    zoomIn: true,
+    enableGameBoy: true,
+    loadGame: GAME_TYPE.Tetris,
     // loadGame: GAME_TYPE.SpaceInvaders,
     // startScreen: SPACE_INVADERS_SCREEN_TYPE.Round,
-    // startScreen: TETRIS_SCREEN_TYPE.License,
+    startScreen: TETRIS_SCREEN_TYPE.Gameplay,
   },
 };
 

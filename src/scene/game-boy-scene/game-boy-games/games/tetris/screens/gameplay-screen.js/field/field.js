@@ -35,6 +35,7 @@ export default class Field extends PIXI.Container {
     this._isShapeFallFast = false;
 
     this._isFallingDisabled = false;
+    this._currentRotateType = ROTATE_TYPE.Clockwise;
 
     this._init();
   }
@@ -74,11 +75,11 @@ export default class Field extends PIXI.Container {
     }
 
     if (buttonType === BUTTON_TYPE.A || buttonType === BUTTON_TYPE.CrossUp) {
-      this._rotateShapeClockwise();
+      this._onRotateClockwise();
     }
 
     if (buttonType === BUTTON_TYPE.B) {
-      this._rotateShapeCounterClockwise();
+      this._onRotateCounterClockwise();
     }
   }
 
@@ -437,26 +438,42 @@ export default class Field extends PIXI.Container {
     }
   }
 
-  _rotateShapeClockwise() {
-    if (this._currentShape === null) {
+  _onRotateClockwise() {
+    const shapeType = this._currentShape.getType();
+    if (this._currentShape === null || shapeType === SHAPE_TYPE.O) {
       return;
     }
 
-    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
+    this._currentRotateType = ROTATE_TYPE.Clockwise;
+    this._rotateShapeClockwise();
+  }
 
+  _onRotateCounterClockwise() {
+    const shapeType = this._currentShape.getType();
+    if (this._currentShape === null || shapeType === SHAPE_TYPE.O) {
+      return;
+    }
+
+    this._currentRotateType = ROTATE_TYPE.CounterClockwise;
+    this._rotateShapeCounterClockwise();
+  }
+
+  _rotateShapeClockwise() {
     this._currentShape.rotate(ROTATE_TYPE.Clockwise);
-    this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
+    const check = this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
+
+    if (check && this._currentRotateType === ROTATE_TYPE.Clockwise) {
+      GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
+    }
   }
 
   _rotateShapeCounterClockwise() {
-    if (this._currentShape === null) {
-      return;
-    }
-
-    GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
-
     this._currentShape.rotate(ROTATE_TYPE.CounterClockwise);
-    this._checkIfShapeCanBeRotated(ROTATE_TYPE.Clockwise);
+    const check = this._checkIfShapeCanBeRotated(ROTATE_TYPE.CounterClockwise);
+
+    if (check && this._currentRotateType === ROTATE_TYPE.CounterClockwise) {
+      GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.RotateShape);
+    }
   }
 
   _checkIfShapeCanBeRotated(rotateType) {
@@ -490,11 +507,13 @@ export default class Field extends PIXI.Container {
               this._rotateShapeClockwise();
             }
 
-            return;
+            return false;
           }
         }
       }
     }
+
+    return true;
   }
 
   _removeCurrentShape() {

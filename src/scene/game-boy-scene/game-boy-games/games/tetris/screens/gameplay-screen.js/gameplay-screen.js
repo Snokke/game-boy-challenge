@@ -192,7 +192,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     this.addChild(gameOverPopup);
 
     gameOverPopup.x = TETRIS_CONFIG.field.position.x;
-    gameOverPopup.y = TETRIS_CONFIG.field.position.y;
+    gameOverPopup.y = TETRIS_CONFIG.field.position.y + 16;
   }
 
   _initPausePopup() {
@@ -200,7 +200,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     this.addChild(pausePopup);
 
     pausePopup.x = TETRIS_CONFIG.field.position.x;
-    pausePopup.y = TETRIS_CONFIG.field.position.y;
+    pausePopup.y = TETRIS_CONFIG.field.position.y + 16;
   }
 
   _initSignals() {
