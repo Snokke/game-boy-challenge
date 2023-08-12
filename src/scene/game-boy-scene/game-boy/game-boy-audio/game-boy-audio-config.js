@@ -37,6 +37,10 @@ const GAME_BOY_SOUNDS_CONFIG = {
     fileName: 'tetris-game-over',
     repeat: false,
   },
+  [GAME_BOY_SOUND_TYPE.TetrisGameOverFinal]: {
+    fileName: 'tetris-game-over-final',
+    repeat: false,
+  },
 
   // Space Invaders
   [GAME_BOY_SOUND_TYPE.PlayerShoot]: {

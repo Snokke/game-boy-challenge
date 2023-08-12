@@ -94,6 +94,8 @@ export default class GameOverPopup extends PIXI.Container {
       this.events.emit('onWallShowed');
       this._gameOverContainer.visible = true;
       this._wallHideAnimation();
+
+      GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisGameOverFinal);
     });
   }
 

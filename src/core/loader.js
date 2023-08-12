@@ -32,53 +32,15 @@ const images = [
 ];
 
 const pixiAssets = [
-  // Tetris
   'assets/other/nintendo-logo-screen.png',
   'assets/other/stop-sign.png',
 
-  // 'assets/tetris/title-screen.png',
-  // 'assets/tetris/license-screen.png',
-  // 'assets/tetris/gameplay-screen.png',
-  // 'assets/tetris/game-over-block.png',
-  // 'assets/tetris/game-over-frame.png',
-
-  // 'assets/tetris/block-i-edge.png',
-  // 'assets/tetris/block-i-middle.png',
-  // 'assets/tetris/block-j.png',
-  // 'assets/tetris/block-l.png',
-  // 'assets/tetris/block-o.png',
-  // 'assets/tetris/block-s.png',
-  // 'assets/tetris/block-t.png',
-  // 'assets/tetris/block-z.png',
-
+  'assets/spritesheets/tetris-sheet.json',
   'fonts/tetris.ttf',
 
-  // Space invaders
-  // 'assets/space-invaders/title-screen-clean.png',
-  // 'assets/space-invaders/space-invaders-logo.png',
-  // 'assets/space-invaders/start-text.png',
-  // 'assets/space-invaders/player.png',
-  // 'assets/space-invaders/enemy01-frame01.png',
-  // 'assets/space-invaders/enemy01-frame02.png',
-  // 'assets/space-invaders/player-missile.png',
-  // 'assets/space-invaders/player-missile-explode.png',
-  // 'assets/space-invaders/enemy-kill.png',
-  // 'assets/space-invaders/enemy-missile-electric-01.png',
-  // 'assets/space-invaders/enemy-missile-electric-02.png',
-  // 'assets/space-invaders/enemy-missile-electric-03.png',
-  // 'assets/space-invaders/enemy-missile-electric-04.png',
-  // 'assets/space-invaders/enemy-missile-explode.png',
-  // 'assets/space-invaders/player-hit.png',
-
-  'fonts/dogicapixel.ttf',
-
-  'assets/spritesheets/tetris-sheet.json',
   'assets/spritesheets/space-invaders-sheet.json',
+  'fonts/dogicapixel.ttf',
 ];
-
-// const spritesheets = [
-//   'assets/spritesheets/tetris.json',
-// ]
 
 const sounds = [
   'power-switch.mp3',
@@ -95,6 +57,7 @@ const sounds = [
   'line-clear.mp3',
   'tetris-pause.mp3',
   'tetris-game-over.mp3',
+  'tetris-game-over-final.mp3',
 
   // space invaders
   'player-shoot.mp3',

@@ -10,6 +10,7 @@ const GAME_BOY_SOUND_TYPE = {
   LineClear: 'LineClear',
   TetrisPause: 'TetrisPause',
   TetrisGameOver: 'TetrisGameOver',
+  TetrisGameOverFinal: 'TetrisGameOverFinal',
 
   // Space Invaders
   PlayerShoot: 'PLAYER_SHOOT',
