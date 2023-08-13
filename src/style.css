@@ -188,3 +188,23 @@ div { -webkit-user-select: none !important; }
 {
   display: block;
 }
+
+.copyrights
+{
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  color: #000000;
+  font-size: 9px;
+  font-family: sans-serif;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  text-align: center;
+  display: none;
+  width: 650px;
+}
+
+.copyrights.show
+{
+  display: block;
+}

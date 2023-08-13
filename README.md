@@ -15,7 +15,7 @@ Making the model of the Game Boy was a challenge, but I'm happy with the final r
 
 **Space Invaders** - this is also not an emulator. I tried to recreate legendary old classic Space Invaders. Invaders are coming, kill them all! 🛸
 
-**Legend of Zelda** - give it a try, but I have a feeling that there is something wrong with the cartridge 👀 
+**Legend of Zelda** - give it a try, but I have a feeling that there is something wrong with the cartridge 👀
 
 ## Controls
 - Arrows, WASD - D-pad
@@ -25,13 +25,11 @@ Making the model of the Game Boy was a challenge, but I'm happy with the final r
 
 Mouse Scroll - Zoom to the Game Boy. On mobile, tap on the screen to zoom in/out. After you rotate the Game Boy, you can reset the rotation by clicking on the background. Also, in Tetris, you can turn off the music by pressing SELECT.
 
-
 ## Technical details
 - 3D engine: [Three.js](https://threejs.org/)
 - 2D engine for games: [PixiJS](https://pixijs.com/)
 - Control panel: [Tweakpane](https://cocopon.github.io/tweakpane/)
 - Models are done with [Blender](https://www.blender.org/)
-
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download). Run this followed commands:
@@ -46,3 +44,8 @@ npm start
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Copyrights
+Nintendo logo is trademark of Nintendo.
+Tetris logo and Tetriminos are trademarks of Tetris Holding.
+Space Invaders logo is trademark of Taito Corporation.

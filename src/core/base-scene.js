@@ -69,6 +69,7 @@ export default class BaseScene {
     this._mainScene.afterAssetsLoad();
     this._setupBackgroundColor();
 
+    this._showCopyrights();
     this._showTextToLandscape();
     this._keyboardControls();
   }
@@ -283,6 +284,23 @@ export default class BaseScene {
   _initScene3DDebugMenu() {
     this._scene3DDebugMenu = new Scene3DDebugMenu(this._scene, this._camera, this._renderer);
     this._orbitControls = this._scene3DDebugMenu.getOrbitControls();
+  }
+
+  _showCopyrights() {
+    const copyrights = document.querySelector('.copyrights');
+    copyrights.innerHTML = `
+    Nintendo logo is trademark of Nintendo.
+    Tetris logo and Tetriminos are trademarks of Tetris Holding.
+    Space Invaders logo is trademark of Taito Corporation.
+    `;
+
+    if (SCENE_CONFIG.isMobile) {
+      copyrights.style['font-size'] = '5px';
+      copyrights.style['width'] = '350px';
+      copyrights.style['bottom'] = '5px';
+    }
+
+    copyrights.classList.add('show');
   }
 
   _showTextToLandscape() {
