@@ -446,8 +446,7 @@ export default class Field extends PIXI.Container {
   }
 
   _onRotateClockwise() {
-    const shapeType = this._currentShape.getType();
-    if (this._currentShape === null || shapeType === SHAPE_TYPE.O) {
+    if (this._currentShape === null || this._currentShape.getType() === SHAPE_TYPE.O) {
       return;
     }
 
@@ -456,8 +455,7 @@ export default class Field extends PIXI.Container {
   }
 
   _onRotateCounterClockwise() {
-    const shapeType = this._currentShape.getType();
-    if (this._currentShape === null || shapeType === SHAPE_TYPE.O) {
+    if (this._currentShape === null || this._currentShape.getType() === SHAPE_TYPE.O) {
       return;
     }
 
