@@ -265,7 +265,8 @@ export default class GameBoyGames {
 
   _initSignals() {
     this._loadingScreen.events.on('onComplete', () => this._onLoadingComplete());
-    this._games[GAME_TYPE.Tetris].events.on('onBestScoreChange', () => this.events.post('onBestScoreChange'));
+    this._games[GAME_TYPE.Tetris].events.on('onBestScoreChange', () => this.events.post('onTetrisBestScoreChange'));
+    this._games[GAME_TYPE.SpaceInvaders].events.on('onBestScoreChange', () => this.events.post('onSpaceInvadersBestScoreChange'));
   }
 
   _onLoadingComplete() {

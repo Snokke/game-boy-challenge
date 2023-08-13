@@ -7,7 +7,7 @@ const DEBUG_CONFIG = {
   rendererStats: false,
   orbitControls: false,
   startState: {
-    disableIntro: true,
+    disableIntro: false,
     // zoomIn: true,
     // enableGameBoy: true,
     // loadGame: GAME_TYPE.Tetris,

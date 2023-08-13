@@ -9,6 +9,7 @@ import SCENE_CONFIG from '../../core/configs/scene-config';
 import { CARTRIDGE_STATE } from './game-boy/data/game-boy-data';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { GAME_TYPE } from './game-boy-games/data/games-config';
+import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/data/space-invaders-config';
 
 export default class GameBoyController {
   constructor(data) {
@@ -230,7 +231,8 @@ export default class GameBoyController {
   }
 
   _initGamesSignals() {
-    this._games.events.on('onBestScoreChange', () => this._onTetrisBestScoreChange());
+    this._games.events.on('onTetrisBestScoreChange', () => this._onTetrisBestScoreChange());
+    this._games.events.on('onSpaceInvadersBestScoreChange', () => this._onSpaceInvadersBestScoreChange());
     this._games.events.on('gameStarted', (msg, gameType) => this._onGameStarted(gameType));
     this._games.events.on('gameStopped', (msg, gameType) => this._onGameStopped(gameType));
   }
@@ -353,6 +355,10 @@ export default class GameBoyController {
 
   _onTetrisBestScoreChange() {
     this._gameBoyDebug.updateTetrisBestScore(TETRIS_CONFIG.bestScore);
+  }
+
+  _onSpaceInvadersBestScoreChange() {
+    this._gameBoyDebug.updateSpaceInvadersBestScore(SPACE_INVADERS_CONFIG.bestScore);
   }
 
   _onGameStarted(gameType) {

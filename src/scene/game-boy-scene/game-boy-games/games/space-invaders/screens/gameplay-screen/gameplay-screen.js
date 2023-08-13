@@ -181,7 +181,7 @@ export default class GameplayScreen extends GameScreenAbstract {
         this._showEnemyMissileExplode(missile);
       }
 
-      if (this._player.getBounds().contains(missile.x, missile.y)) {
+      if (!SPACE_INVADERS_CONFIG.playerInvincible && this._player.getBounds().contains(missile.x, missile.y)) {
         this._onPlayerHit();
       }
     });
@@ -355,6 +355,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._enemiesController.events.on('enemyReachedBottom', () => this._enemyReachedBottom());
     this._enemiesController.events.on('enemyShoot', (enemy) => this._enemyShoot(enemy));
     this._enemiesController.events.on('allEnemiesKilled', () => this._allEnemiesKilled());
+    this._score.events.on('onBestScoreChange', () => this.events.emit('onBestScoreChange'));
   }
 
   _allEnemiesKilled() {

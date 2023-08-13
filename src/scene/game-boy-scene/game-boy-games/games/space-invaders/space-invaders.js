@@ -1,3 +1,4 @@
+import { MessageDispatcher } from "black-engine";
 import DEBUG_CONFIG from "../../../../../core/configs/debug-config";
 import { GAME_TYPE } from "../../data/games-config";
 import GameAbstract from "../game-abstract";
@@ -11,6 +12,8 @@ import TitleScreen from "./screens/title-screen";
 export default class SpaceInvaders extends GameAbstract {
   constructor() {
     super();
+
+    this.events = new MessageDispatcher();
 
     this._screens = {};
     this._currentScreenType = null;
@@ -124,6 +127,7 @@ export default class SpaceInvaders extends GameAbstract {
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Round].events.on('onRoundEnd', () => this._onRoundEnd());
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onGameOver', () => this._onGameOver());
     this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onAllEnemiesKilled', () => this._onNextRound());
+    this._screens[SPACE_INVADERS_SCREEN_TYPE.Gameplay].events.on('onBestScoreChange', () => this.events.post('onBestScoreChange'));
     this._screens[SPACE_INVADERS_SCREEN_TYPE.GameOver].events.on('onGameOverEnd', () => this._onGameOverScreenEnd());
   }
 

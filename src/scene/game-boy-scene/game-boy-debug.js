@@ -7,6 +7,7 @@ import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { POWER_STATE } from './game-boy/data/game-boy-data';
 import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
+import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/data/space-invaders-config';
 
 export default class GameBoyDebug extends THREE.Group {
   constructor() {
@@ -21,10 +22,11 @@ export default class GameBoyDebug extends THREE.Group {
     this._audioEnabledController = null;
     this._gameBoyVolumeController = null;
     this._tetrisCartridgeStateController = null;
-    this._bestScoreController = null;
+    this._tetrisBestScoreController = null;
     this._restartTetrisButton = null;
     this._disableFallingButton = null;
     this._clearBottomLineButton = null;
+    this._spaceInvadersBestScoreController = null;
 
     this._isTetrisFallingDisabled = false;
 
@@ -74,8 +76,8 @@ export default class GameBoyDebug extends THREE.Group {
   }
 
   updateTetrisBestScore(score) {
-    this._bestScoreObject.value = score.toString();
-    this._bestScoreController.refresh();
+    this._tetrisBestScoreObject.value = score.toString();
+    this._tetrisBestScoreController.refresh();
   }
 
   enableTetrisButtons() {
@@ -90,10 +92,16 @@ export default class GameBoyDebug extends THREE.Group {
     this._clearBottomLineButton.disabled = true;
   }
 
+  updateSpaceInvadersBestScore(score) {
+    this._spaceInvadersBestScoreObject.value = score.toString();
+    this._spaceInvadersBestScoreController.refresh();
+  }
+
   _init() {
     this._initGeneralFolder();
     this._initGameBoyFolder();
     this._initTetrisFolder();
+    this._initSpaceInvadersFolder();
   }
 
   _initGeneralFolder() {
@@ -209,7 +217,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
-      // expanded: false,
+      expanded: false,
     });
 
     this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
@@ -217,8 +225,8 @@ export default class GameBoyDebug extends THREE.Group {
       disabled: true,
     });
 
-    this._bestScoreObject = { value: '0' };
-    this._bestScoreController = tetrisFolder.addInput(this._bestScoreObject, 'value', {
+    this._tetrisBestScoreObject = { value: '0' };
+    this._tetrisBestScoreController = tetrisFolder.addInput(this._tetrisBestScoreObject, 'value', {
       label: 'Best score',
       disabled: true,
     });
@@ -272,7 +280,7 @@ export default class GameBoyDebug extends THREE.Group {
 
     const tetrisCheatsFolder = tetrisFolder.addFolder({
       title: 'Cheats',
-      // expanded: false,
+      expanded: false,
     });
 
     this._disableFallingButton = tetrisCheatsFolder.addButton({
@@ -295,6 +303,48 @@ export default class GameBoyDebug extends THREE.Group {
       disabled: true,
     }).on('click', () => {
       this.events.post('tetrisClearBottomLine');
+    });
+  }
+
+  _initSpaceInvadersFolder() {
+    const spaceInvadersFolder = GUIHelper.getGui().addFolder({
+      title: 'Space Invaders',
+      expanded: false,
+    });
+
+    this._spaceInvadersStateController = spaceInvadersFolder.addInput(SPACE_INVADERS_CONFIG, 'cartridgeState', {
+      label: 'Cartridge state',
+      disabled: true,
+    });
+
+    this._spaceInvadersBestScoreObject = { value: '0' };
+    this._spaceInvadersBestScoreController = spaceInvadersFolder.addInput(this._spaceInvadersBestScoreObject, 'value', {
+      label: 'Best score',
+      disabled: true,
+    });
+
+    const spaceInvadersCheatsFolder = spaceInvadersFolder.addFolder({
+      title: 'Cheats',
+      expanded: false,
+    });
+
+    this._spaceInvadersInvincibilityButton = spaceInvadersCheatsFolder.addButton({
+      title: 'Make invincible',
+    }).on('click', () => {
+      SPACE_INVADERS_CONFIG.playerInvincible = !SPACE_INVADERS_CONFIG.playerInvincible;
+
+      if (SPACE_INVADERS_CONFIG.playerInvincible) {
+        this._spaceInvadersInvincibilityButton.title = 'Make vulnerable';
+      } else {
+        this._spaceInvadersInvincibilityButton.title = 'Make invincible';
+      }
+    });
+
+    spaceInvadersCheatsFolder.addInput(SPACE_INVADERS_CONFIG.player, 'reloadTime', {
+      label: 'Reload time',
+      min: 0,
+      max: 1000,
+      step: 1,
     });
   }
 }
