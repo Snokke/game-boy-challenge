@@ -14,7 +14,7 @@ export default class GUIHelper {
     const isMobileDevice = isMobile(window.navigator).any;
 
     // if (isMobileDevice) {
-      this.gui.expanded = false;
+      // this.gui.expanded = false;
     // }
 
     GUIHelper.instance = this;

@@ -144,7 +144,7 @@ export default class Field extends PIXI.Container {
   clearBottomLine() {
     const towerHeight = this._getTowerHeight();
 
-    if (towerHeight === 0) {
+    if (towerHeight === 0 || (this._linesBlinkTimer && this._linesBlinkTimer.isPlaying)) {
       return;
     }
 
@@ -160,7 +160,8 @@ export default class Field extends PIXI.Container {
       filledRows.push(value);
     }
 
-    this._showFilledRowsAnimation(filledRows);
+    this._fieldMapContainer.cacheAsBitmap = false;
+    this._showFilledRowsAnimation(filledRows, true);
   }
 
   _moveShapeRight() {
@@ -314,7 +315,7 @@ export default class Field extends PIXI.Container {
     return false;
   }
 
-  _showFilledRowsAnimation(filledRows) {
+  _showFilledRowsAnimation(filledRows, debugClear = false) {
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.LineClear);
 
     const usedFilledRowAnimationShape = [];
@@ -327,16 +328,18 @@ export default class Field extends PIXI.Container {
       }
     }
 
-    this._blinkFilledRows(usedFilledRowAnimationShape);
+    this._blinkFilledRows(usedFilledRowAnimationShape, debugClear);
 
-    this._linesBlinkTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * TETRIS_CONFIG.linesBlinkCount, () => {
+    const time = debugClear ? TETRIS_CONFIG.linesBlinkTime : TETRIS_CONFIG.linesBlinkTime * TETRIS_CONFIG.linesBlinkCount;
+
+    this._linesBlinkTimer = Delayed.call(time, () => {
       this._filledRowsCount += usedFilledRowAnimationShape.length;
       this.events.emit('onFilledRowsCountChange', this._filledRowsCount);
 
       this._calculateScore(usedFilledRowAnimationShape.length);
       this._checkForNextLevel(usedFilledRowAnimationShape.length);
       this._hideUsedFilledRowAnimationShape(usedFilledRowAnimationShape);
-      this._afterFilledRowsAnimation(filledRows);
+      this._afterFilledRowsAnimation(filledRows, debugClear);
     });
   }
 
@@ -358,8 +361,10 @@ export default class Field extends PIXI.Container {
     }
   }
 
-  _blinkFilledRows(filledRowAnimationShapes) {
-    for (let i = 0; i < TETRIS_CONFIG.linesBlinkCount; i++) {
+  _blinkFilledRows(filledRowAnimationShapes, debugClear = false) {
+    const count = debugClear ? 1 : TETRIS_CONFIG.linesBlinkCount;
+
+    for (let i = 0; i < count; i++) {
       const timer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * i, () => {
         filledRowAnimationShapes.forEach((filledRowAnimationShape) => this._blinkFilledRow(filledRowAnimationShape));
       });
@@ -378,9 +383,9 @@ export default class Field extends PIXI.Container {
     });
   }
 
-  _afterFilledRowsAnimation(filledRows) {
+  _afterFilledRowsAnimation(filledRows, debugClear = false) {
     this._removeRowAndMoveRowsDown(filledRows);
-    this._afterShapePlaced();
+    this._afterShapePlaced(debugClear);
   }
 
   _removeRowAndMoveRowsDown(filledRows) {
@@ -399,14 +404,16 @@ export default class Field extends PIXI.Container {
     }
   }
 
-  _afterShapePlaced() {
+  _afterShapePlaced(debugClear = false) {
     this._score += this._scoreForFallFast;
     this._scoreForFallFast = 0;
     this.events.emit('onScoreChange', this._score);
 
-    this._spawnShape(this._nextShapeType);
-    this._nextShapeType = this._getRandomShapeType();
-    this.events.emit('onChangedNextShape', this._nextShapeType);
+    if (!debugClear) {
+      this._spawnShape(this._nextShapeType);
+      this._nextShapeType = this._getRandomShapeType();
+      this.events.emit('onChangedNextShape', this._nextShapeType);
+    }
 
     this._shapeFallInterval = this._calculateFallInterval();
     this._fieldMapContainer.cacheAsBitmap = true;

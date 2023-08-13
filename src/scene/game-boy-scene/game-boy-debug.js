@@ -24,7 +24,7 @@ export default class GameBoyDebug extends THREE.Group {
     this._bestScoreController = null;
     this._restartTetrisButton = null;
     this._disableFallingButton = null;
-    // this._clearBottomLineButton = null;
+    this._clearBottomLineButton = null;
 
     this._isTetrisFallingDisabled = false;
 
@@ -81,13 +81,13 @@ export default class GameBoyDebug extends THREE.Group {
   enableTetrisButtons() {
     this._restartTetrisButton.disabled = false;
     this._disableFallingButton.disabled = false;
-    // this._clearBottomLineButton.disabled = false;
+    this._clearBottomLineButton.disabled = false;
   }
 
   disableTetrisButtons() {
     this._restartTetrisButton.disabled = true;
     this._disableFallingButton.disabled = true;
-    // this._clearBottomLineButton.disabled = true;
+    this._clearBottomLineButton.disabled = true;
   }
 
   _init() {
@@ -209,7 +209,7 @@ export default class GameBoyDebug extends THREE.Group {
   _initTetrisFolder() {
     const tetrisFolder = GUIHelper.getGui().addFolder({
       title: 'Tetris',
-      expanded: false,
+      // expanded: false,
     });
 
     this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
@@ -272,7 +272,7 @@ export default class GameBoyDebug extends THREE.Group {
 
     const tetrisCheatsFolder = tetrisFolder.addFolder({
       title: 'Cheats',
-      expanded: false,
+      // expanded: false,
     });
 
     this._disableFallingButton = tetrisCheatsFolder.addButton({
@@ -290,11 +290,11 @@ export default class GameBoyDebug extends THREE.Group {
       this.events.post('tetrisDisableFalling');
     });
 
-    // this._clearBottomLineButton = tetrisCheatsFolder.addButton({
-    //   title: 'Clear bottom line',
-    //   disabled: true,
-    // }).on('click', () => {
-    //   this.events.post('tetrisClearBottomLine');
-    // });
+    this._clearBottomLineButton = tetrisCheatsFolder.addButton({
+      title: 'Clear bottom line',
+      disabled: true,
+    }).on('click', () => {
+      this.events.post('tetrisClearBottomLine');
+    });
   }
 }
