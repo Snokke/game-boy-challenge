@@ -2,7 +2,7 @@
 ![screenshot-for-post](https://github.com/Snokke/game-boy-challenge/assets/36459180/339a94c1-4a83-406e-9a56-829173cd136d)
 🔥 **Live: [gameboy.andriibabintsev.com](https://gameboy.andriibabintsev.com/)**
 
-This is my project for **Three.js Journey Challenge** - challenge by **Bruno Simon** ([threejs-journey.com](https://threejs-journey.com/)), where participants should create project in two weeks with main renderer library Three.js on a given theme. Theme of this challenge was **Game Boy**.
+This is my project for **Three.js Journey Challenge** - challenge by **Bruno Simon** ([threejs-journey.com](https://threejs-journey.com/)), where participants should create project in two weeks with main renderer library Three.js on a given theme. Theme of this challenge was **Game Boy**. And I was fortunate to have won this challenge: [Winners](https://threejs-journey.com/challenges/001-game-boy)🏆
 
 My idea was to create an interactive Game Boy and from scratch create at least one game for it (without emulator).
 
