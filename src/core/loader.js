@@ -12,7 +12,6 @@ const textures = [
   'baked-cartridge-space-invaders.jpg',
   'baked-cartridge-space-invaders-in-pocket.jpg',
   'baked-power-indicator.jpg',
-  'baked-screen.jpg',
   'baked-screen-shadow.png',
   'baked-cartridge-pocket.jpg',
   'baked-cartridge-pocket-with-cartridge.jpg',
