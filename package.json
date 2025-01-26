@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
@@ -16,12 +16,14 @@
     "vite-plugin-glsl": "^1.1.2"
   },
   "dependencies": {
+    "@types/three": "^0.172.0",
     "@vercel/analytics": "^1.0.1",
     "black-engine": "^0.5.16",
     "ismobilejs": "^1.1.1",
     "pixi.js": "^8.7.0",
     "three": "^0.170.0",
     "tweakpane": "^3.1.7",
+    "typescript": "^5.7.3",
     "vercel": "^28.17.0"
   }
 }

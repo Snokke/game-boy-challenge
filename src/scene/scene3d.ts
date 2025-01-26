@@ -4,6 +4,14 @@ import { MessageDispatcher } from 'black-engine';
 import GameBoyScene from './game-boy-scene/game-boy-scene';
 
 export default class Scene3D extends THREE.Group {
+  private _data: any;
+  private _scene: THREE.Scene;
+  private _camera: THREE.Camera;
+  private _raycasterController: RaycasterController;
+  private _gameBoyScene: GameBoyScene;
+
+  private events: MessageDispatcher;
+
   constructor(data) {
     super();
 
@@ -12,9 +20,6 @@ export default class Scene3D extends THREE.Group {
     this._data = data,
     this._scene = data.scene,
     this._camera = data.camera,
-
-    this._raycasterController = null;
-    this._gameBoyScene = null;
 
     this._init();
   }
