@@ -1,10 +1,10 @@
-import * as PIXI from 'pixi.js';
+import { Container, EventEmitter } from "pixi.js";
 
-export default class GameScreenAbstract extends PIXI.Container {
+export default class GameScreenAbstract extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._screenType = null;
 

@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Sprite, Text, Graphics } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
@@ -61,15 +61,18 @@ export default class TitleScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
     const texture = spriteSheet.textures['title-screen.png'];
 
-    const screen = new PIXI.Sprite(texture);
+    const screen = new Sprite(texture);
     this.addChild(screen);
   }
 
   _initStartText() {
-    const text = new PIXI.Text('Start game', new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-    }));
+    const text = new Text({
+        text: 'Start game',
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+        },
+    });
 
     this.addChild(text);
 
@@ -80,10 +83,10 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _initArrow() {
-    const arrow = this._arrow = new PIXI.Graphics();
+    const arrow = this._arrow = new Graphics();
     this.addChild(arrow);
 
-    arrow.beginFill(0x000000);
+    arrow.fill(0x000000);
     arrow.moveTo(0, 0);
     arrow.lineTo(4, 3);
     arrow.lineTo(0, 6);

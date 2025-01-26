@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite, Text, EventEmitter } from 'pixi.js';
 import { TETRIS_CONFIG } from '../../../data/tetris-config';
 import Loader from '../../../../../../../../core/loader';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
@@ -6,11 +6,11 @@ import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
-export default class GameOverPopup extends PIXI.Container {
+export default class GameOverPopup extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._width = TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize;
     this._height = TETRIS_CONFIG.field.height * TETRIS_CONFIG.blockSize;
@@ -125,7 +125,7 @@ export default class GameOverPopup extends PIXI.Container {
   }
 
   _initWall() {
-    const wallContainer = this._wallContainer = new PIXI.Container();
+    const wallContainer = this._wallContainer = new Container();
     this.addChild(wallContainer);
 
     for (let i = 0; i < TETRIS_CONFIG.field.height; i++) {
@@ -142,13 +142,13 @@ export default class GameOverPopup extends PIXI.Container {
   }
 
   _initGameOverContainer() {
-    const gameOverContainer = this._gameOverContainer = new PIXI.Container();
+    const gameOverContainer = this._gameOverContainer = new Container();
     this.addChild(gameOverContainer);
 
     this._initGameOverFrame();
     this._initTryAgainText();
 
-    gameOverContainer.cacheAsBitmap = true;
+    gameOverContainer.cacheAsTexture = true;
     gameOverContainer.visible = false;
   }
 
@@ -156,7 +156,7 @@ export default class GameOverPopup extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
     const texture = spriteSheet.textures['game-over-frame.png'];
 
-    const gameOverFrame = new PIXI.Sprite(texture);
+    const gameOverFrame = new Sprite(texture);
     this._gameOverContainer.addChild(gameOverFrame);
 
     gameOverFrame.anchor.set(0.5);
@@ -190,11 +190,14 @@ export default class GameOverPopup extends PIXI.Container {
   }
 
   _createTextLine(string) {
-    const text = new PIXI.Text(string, new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const text = new Text({
+        text: string,
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+            fill: 0x000000,
+        }
+    });
 
     text.anchor.set(0.5, 0);
 
@@ -202,20 +205,20 @@ export default class GameOverPopup extends PIXI.Container {
   }
 
   _createBlockLine() {
-    const blockLineContainer = new PIXI.Container();
+    const blockLineContainer = new Container();
     this.addChild(blockLineContainer);
 
     const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
     const texture = spriteSheet.textures['game-over-block.png'];
 
     for (let i = 0; i < TETRIS_CONFIG.field.width; i++) {
-      const block = new PIXI.Sprite(texture);
+      const block = new Sprite(texture);
       blockLineContainer.addChild(block);
 
       block.x = i * TETRIS_CONFIG.blockSize;
     }
 
-    blockLineContainer.cacheAsBitmap = true;
+    blockLineContainer.cacheAsTexture = true;
 
     return blockLineContainer;
   }

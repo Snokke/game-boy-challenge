@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Sprite, Container, Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import Loader from '../../../../core/loader';
 import ScreenAbstract from './screen-abstract';
@@ -20,7 +20,7 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
   _initStopSign() {
     const texture = Loader.assets['assets/other/stop-sign'];
 
-    const stopSign = new PIXI.Sprite(texture);
+    const stopSign = new Sprite(texture);
     this.addChild(stopSign);
 
     stopSign.anchor.set(0.5);
@@ -30,7 +30,7 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
   }
 
   _initText() {
-    const textContainer = new PIXI.Container();
+    const textContainer = new Container();
     this.addChild(textContainer);
 
     const textLine01 = this._createTextLine('The cartridge');
@@ -45,11 +45,14 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
   }
 
   _createTextLine(string) {
-    const text = new PIXI.Text(string, new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const text = new Text({
+        text: string,
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     text.anchor.set(0.5, 0);
 

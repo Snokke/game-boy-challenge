@@ -1,7 +1,7 @@
-import * as PIXI from 'pixi.js';
+import { Container, ColorMatrixFilter } from 'pixi.js';
 import LoadingScreen from './screens/loading-screen';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import NoCartridgeScreen from './screens/no-cartridge-screen';
 import DamagedCartridgeScreen from './screens/damaged-cartridge-screen';
 import { GAME_TYPE } from './data/games-config';
@@ -179,7 +179,7 @@ export default class GameBoyGames {
   }
 
   _initRootContainer() {
-    const container = this._container = new PIXI.Container();
+    const container = this._container = new Container();
     this._application.stage.addChild(container);
   }
 
@@ -214,7 +214,7 @@ export default class GameBoyGames {
       0, 0, 0, 1, 0
     ];
 
-    const filter = new PIXI.ColorMatrixFilter();
+    const filter = new ColorMatrixFilter();
     filter.matrix = colorMatrix;
     this._container.filters = [filter];
   }

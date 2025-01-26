@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Sprite } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
 import Delayed from '../../../../../../../core/helpers/delayed-call';
@@ -32,7 +32,7 @@ export default class LicenseScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
     const texture = spriteSheet.textures['license-screen.png'];
 
-    const screen = new PIXI.Sprite(texture);
+    const screen = new Sprite(texture);
     this.addChild(screen);
   }
 }

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON_TYPE, GAME_BOY_DRAGGABLE_PARTS } from './data/game-boy-data';
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';

@@ -1,4 +1,4 @@
-import * as PIXI from "pixi.js";
+import { Container, Point } from "pixi.js";
 import { GAME_BOY_CONFIG } from "../../../../../game-boy/data/game-boy-config";
 import { BUTTON_TYPE } from "../../../../../game-boy/data/game-boy-data";
 import GameScreenAbstract from "../../../shared/game-screen-abstract";
@@ -15,6 +15,7 @@ import Score from "./ui-elements/score";
 import EnemyMissile from "./missile/enemy-missile";
 import { GAME_BOY_SOUND_TYPE } from "../../../../../game-boy/game-boy-audio/game-boy-audio-data";
 import GameBoyAudio from "../../../../../game-boy/game-boy-audio/game-boy-audio";
+import { CCDIKHelper } from "three/examples/jsm/Addons.js";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -151,7 +152,7 @@ export default class GameplayScreen extends GameScreenAbstract {
         for (let column = 0; column < ENEMY_CONFIG.columns; column++) {
           const enemy = enemies[row][column];
 
-          if (enemy && enemy.isActive() && enemy.getBounds().contains(missile.x, missile.y)) {
+          if (enemy && enemy.isActive() && enemy.getBounds().rectangle.contains(missile.x, missile.y)) {
             const enemyType = enemy.getType();
             const score = ENEMIES_CONFIG[enemyType].score;
             this._score.addScore(score);
@@ -181,7 +182,7 @@ export default class GameplayScreen extends GameScreenAbstract {
         this._showEnemyMissileExplode(missile);
       }
 
-      if (!SPACE_INVADERS_CONFIG.playerInvincible && this._player.getBounds().contains(missile.x, missile.y)) {
+      if (!SPACE_INVADERS_CONFIG.playerInvincible && this._player.getBounds().rectangle.contains(missile.x, missile.y)) {
         this._onPlayerHit();
       }
     });
@@ -211,7 +212,7 @@ export default class GameplayScreen extends GameScreenAbstract {
 
     this._playerShootReloadTime = 0;
 
-    const playerPosition = new PIXI.Point(this._player.x + 3, this._player.y - 7);
+    const playerPosition = new Point(this._player.x + 3, this._player.y - 7);
     const missile = this._createPlayerMissile(playerPosition);
     missile.activate();
     this._playerMissiles.push(missile);
@@ -219,7 +220,7 @@ export default class GameplayScreen extends GameScreenAbstract {
 
   _enemyShoot(enemy) {
     const type = MISSILE_TYPE.Electric;
-    const enemyPosition = new PIXI.Point(enemy.x + 3, enemy.y + 7);
+    const enemyPosition = new Point(enemy.x + 3, enemy.y + 7);
     const missile = this._createEnemyMissile(enemyPosition, type);
     missile.activate();
     this._enemyMissiles.push(missile);
@@ -317,7 +318,7 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initFieldContainer() {
-    const fieldContainer = this._fieldContainer = new PIXI.Container();
+    const fieldContainer = this._fieldContainer = new Container();
     this.addChild(fieldContainer);
 
     fieldContainer.x = 1;

@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Point } from 'pixi.js';
 import { CARTRIDGE_STATE } from '../../../../game-boy/data/game-boy-data';
 
 const TETRIS_CONFIG = {
@@ -7,10 +7,10 @@ const TETRIS_CONFIG = {
   field: {
     width: 10,
     height: 20,
-    position: new PIXI.Point(16, -16),
+    position: new Point(16, -16),
   },
   blockSize: 8,
-  shapeSpawnPosition: new PIXI.Point(4, 3),
+  shapeSpawnPosition: new Point(4, 3),
   linesBlinkTime: 300,
   linesBlinkCount: 3,
   fastFallInterval: 30,

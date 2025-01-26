@@ -1,8 +1,8 @@
-import * as PIXI from "pixi.js";
+import { Sprite } from 'pixi.js';
 import Loader from "../../../../../../core/loader";
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import Delayed from "../../../../../../core/helpers/delayed-call";
 import { BUTTON_TYPE } from "../../../../game-boy/data/game-boy-data";
 
@@ -45,7 +45,6 @@ export default class TitleScreen extends GameScreenAbstract {
       this.events.emit('onStartGame');
     }
   }
-
 
   stopTweens() {
     if (this._logoTween) {
@@ -96,7 +95,7 @@ export default class TitleScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['space-invaders-logo.png'];
 
-    const logo = this._logo = new PIXI.Sprite(texture);
+    const logo = this._logo = new Sprite(texture);
     this.addChild(logo);
 
     logo.x = 9;
@@ -107,7 +106,7 @@ export default class TitleScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['title-screen-clean.png'];
 
-    const titleScreenClean = this._titleScreenClean = new PIXI.Sprite(texture);
+    const titleScreenClean = this._titleScreenClean = new Sprite(texture);
     this.addChild(titleScreenClean);
 
     titleScreenClean.visible = false;
@@ -117,7 +116,7 @@ export default class TitleScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['start-text.png'];
 
-    const startText = this._startText = new PIXI.Sprite(texture);
+    const startText = this._startText = new Sprite(texture);
     this.addChild(startText);
 
     startText.x = 41;

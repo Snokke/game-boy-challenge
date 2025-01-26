@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import * as PIXI from 'pixi.js';
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import { Application, Ticker } from 'pixi.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -82,10 +82,10 @@ export default class BaseScene {
     this._mainScene.events.on('fpsMeterChanged', () => this._scene3DDebugMenu.onFpsMeterClick());
   }
 
-  _init() {
+  async _init() {
     this._initBlack();
     this._initThreeJS();
-    this._initPixiJS();
+    await this._initPixiJS();
     this._initUpdate();
   }
 
@@ -100,24 +100,26 @@ export default class BaseScene {
     engine.stage.scaleMode = StageScaleMode.LETTERBOX;
   }
 
-  _initPixiJS() {
+  async _initPixiJS() {
     const canvas = document.createElement('canvas');
     canvas.width = GAME_BOY_CONFIG.screen.width;
     canvas.height = GAME_BOY_CONFIG.screen.height;
 
-    // const view = canvas.transferControlToOffscreen();
+    const pixiApp = this._pixiApplication = new Application();
 
-    this._pixiApplication = new PIXI.Application({
-      view: canvas,
+    await pixiApp.init({
+      canvas: canvas,
+      autoDensity: true,
       width: GAME_BOY_CONFIG.screen.width,
       height: GAME_BOY_CONFIG.screen.height,
       background: GAME_BOY_CONFIG.screen.tint,
       backgroundAlpha: 0,
     });
 
-    this._pixiApplication.renderer.background.alpha = 1;
+    Ticker.shared.autoStart = false;
+    Ticker.shared.stop();
 
-    // globalThis.__PIXI_APP__ = this._pixiApplication;
+    this._pixiApplication.renderer.background.alpha = 1;
   }
 
   _initThreeJS() {

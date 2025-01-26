@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Point } from 'pixi.js';
 
 const SHAPE_TYPE = {
   I: 'I',
@@ -37,7 +37,7 @@ const SHAPE_CONFIG = {
     blocksView: [
       [1, 1, 1, 1],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Left,
@@ -49,7 +49,7 @@ const SHAPE_CONFIG = {
       [1, 1, 1],
       [0, 0, 1],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,
@@ -63,7 +63,7 @@ const SHAPE_CONFIG = {
       [1, 1, 1],
       [1, 0, 0],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,
@@ -77,7 +77,7 @@ const SHAPE_CONFIG = {
       [1, 1],
       [1, 1],
     ],
-    pivot: new PIXI.Point(0, 0),
+    pivot: new Point(0, 0),
     availableDirections: [],
   },
   [SHAPE_TYPE.S]: {
@@ -86,7 +86,7 @@ const SHAPE_CONFIG = {
       [0, 1, 1],
       [1, 1, 0],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,
@@ -98,7 +98,7 @@ const SHAPE_CONFIG = {
       [1, 1, 1],
       [0, 1, 0],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,
@@ -112,7 +112,7 @@ const SHAPE_CONFIG = {
       [1, 1, 0],
       [0, 1, 1],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,
@@ -124,7 +124,7 @@ const SHAPE_CONFIG = {
     blocksView: [
       [1, 1, 1],
     ],
-    pivot: new PIXI.Point(1, 0),
+    pivot: new Point(1, 0),
     availableDirections: [
       SHAPE_DIRECTION.Up,
       SHAPE_DIRECTION.Right,

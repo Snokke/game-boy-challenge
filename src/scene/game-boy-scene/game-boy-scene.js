@@ -73,7 +73,7 @@ export default class GameBoyScene extends THREE.Group {
   }
 
   _initGameBoy() {
-    const pixiCanvas = this._data.pixiApplication.view;
+    const pixiCanvas = this._data.pixiApplication.canvas;
     const pixiApplication = this._data.pixiApplication;
     const audioListener = this._data.audioListener;
 

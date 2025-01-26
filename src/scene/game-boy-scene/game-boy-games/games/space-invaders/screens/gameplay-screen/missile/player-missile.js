@@ -1,8 +1,8 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite } from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
 import { MISSILES_CONFIG, MISSILE_TYPE } from './missile-config';
 
-export default class PlayerMissile extends PIXI.Container {
+export default class PlayerMissile extends Container {
   constructor() {
     super();
 
@@ -44,7 +44,7 @@ export default class PlayerMissile extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures[this._config.textures[0]];
 
-    const view = this._view = new PIXI.Sprite(texture);
+    const view = this._view = new Sprite(texture);
     this.addChild(view);
   }
 }

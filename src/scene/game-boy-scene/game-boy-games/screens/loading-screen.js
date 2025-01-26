@@ -1,7 +1,7 @@
-import * as PIXI from 'pixi.js';
+import { Sprite, EventEmitter } from 'pixi.js';
 import Loader from '../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 import Delayed from '../../../../core/helpers/delayed-call';
 import ScreenAbstract from './screen-abstract';
 import GameBoyAudio from '../../game-boy/game-boy-audio/game-boy-audio';
@@ -11,7 +11,7 @@ export default class LoadingScreen extends ScreenAbstract {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._logo = null;
     this._movingTween = null;
@@ -65,7 +65,7 @@ export default class LoadingScreen extends ScreenAbstract {
   _initLogo() {
     const texture = Loader.assets['assets/other/nintendo-logo-screen'];
 
-    const logo = this._logo = new PIXI.Sprite(texture);
+    const logo = this._logo = new Sprite(texture);
     logo.anchor.set(0.5);
     this.addChild(logo);
 

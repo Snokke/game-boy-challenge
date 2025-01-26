@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
 import Delayed from '../../../../../../core/helpers/delayed-call';
@@ -27,11 +27,14 @@ export default class GameOverScreen extends GameScreenAbstract {
   }
 
   _init() {
-    const text = new PIXI.Text('GAME OVER', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const text = new Text({
+        text: 'GAME OVER',
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(text);
 

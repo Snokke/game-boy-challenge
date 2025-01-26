@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite } from 'pixi.js';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
 import Loader from '../../../../../../../core/loader';
 import { SHAPE_CONFIG, SHAPE_TYPE } from './field/shape/shape-config';
 
-export default class NextShape extends PIXI.Container {
+export default class NextShape extends Container {
   constructor(type) {
     super();
 
@@ -40,7 +40,7 @@ export default class NextShape extends PIXI.Container {
       this._initShape();
     }
 
-    this.cacheAsBitmap = true;
+    this.cacheAsTexture = true;
   }
 
   _initShapeI() {
@@ -57,7 +57,7 @@ export default class NextShape extends PIXI.Container {
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
           const texture = (column === 0 || column === blocksView[0].length - 1) ? edgeTexture : blockTexture;
-          const block = new PIXI.Sprite(texture);
+          const block = new Sprite(texture);
           this.addChild(block);
 
           this._blocksView[row][column] = block;
@@ -84,7 +84,7 @@ export default class NextShape extends PIXI.Container {
 
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
-          const block = new PIXI.Sprite(blockTexture);
+          const block = new Sprite(blockTexture);
           this.addChild(block);
 
           if (config.tint) {

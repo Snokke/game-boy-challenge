@@ -1,4 +1,4 @@
-import * as PIXI from "pixi.js";
+import { Text } from "pixi.js";
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
 import { SPACE_INVADERS_CONFIG } from "../data/space-invaders-config";
@@ -41,28 +41,37 @@ export default class RoundScreen extends GameScreenAbstract {
   }
 
   _initRoundText() {
-    const roundText = new PIXI.Text('ROUND', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const roundText = new Text({
+        text: 'ROUND',
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(roundText);
 
     const roundString = SPACE_INVADERS_CONFIG.currentRound.toString().padStart(2, '0');
-    const roundNumber = this._roundNumber = new PIXI.Text(roundString, new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const roundNumber = this._roundNumber = new Text({
+        text: roundString,
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(roundNumber);
 
-    const readyText = new PIXI.Text('READY!', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const readyText = new Text({
+        text: 'READY!',
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(readyText);
 

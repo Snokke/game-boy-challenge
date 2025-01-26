@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
 import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
 import Loader from '../../../../../../../core/loader';
@@ -11,6 +10,7 @@ import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
 import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
+import { Text, Sprite } from 'pixi.js';
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -131,7 +131,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
     const texture = spriteSheet.textures['gameplay-screen.png'];
 
-    const screen = new PIXI.Sprite(texture);
+    const screen = new Sprite(texture);
     this.addChild(screen);
   }
 
@@ -141,11 +141,14 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initLinesCount() {
-    const linesCount = this._linesCount = new PIXI.Text('0', new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const linesCount = this._linesCount = new Text({
+        text: '0',
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+            fill: 0x000000,
+        }
+    });
 
     this.addChild(linesCount);
     linesCount.anchor.set(1, 0);
@@ -155,11 +158,14 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initLevel() {
-    const level = this._level = new PIXI.Text(TETRIS_CONFIG.startLevel, new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const level = this._level = new Text({
+        text: TETRIS_CONFIG.startLevel,
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+            fill: 0x000000,
+        }
+    });
 
     this.addChild(level);
     level.anchor.set(1, 0);
@@ -169,11 +175,14 @@ export default class GameplayScreen extends GameScreenAbstract {
   }
 
   _initScore() {
-    const score = this._score = new PIXI.Text('0', new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const score = this._score = new Text({
+        text: '0',
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+            fill: 0x000000,
+        }
+    });
 
     this.addChild(score);
     score.anchor.set(1, 0);

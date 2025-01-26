@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as PIXI from 'pixi.js';
+import { Assets } from 'pixi.js';
 import { AssetManager, GameObject, MessageDispatcher } from 'black-engine';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
 
@@ -116,12 +116,13 @@ export default class Loader extends GameObject {
 
     pixiAssets.forEach((textureFilename) => {
       const textureName = textureFilename.replace(/\.[^/.]+$/, "");
-      PIXI.Assets.add(textureName, textureFilename);
+      Assets.add({ alias: textureName, src: textureFilename });
+    //   Assets.add(textureName, textureFilename);
 
       texturesNames.push(textureName);
     });
 
-    const texturesPromise = PIXI.Assets.load(texturesNames);
+    const texturesPromise = Assets.load(texturesNames);
 
     texturesPromise.then((textures) => {
       texturesNames.forEach((name) => {

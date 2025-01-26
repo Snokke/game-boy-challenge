@@ -1,11 +1,11 @@
-import * as PIXI from 'pixi.js';
+import { Container, Text, EventEmitter } from 'pixi.js';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
-export default class Score extends PIXI.Container {
+export default class Score extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._scoreText = null;
     this._score = 0;
@@ -29,19 +29,24 @@ export default class Score extends PIXI.Container {
   }
 
   _init() {
-    const caption = new PIXI.Text('SCORE', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
-
+    const caption = new Text({
+        text: 'SCORE',
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
     this.addChild(caption);
 
-    const scoreText = this._scoreText = new PIXI.Text('00000', new PIXI.TextStyle({
-      fontFamily: 'dogicapixel',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const scoreText = this._scoreText = new Text({
+        text: '00000',
+        style: {
+            fontFamily: 'dogicapixel',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(scoreText);
 

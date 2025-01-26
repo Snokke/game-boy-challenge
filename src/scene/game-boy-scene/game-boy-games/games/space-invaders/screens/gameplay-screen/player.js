@@ -1,8 +1,8 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { PLAYER_MOVEMENT_STATE } from '../../data/space-invaders-data';
 
-export default class Player extends PIXI.Container {
+export default class Player extends Container {
   constructor() {
     super();
 
@@ -54,7 +54,7 @@ export default class Player extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['player.png'];
 
-    const view = this._view = new PIXI.Sprite(texture);
+    const view = this._view = new Sprite(texture);
     this.addChild(view);
   }
 
@@ -62,7 +62,7 @@ export default class Player extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['player-hit.png'];
 
-    const playerHit = this._playerHit = new PIXI.Sprite(texture);
+    const playerHit = this._playerHit = new Sprite(texture);
     this.addChild(playerHit);
 
     playerHit.visible = false;

@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite } from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
 import { MISSILES_CONFIG } from './missile-config';
 import { GAME_BOY_CONFIG } from '../../../../../../game-boy/data/game-boy-config';
 
-export default class EnemyMissile extends PIXI.Container {
+export default class EnemyMissile extends Container {
   constructor(type) {
     super();
 
@@ -52,7 +52,7 @@ export default class EnemyMissile extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
 
-    const view = this._view = new PIXI.Sprite(texture);
+    const view = this._view = new Sprite(texture);
     this.addChild(view);
   }
 }

@@ -1,13 +1,13 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite, EventEmitter } from "pixi.js";
 import Loader from '../../../../../../../../core/loader';
 import { ENEMIES_CONFIG, ENEMY_MOVEMENT_DIRECTION } from './data/enemy-config';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
-export default class Enemy extends PIXI.Container {
+export default class Enemy extends Container {
   constructor(type) {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._type = type;
     this._config = ENEMIES_CONFIG[type];
@@ -143,7 +143,7 @@ export default class Enemy extends PIXI.Container {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures[this._config.textures[this._textureIndex]];
 
-    const view = this._view = new PIXI.Sprite(texture);
+    const view = this._view = new Sprite(texture);
     this.addChild(view);
   }
 }

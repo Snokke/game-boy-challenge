@@ -1,14 +1,14 @@
-import * as PIXI from 'pixi.js';
+import { Container, EventEmitter } from 'pixi.js';
 import { ENEMY_CONFIG, ENEMY_MOVEMENT_DIRECTION, ENEMY_TYPE } from './data/enemy-config';
 import Enemy from './enemy';
 import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
-export default class EnemiesController extends PIXI.Container {
+export default class EnemiesController extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._movementDirection = ENEMY_MOVEMENT_DIRECTION.Right;
     this._previousMovementDirection = ENEMY_MOVEMENT_DIRECTION.Right;

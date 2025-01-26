@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+import { Container } from "pixi.js";
 
-export default class GameAbstract extends PIXI.Container {
+export default class GameAbstract extends Container {
   constructor() {
     super();
   }

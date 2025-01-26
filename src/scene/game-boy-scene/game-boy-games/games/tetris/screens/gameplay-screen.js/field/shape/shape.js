@@ -1,12 +1,12 @@
-import * as PIXI from 'pixi.js';
+import { Container, Point, Sprite } from 'pixi.js';
 import { TETRIS_CONFIG } from '../../../../data/tetris-config';
 import Loader from '../../../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../../../game-boy/data/game-boy-config';
 import { DIRECTION_SEQUENCE, ROTATE_TYPE, SHAPE_CONFIG, SHAPE_DIRECTION, SHAPE_TYPE } from './shape-config';
-import { TWEEN } from '/node_modules/three/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 
 
-export default class Shape extends PIXI.Container {
+export default class Shape extends Container {
   constructor(type) {
     super();
 
@@ -14,7 +14,7 @@ export default class Shape extends PIXI.Container {
     this._blocksView = [];
     this._shapePivot = null;
     this._direction = SHAPE_DIRECTION.Up;
-    this._blockPosition = new PIXI.Point(0, 0);
+    this._blockPosition = new Point(0, 0);
     this._distanceFallen = 0;
 
     this._init();
@@ -99,7 +99,7 @@ export default class Shape extends PIXI.Container {
     }
 
     this._blocksView = newBlocksView;
-    this._shapePivot = new PIXI.Point(this._blocksView[0].length - this._shapePivot.y - 1, this._shapePivot.x);
+    this._shapePivot = new Point(this._blocksView[0].length - this._shapePivot.y - 1, this._shapePivot.x);
 
     const availableDirections = SHAPE_CONFIG[this._type].availableDirections;
     this._direction = this._getNextDirection();
@@ -122,7 +122,7 @@ export default class Shape extends PIXI.Container {
     }
 
     this._blocksView = newBlocksView;
-    this._shapePivot = new PIXI.Point(this._shapePivot.y, this._blocksView.length - this._shapePivot.x - 1);
+    this._shapePivot = new Point(this._shapePivot.y, this._blocksView.length - this._shapePivot.x - 1);
 
     const availableDirections = SHAPE_CONFIG[this._type].availableDirections;
     this._direction = this._getPreviousDirection();
@@ -190,7 +190,7 @@ export default class Shape extends PIXI.Container {
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
           const texture = (column === 0 || column === blocksView[0].length - 1) ? edgeTexture : blockTexture;
-          const block = new PIXI.Sprite(texture);
+          const block = new Sprite(texture);
           this.addChild(block);
 
           this._blocksView[row][column] = block;
@@ -215,7 +215,7 @@ export default class Shape extends PIXI.Container {
 
       for (let column = 0; column < blocksView[0].length; column++) {
         if (blocksView[row][column] === 1) {
-          const block = new PIXI.Sprite(blockTexture);
+          const block = new Sprite(blockTexture);
           this.addChild(block);
 
           if (config.tint) {

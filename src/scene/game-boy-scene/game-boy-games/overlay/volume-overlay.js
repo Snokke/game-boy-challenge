@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import Delayed from '../../../../core/helpers/delayed-call';
 import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
 
-export default class VolumeOverlay extends PIXI.Container {
+export default class VolumeOverlay extends Container {
   constructor() {
     super();
 
@@ -65,30 +65,31 @@ export default class VolumeOverlay extends PIXI.Container {
   _initFrame() {
     const borderThickness = 1;
 
-    const frame = new PIXI.Graphics();
+    const frame = new Graphics();
     this.addChild(frame);
 
-    frame.beginFill(0x000000);
-    frame.drawRect(0, 0, this._width, this._height);
-    frame.endFill();
+    frame.rect(0, 0, this._width, this._height);
+    frame.fill(0x000000);
 
-    const background = new PIXI.Graphics();
+    const background = new Graphics();
     this.addChild(background);
 
-    background.beginFill(0xffffff);
-    background.drawRect(0, 0, this._width - borderThickness * 2, this._height - borderThickness * 2);
-    background.endFill();
+    background.rect(0, 0, this._width - borderThickness * 2, this._height - borderThickness * 2);
+    background.fill(0xffffff);
 
     background.x = borderThickness;
     background.y = borderThickness;
   }
 
   _initVolumeText() {
-    const text = new PIXI.Text('VOLUME', new PIXI.TextStyle({
-      fontFamily: 'tetris',
-      fontSize: 8,
-      fill: 0x000000,
-    }));
+    const text = new Text({
+        text: 'VOLUME',
+        style: {
+            fontFamily: 'tetris',
+            fontSize: 8,
+            fill: 0x000000,
+        },
+    });
 
     this.addChild(text);
 
@@ -99,12 +100,11 @@ export default class VolumeOverlay extends PIXI.Container {
     const volumeParts = 20;
 
     for (let i = 0; i < volumeParts; i += 1) {
-      const volumePart = new PIXI.Graphics();
+      const volumePart = new Graphics();
       this.addChild(volumePart);
 
-      volumePart.beginFill(0x000000);
-      volumePart.drawRect(0, 0, 4, 7);
-      volumePart.endFill();
+      volumePart.rect(0, 0, 4, 7);
+      volumePart.fill(0x000000);
 
       volumePart.x = 2 + i * 5;
       volumePart.y = 11;

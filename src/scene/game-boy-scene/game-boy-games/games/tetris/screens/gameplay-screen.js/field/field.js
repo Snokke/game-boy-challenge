@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite, Graphics, EventEmitter } from 'pixi.js';
 import { LEVELS_CONFIG, TETRIS_CONFIG } from '../../../data/tetris-config';
 import Shape from './shape/shape';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
@@ -7,11 +7,11 @@ import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
-export default class Field extends PIXI.Container {
+export default class Field extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._fieldMap = [];
     this._currentShape = null;
@@ -160,7 +160,7 @@ export default class Field extends PIXI.Container {
       filledRows.push(value);
     }
 
-    this._fieldMapContainer.cacheAsBitmap = false;
+    this._fieldMapContainer.cacheAsTexture = false;
     this._showFilledRowsAnimation(filledRows, true);
   }
 
@@ -416,7 +416,7 @@ export default class Field extends PIXI.Container {
     }
 
     this._shapeFallInterval = this._calculateFallInterval();
-    this._fieldMapContainer.cacheAsBitmap = true;
+    this._fieldMapContainer.cacheAsTexture = true;
   }
 
   _removeRow(row) {
@@ -527,7 +527,7 @@ export default class Field extends PIXI.Container {
   }
 
   _addShapeToFieldMap() {
-    this._fieldMapContainer.cacheAsBitmap = false;
+    this._fieldMapContainer.cacheAsTexture = false;
 
     const shapePosition = this._currentShape.getBlockPosition();
     const shapeBlocksView = this._currentShape.getBlocksView();
@@ -558,7 +558,7 @@ export default class Field extends PIXI.Container {
   }
 
   _createBlockCopy(block) {
-    const blockCopy = new PIXI.Sprite(block.texture);
+    const blockCopy = new Sprite(block.texture);
     blockCopy.tint = block.tint;
 
     return blockCopy;
@@ -637,7 +637,7 @@ export default class Field extends PIXI.Container {
   }
 
   _initFieldMapContainer() {
-    this._fieldMapContainer = new PIXI.Container();
+    this._fieldMapContainer = new Container();
     this.addChild(this._fieldMapContainer);
   }
 
@@ -655,11 +655,10 @@ export default class Field extends PIXI.Container {
     const filledRowsAnimationShapeCount = 4;
 
     for (let i = 0; i < filledRowsAnimationShapeCount; i++) {
-      const filledRowAnimationShape = new PIXI.Graphics();
+      const filledRowAnimationShape = new Graphics();
 
-      filledRowAnimationShape.beginFill(0x686f4a);
-      filledRowAnimationShape.drawRect(0, 0, TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize, TETRIS_CONFIG.blockSize);
-      filledRowAnimationShape.endFill();
+      filledRowAnimationShape.rect(0, 0, TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize, TETRIS_CONFIG.blockSize);
+      filledRowAnimationShape.fill(0x686f4a);
 
       filledRowAnimationShape.visible = false;
 
@@ -677,7 +676,7 @@ export default class Field extends PIXI.Container {
   }
 
   _clearFieldMap() {
-    this._fieldMapContainer.cacheAsBitmap = false;
+    this._fieldMapContainer.cacheAsTexture = false;
 
     for (let row = 0; row < this._fieldMap.length; row++) {
       for (let column = 0; column < this._fieldMap[0].length; column++) {
@@ -690,6 +689,6 @@ export default class Field extends PIXI.Container {
       }
     }
 
-    this._fieldMapContainer.cacheAsBitmap = true;
+    this._fieldMapContainer.cacheAsTexture = true;
   }
 }

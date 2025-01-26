@@ -1,12 +1,12 @@
-import * as PIXI from 'pixi.js';
+import { Container, Sprite, EventEmitter } from 'pixi.js';
 import Loader from '../../../../../../../../core/loader';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
-export default class PlayerLives extends PIXI.Container {
+export default class PlayerLives extends Container {
   constructor() {
     super();
 
-    this.events = new PIXI.utils.EventEmitter();
+    this.events = new EventEmitter();
 
     this._lives = SPACE_INVADERS_CONFIG.player.livesAtStart;
     this._livesViews = [];
@@ -52,7 +52,7 @@ export default class PlayerLives extends PIXI.Container {
   _createLifeView() {
     const spriteSheet = Loader.assets['assets/spritesheets/space-invaders-sheet'];
     const texture = spriteSheet.textures['player.png'];
-    const view = new PIXI.Sprite(texture);
+    const view = new Sprite(texture);
 
     return view;
   }
