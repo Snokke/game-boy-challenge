@@ -25,7 +25,15 @@ body { -webkit-touch-callout: none !important; }
 a { -webkit-user-select: none !important; }
 div { -webkit-user-select: none !important; }
 
-.webgl
+.threejs-canvas
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.pixi-canvas
 {
   position: fixed;
   top: 0;

@@ -1,10 +1,10 @@
 import { Container, Sprite, Text, EventEmitter } from 'pixi.js';
 import { TETRIS_CONFIG } from '../../../data/tetris-config';
 import Loader from '../../../../../../../../core/loader';
-import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
+import Timeout from '../../../../../../../../core/helpers/timeout';
 
 export default class GameOverPopup extends Container {
   constructor() {
@@ -82,7 +82,7 @@ export default class GameOverPopup extends Container {
     let index = 0;
 
     for (let i = this._blockLines.length - 1; i >= 0; i--) {
-      const lineAnimationTimer = Delayed.call(this._showWallLineDelay * index, () => {
+      const lineAnimationTimer = Timeout.call(this._showWallLineDelay * index, () => {
         this._blockLines[i].visible = true;
       });
 
@@ -90,7 +90,7 @@ export default class GameOverPopup extends Container {
       this._lineAnimationTimers[i] = lineAnimationTimer;
     }
 
-    this._animationTimer = Delayed.call(this._showWallLineDelay * this._blockLines.length + 100, () => {
+    this._animationTimer = Timeout.call(this._showWallLineDelay * this._blockLines.length + 100, () => {
       this.events.emit('onWallShowed');
       this._gameOverContainer.visible = true;
       this._wallHideAnimation();
@@ -103,7 +103,7 @@ export default class GameOverPopup extends Container {
     let index = 0;
 
     for (let i = this._blockLines.length - 1; i >= 0; i--) {
-      const lineAnimationTimer = Delayed.call(this._showWallLineDelay * index, () => {
+      const lineAnimationTimer = Timeout.call(this._showWallLineDelay * index, () => {
         this._blockLines[i].visible = false;
       });
 
@@ -111,7 +111,7 @@ export default class GameOverPopup extends Container {
       this._lineAnimationTimers[i] = lineAnimationTimer;
     }
 
-    this._animationTimer = Delayed.call(this._showWallLineDelay * this._blockLines.length, () => {
+    this._animationTimer = Timeout.call(this._showWallLineDelay * this._blockLines.length, () => {
       this._wallContainer.visible = false;
       this._isGameOverShowed = true;
     });

@@ -1,8 +1,8 @@
 import { Sprite } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
-import Delayed from '../../../../../../../core/helpers/delayed-call';
 import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
+import Timeout from '../../../../../../../core/helpers/timeout';
 
 export default class LicenseScreen extends GameScreenAbstract {
   constructor() {
@@ -17,7 +17,7 @@ export default class LicenseScreen extends GameScreenAbstract {
   show() {
     super.show();
 
-    this._delay = Delayed.call(2000, () => {
+    this._delay = Timeout.call(2000, () => {
       this.events.emit('onComplete');
     });
   }

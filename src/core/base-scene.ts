@@ -8,8 +8,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 import SCENE_CONFIG from './configs/scene-config';
 import MainScene from '../main-scene';
-import LoadingOverlay from './loading-overlay';
-import { Black, CanvasDriver, Engine, Input, MasterAudio, StageScaleMode } from 'black-engine';
+import LoadingOverlay from './LoadingOverlay';
 import Loader from './loader';
 import Scene3DDebugMenu from './helpers/gui-helper/scene-3d-debug-menu';
 import DEBUG_CONFIG from './configs/debug-config';
@@ -20,6 +19,8 @@ import isMobile from 'ismobilejs';
 import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/game-boy/data/game-boy-config';
 
 export default class BaseScene {
+  private pixiApp: Application;
+
   constructor() {
     this._scene = null;
     this._renderer = null;
@@ -32,7 +33,7 @@ export default class BaseScene {
     this._orbitControls = null;
     this._audioListener = null;
     this._renderPass = null;
-    this._pixiApplication = null;
+    this._gameBoyPixiApp = null;
 
     this._windowSizes = {};
     this._isAssetsLoaded = false;
@@ -53,7 +54,8 @@ export default class BaseScene {
       orbitControls: this._orbitControls,
       outlinePass: this._outlinePass,
       audioListener: this._audioListener,
-      pixiApplication: this._pixiApplication,
+      pixiApp: this.pixiApp,
+      gameBoyPixiApp: this._gameBoyPixiApp,
     };
 
     this._mainScene = new MainScene(data);
@@ -83,31 +85,42 @@ export default class BaseScene {
   }
 
   async _init() {
-    this._initBlack();
+    this.initLoader();
+    await this.initPixiJS();
     this._initThreeJS();
-    await this._initPixiJS();
+    await this._initGameBoyPixiJS();
     this._initUpdate();
   }
 
-  _initBlack() {
-    const engine = new Engine('container', Loader, CanvasDriver, [Input, MasterAudio]);
-
-    engine.pauseOnBlur = false;
-    engine.pauseOnHide = false;
-    engine.start();
-
-    engine.stage.setSize(640, 960);
-    engine.stage.scaleMode = StageScaleMode.LETTERBOX;
+  private initLoader(): void {
+    new Loader();
   }
 
-  async _initPixiJS() {
+  private async initPixiJS(): Promise<void> {
+    const canvas = document.querySelector('.pixi-canvas') as HTMLCanvasElement;
+    const pixiApp = this.pixiApp = new Application();
+
+    await pixiApp.init({
+      canvas: canvas,
+      autoDensity: true,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      resizeTo: window,
+      backgroundAlpha: 0,
+    });
+
+    Ticker.shared.autoStart = false;
+    Ticker.shared.stop();
+  }
+
+  async _initGameBoyPixiJS() {
     const canvas = document.createElement('canvas');
     canvas.width = GAME_BOY_CONFIG.screen.width;
     canvas.height = GAME_BOY_CONFIG.screen.height;
 
-    const pixiApp = this._pixiApplication = new Application();
+    const gameBoyPixiApp = this._gameBoyPixiApp = new Application();
 
-    await pixiApp.init({
+    await gameBoyPixiApp.init({
       canvas: canvas,
       autoDensity: true,
       width: GAME_BOY_CONFIG.screen.width,
@@ -119,7 +132,7 @@ export default class BaseScene {
     Ticker.shared.autoStart = false;
     Ticker.shared.stop();
 
-    this._pixiApplication.renderer.background.alpha = 1;
+    this._gameBoyPixiApp.renderer.background.alpha = 1;
   }
 
   _initThreeJS() {
@@ -145,7 +158,7 @@ export default class BaseScene {
       height: window.innerHeight
     };
 
-    const canvas = document.querySelector('canvas.webgl');
+    const canvas = document.querySelector('.threejs-canvas');
 
     const renderer = this._renderer = new THREE.WebGLRenderer({
       canvas: canvas,
@@ -215,6 +228,10 @@ export default class BaseScene {
       this._fxaaPass.material.uniforms['resolution'].value.x = 1 / (this._windowSizes.width * pixelRatio);
       this._fxaaPass.material.uniforms['resolution'].value.y = 1 / (this._windowSizes.height * pixelRatio);
     }
+
+    if (this._mainScene) {
+      this._mainScene.onResize();
+    }
   }
 
   _setupBackgroundColor() {
@@ -253,9 +270,7 @@ export default class BaseScene {
   }
 
   _initOutlinePass() {
-    const bounds = Black.stage.bounds;
-
-    const outlinePass = this._outlinePass = new OutlinePass(new THREE.Vector2(bounds.width, bounds.height), this._scene, this._camera);
+    const outlinePass = this._outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this._scene, this._camera);
     this._effectComposer.addPass(outlinePass);
 
     const outlinePassConfig = SCENE_CONFIG.outlinePass;
@@ -284,7 +299,7 @@ export default class BaseScene {
   }
 
   _initScene3DDebugMenu() {
-    this._scene3DDebugMenu = new Scene3DDebugMenu(this._scene, this._camera, this._renderer);
+    this._scene3DDebugMenu = new Scene3DDebugMenu(this._scene, this._camera, this._renderer, this.pixiApp);
     this._orbitControls = this._scene3DDebugMenu.getOrbitControls();
   }
 

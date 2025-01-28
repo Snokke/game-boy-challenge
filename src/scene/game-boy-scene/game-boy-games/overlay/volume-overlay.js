@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
-import Delayed from '../../../../core/helpers/delayed-call';
 import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
+import Timeout from '../../../../core/helpers/timeout';
 
 export default class VolumeOverlay extends Container {
   constructor() {
@@ -34,7 +34,7 @@ export default class VolumeOverlay extends Container {
       this._hideTimer.stop();
     }
 
-    this._hideTimer = Delayed.call(GAME_BOY_CONFIG.volumeController.hideTime, () => {
+    this._hideTimer = Timeout.call(GAME_BOY_CONFIG.volumeController.hideTime, () => {
       this.hide();
     });
   }

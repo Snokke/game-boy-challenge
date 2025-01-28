@@ -1,21 +1,24 @@
-import { DisplayObject, Sprite } from "black-engine";
+import { Container, Sprite, EventEmitter } from "pixi.js";
 import DEBUG_CONFIG from "../core/configs/debug-config";
 import { SOUNDS_CONFIG } from "../core/configs/sounds-config";
+import Loader from "../core/loader";
 
-export default class SoundIcon extends DisplayObject {
+export default class SoundIcon extends Container {
   constructor() {
     super();
 
+    this.events = new EventEmitter();
+
     this._view = null;
 
-    this.touchable = true;
+    this._init();
   }
 
   updateTexture() {
-    this._view.textureName = this._getTexture();
+    this._view.texture = Loader.assets[this._getTexture()];
   }
 
-  onAdded() {
+  _init() {
     this._initView();
     this._initSignals();
 
@@ -25,24 +28,26 @@ export default class SoundIcon extends DisplayObject {
   }
 
   _initView() {
-    const view = this._view = new Sprite(this._getTexture());
-    this.add(view);
+    const texture = Loader.assets['assets/other/sound-icon'];
+    const view = this._view = new Sprite(texture);
+    this.addChild(view);
 
-    view.alignAnchor();
-    view.touchable = true;
+    view.anchor.set(0.5);
+    view.eventMode = 'static';
+    view.cursor = 'pointer';
 
     view.scale = 0.4;
   }
 
   _getTexture() {
-    return SOUNDS_CONFIG.enabled ? 'other/sound-icon' : 'other/sound-icon-mute';
+    return SOUNDS_CONFIG.enabled ? 'assets/other/sound-icon' : 'assets/other/sound-icon-mute';
   }
 
   _initSignals() {
-    this._view.on('pointerDown', () => {
+    this._view.on('pointerdown', () => {
       SOUNDS_CONFIG.enabled = !SOUNDS_CONFIG.enabled;
       this.updateTexture();
-      this.post('onSoundChanged');
+      this.events.emit('onSoundChanged');
     });
   }
 }

@@ -4,25 +4,25 @@ import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
-import { Black, MessageDispatcher } from 'black-engine';
+import { MessageDispatcher } from 'black-engine';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
-import Delayed from '../../../core/helpers/delayed-call';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 import GameBoyAudio from './game-boy-audio/game-boy-audio';
 import SCENE_CONFIG from '../../../core/configs/scene-config';
+import Timeout from '../../../core/helpers/timeout';
 
 export default class GameBoy extends THREE.Group {
-  constructor(pixiCanvas, pixiApplication, audioListener) {
+  constructor(pixiCanvas, gameBoyPixiApp, audioListener) {
     super();
 
     this.events = new MessageDispatcher();
 
     this._pixiCanvas = pixiCanvas;
-    this._pixiApplication = pixiApplication;
+    this._gameBoyPixiApp = gameBoyPixiApp;
     this._audioListener = audioListener;
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
@@ -216,7 +216,7 @@ export default class GameBoy extends THREE.Group {
 
     if ((this._draggableParts.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled)
       || (objectPartType === GAME_BOY_PART_TYPE.VolumeControl)) {
-      Black.engine.containerElement.style.cursor = 'grab';
+      // Black.engine.containerElement.style.cursor = 'grab';
     }
   }
 
@@ -346,7 +346,7 @@ export default class GameBoy extends THREE.Group {
 
   showZeldaIntro() {
     this._isZeldaIntroPlaying = true;
-    this._pixiApplication.renderer.background.alpha = 0;
+    this._gameBoyPixiApp.renderer.background.alpha = 0;
 
     this._zeldaIntroVideo.play();
   }
@@ -412,7 +412,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   _setReturnRotationTimer() {
-    this._returnRotationTimer = Delayed.call(GAME_BOY_CONFIG.rotation.returnTime, () => this._onReturnRotation());
+    this._returnRotationTimer = Timeout.call(GAME_BOY_CONFIG.rotation.returnTime, () => this._onReturnRotation());
   }
 
   _resetReturnRotationTimer() {
@@ -455,7 +455,7 @@ export default class GameBoy extends THREE.Group {
     this.events.post('onButtonPress', buttonType);
 
     if (GAME_BOY_BUTTONS_CONFIG[buttonType].keyRepeat) {
-      this._firstRepeatTimer = Delayed.call(GAME_BOY_CONFIG.buttons.firstRepeatTime, () => {
+      this._firstRepeatTimer = Timeout.call(GAME_BOY_CONFIG.buttons.firstRepeatTime, () => {
         this._buttonRepeatAllowed = true;
       });
     }
@@ -610,7 +610,7 @@ export default class GameBoy extends THREE.Group {
 
   _onZeldaIntroEnded() {
     this._isZeldaIntroPlaying = false;
-    this._pixiApplication.renderer.background.alpha = 1;
+    this._gameBoyPixiApp.renderer.background.alpha = 1;
 
     this._zeldaIntroVideo.pause();
     this._zeldaIntroVideo.currentTime = 0;
@@ -856,7 +856,7 @@ export default class GameBoy extends THREE.Group {
 
     powerSwitchSound.setVolume(this._globalVolume);
 
-    Loader.events.on('onAudioLoaded', () => {
+    document.addEventListener('onLoad', () => {
       powerSwitchSound.setBuffer(Loader.assets['power-switch']);
     });
   }
@@ -878,7 +878,7 @@ export default class GameBoy extends THREE.Group {
     insertCartridgeSound.setVolume(this._globalVolume);
     ejectCartridgeSound.setVolume(this._globalVolume);
 
-    Loader.events.on('onAudioLoaded', () => {
+    document.addEventListener('onLoad', () => {
       insertCartridgeSound.setBuffer(Loader.assets['insert-cartridge']);
       ejectCartridgeSound.setBuffer(Loader.assets['eject-cartridge']);
     });

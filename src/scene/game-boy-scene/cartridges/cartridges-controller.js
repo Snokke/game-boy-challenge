@@ -3,8 +3,8 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 import Cartridge from './cartridge';
 import { CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
 import { MessageDispatcher } from 'black-engine';
-import Delayed from '../../../core/helpers/delayed-call';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
+import Timeout from '../../../core/helpers/timeout';
 
 export default class CartridgesController extends THREE.Group {
   constructor() {
@@ -154,7 +154,7 @@ export default class CartridgesController extends THREE.Group {
             this._onCartridgeInserted(cartridge);
           });
 
-        Delayed.call(200, () => this.events.post('cartridgeInsertSound'));
+        Timeout.call(200, () => this.events.post('cartridgeInsertSound'));
       });
 
     new TWEEN.Tween(cartridge.rotation)

@@ -1,61 +1,55 @@
-import { Black, DisplayObject, Sprite } from "black-engine";
+import { Container, Sprite, EventEmitter } from "pixi.js";
+import Loader from "../core/loader";
 
-export default class Overlay extends DisplayObject {
+export default class Overlay extends Container {
   constructor() {
     super();
 
+    this.events = new EventEmitter();
+
     this._view = null;
 
-    this.touchable = true;
+    this._init();
   }
 
-  onAdded() {
+  onResize(width, height) {
+    this._view.x = 0;
+    this._view.y = 0;
+
+    const overlaySize = 10;
+    this._view.scale.x = width / overlaySize;
+    this._view.scale.y = height / overlaySize;
+  }
+
+  _init() {
     this._initView();
     this._initSignals();
-
-    Black.stage.on('resize', () => this._onResize());
-    this._onResize();
   }
 
   _initView() {
-    const view = this._view = new Sprite('other/overlay');
-    this.add(view);
+    const texture = Loader.assets['assets/other/overlay'];
+    const view = this._view = new Sprite(texture);
+    this.addChild(view);
 
     view.alpha = 0;
-    view.touchable = true;
+    view.eventMode = 'static';
   }
 
   _initSignals() {
-    this._view.on('pointerDown', (msg, pointer) => {
+    this._view.on('pointerdown', (pointer) => {
       if (pointer.button === 0) {
-        this.post('onPointerDown', pointer.x, pointer.y);
+        this.events.emit('onPointerDown', pointer.x, pointer.y);
       }
     });
 
-    this._view.on('pointerUp', (msg, pointer) => {
+    this._view.on('pointerup', (pointer) => {
       if (pointer.button === 0) {
-        this.post('onPointerUp', pointer.x, pointer.y);
+        this.events.emit('onPointerUp', pointer.x, pointer.y);
       }
     });
 
-    this._view.on('pointerMove', (msg, pointer) => {
-      this.post('onPointerMove', pointer.x, pointer.y);
+    this._view.on('pointermove', (pointer) => {
+      this.events.emit('onPointerMove', pointer.x, pointer.y);
     });
-
-    Black.engine.containerElement.addEventListener("wheel", event => {
-      const delta = Math.sign(event.deltaY);
-      this.post('onWheelScroll', delta);
-    });
-  }
-
-  _onResize() {
-    const bounds = Black.stage.bounds;
-
-    this._view.x = bounds.left;
-    this._view.y = bounds.top;
-
-    const overlaySize = 10;
-    this._view.scaleX = bounds.width / overlaySize;
-    this._view.scaleY = bounds.height / overlaySize;
   }
 }

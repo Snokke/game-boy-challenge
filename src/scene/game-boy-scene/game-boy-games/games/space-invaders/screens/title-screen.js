@@ -1,10 +1,9 @@
 import { Sprite } from 'pixi.js';
 import Loader from "../../../../../../core/loader";
-import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
 import TWEEN from 'three/addons/libs/tween.module.js';
-import Delayed from "../../../../../../core/helpers/delayed-call";
 import { BUTTON_TYPE } from "../../../../game-boy/data/game-boy-data";
+import Timeout from '../../../../../../core/helpers/timeout';
 
 
 export default class TitleScreen extends GameScreenAbstract {
@@ -77,7 +76,7 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _blinkStartText() {
-    this._blinkTimer = Delayed.call(this._blinkTime, () => {
+    this._blinkTimer = Timeout.call(this._blinkTime, () => {
       this._startText.visible = !this._startText.visible;
       this._blinkStartText();
     });

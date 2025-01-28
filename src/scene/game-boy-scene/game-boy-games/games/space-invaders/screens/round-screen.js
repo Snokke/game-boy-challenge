@@ -2,7 +2,7 @@ import { Text } from "pixi.js";
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
 import { SPACE_INVADERS_CONFIG } from "../data/space-invaders-config";
-import Delayed from "../../../../../../core/helpers/delayed-call";
+import Timeout from "../../../../../../core/helpers/timeout";
 
 
 export default class RoundScreen extends GameScreenAbstract {
@@ -18,7 +18,7 @@ export default class RoundScreen extends GameScreenAbstract {
   show() {
     super.show();
 
-    this._timer = Delayed.call(1300, () => {
+    this._timer = Timeout.call(1300, () => {
       this.events.emit('onRoundEnd');
     });
   }

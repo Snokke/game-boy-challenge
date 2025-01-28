@@ -9,13 +9,12 @@ import EnemiesController from "./enemies-controller/enemies-controller";
 import PlayerMissile from "./missile/player-missile";
 import { MISSILE_TYPE } from "./missile/missile-config";
 import { ENEMIES_CONFIG, ENEMY_CONFIG } from "./enemies-controller/data/enemy-config";
-import Delayed from "../../../../../../../core/helpers/delayed-call";
 import PlayerLives from "./ui-elements/player-lives";
 import Score from "./ui-elements/score";
 import EnemyMissile from "./missile/enemy-missile";
 import { GAME_BOY_SOUND_TYPE } from "../../../../../game-boy/game-boy-audio/game-boy-audio-data";
 import GameBoyAudio from "../../../../../game-boy/game-boy-audio/game-boy-audio";
-import { CCDIKHelper } from "three/examples/jsm/Addons.js";
+import Timeout from "../../../../../../../core/helpers/timeout";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {
@@ -196,7 +195,7 @@ export default class GameplayScreen extends GameScreenAbstract {
 
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.PlayerKilled);
 
-    Delayed.call(1000, () => {
+    Timeout.call(1000, () => {
       this._player.hideHit();
       this._setPlayerStartPosition();
       this._isGamePaused = false;
@@ -230,7 +229,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     missile.deactivate();
     missile.explode();
 
-    Delayed.call(300, () => {
+    Timeout.call(300, () => {
       this._removePlayerMissile(missile);
     });
   }
@@ -239,7 +238,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     missile.deactivate();
     missile.explode();
 
-    Delayed.call(300, () => {
+    Timeout.call(300, () => {
       this._removeEnemyMissile(missile);
     });
   }
@@ -297,7 +296,7 @@ export default class GameplayScreen extends GameScreenAbstract {
     this._player.showHit();
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.PlayerKilled);
 
-    Delayed.call(1000, () => {
+    Timeout.call(1000, () => {
       this._gameOver();
     });
   }
@@ -362,7 +361,7 @@ export default class GameplayScreen extends GameScreenAbstract {
   _allEnemiesKilled() {
     this._removeAllEnemyMissiles();
 
-    Delayed.call(500, () => {
+    Timeout.call(500, () => {
       this.events.emit('onAllEnemiesKilled');
     });
   }

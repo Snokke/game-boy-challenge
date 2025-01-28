@@ -2,10 +2,10 @@ import { Sprite, EventEmitter } from 'pixi.js';
 import Loader from '../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import TWEEN from 'three/addons/libs/tween.module.js';
-import Delayed from '../../../../core/helpers/delayed-call';
 import ScreenAbstract from './screen-abstract';
 import GameBoyAudio from '../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../game-boy/game-boy-audio/game-boy-audio-data';
+import Timeout from '../../../../core/helpers/timeout';
 
 export default class LoadingScreen extends ScreenAbstract {
   constructor() {
@@ -33,7 +33,7 @@ export default class LoadingScreen extends ScreenAbstract {
       .onComplete(() => {
         GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.GameBoyLoad);
 
-        this._delayToStart = Delayed.call(1000, () => {
+        this._delayToStart = Timeout.call(1000, () => {
           this.hide();
           this.events.emit('onComplete');
         });

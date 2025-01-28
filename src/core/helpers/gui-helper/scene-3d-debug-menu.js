@@ -1,4 +1,3 @@
-import { Black } from 'black-engine';
 import DEBUG_CONFIG from "../../configs/debug-config";
 import RendererStats from 'three-webgl-stats';
 import Stats from 'three/addons/libs/stats.module.js';
@@ -6,10 +5,11 @@ import GUIHelper from "./gui-helper";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 
 export default class Scene3DDebugMenu {
-  constructor(scene, camera, renderer) {
+  constructor(scene, camera, renderer, pixiApp) {
     this._scene = scene;
     this._camera = camera;
     this._renderer = renderer;
+    this.pixiApp = pixiApp;
 
     this._fpsStats = null;
     this._rendererStats = null;
@@ -103,7 +103,7 @@ export default class Scene3DDebugMenu {
   }
 
   _initOrbitControls() {
-    const orbitControls = this._orbitControls = new OrbitControls(this._camera, Black.engine.containerElement);
+    const orbitControls = this._orbitControls = new OrbitControls(this._camera, this.pixiApp.renderer.canvas);
 
     orbitControls.target.set(0, 0, 0);
 

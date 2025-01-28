@@ -2,16 +2,16 @@ import * as THREE from 'three';
 import TWEEN from 'three/addons/libs/tween.module.js';
 
 export default class LoadingOverlay extends THREE.Group {
+  private overlayMaterial: THREE.ShaderMaterial;
+
   constructor() {
     super();
 
-    this._overlayMaterial = null;
-
-    this._init();
+    this.init();
   }
 
-  hide() {
-    new TWEEN.Tween(this._overlayMaterial.uniforms.uAlpha)
+  public hide(): void {
+    new TWEEN.Tween(this.overlayMaterial.uniforms.uAlpha)
       .to({ value: 0 }, 400)
       .easing(TWEEN.Easing.Linear.None)
       .start()
@@ -20,9 +20,9 @@ export default class LoadingOverlay extends THREE.Group {
       });
   }
 
-  _init() {
+  private init(): void {
     const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-    const overlayMaterial = this._overlayMaterial = new THREE.ShaderMaterial({
+    const overlayMaterial = this.overlayMaterial = new THREE.ShaderMaterial({
       transparent: true,
       uniforms: {
         uAlpha: { value: 1 },

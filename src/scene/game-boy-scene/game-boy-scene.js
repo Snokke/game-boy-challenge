@@ -73,11 +73,11 @@ export default class GameBoyScene extends THREE.Group {
   }
 
   _initGameBoy() {
-    const pixiCanvas = this._data.pixiApplication.canvas;
-    const pixiApplication = this._data.pixiApplication;
+    const gameBoyPixiCanvas = this._data.gameBoyPixiApp.canvas;
+    const gameBoyPixiApp = this._data.gameBoyPixiApp;
     const audioListener = this._data.audioListener;
 
-    const gameBoy = new GameBoy(pixiCanvas, pixiApplication, audioListener);
+    const gameBoy = new GameBoy(gameBoyPixiCanvas, gameBoyPixiApp, audioListener);
     this.add(gameBoy);
 
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy] = gameBoy;
@@ -91,9 +91,9 @@ export default class GameBoyScene extends THREE.Group {
   }
 
   _initGameBoyGames() {
-    const pixiApplication = this._data.pixiApplication;
+    const gameBoyPixiApp = this._data.gameBoyPixiApp;
 
-    this._gameBoyGames = new GameBoyGames(pixiApplication);
+    this._gameBoyGames = new GameBoyGames(gameBoyPixiApp);
   }
 
   _initGameBoyDebug() {

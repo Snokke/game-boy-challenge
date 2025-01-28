@@ -1,52 +1,58 @@
-import { Black, DisplayObject, Message } from "black-engine";
+import { Container, EventEmitter } from "pixi.js";
 import Overlay from "./overlay";
 import SoundIcon from "./sound-icon";
 
-export default class UI extends DisplayObject {
-  constructor() {
+export default class UI extends Container {
+  constructor(pixiApp) {
     super();
 
+    this.events = new EventEmitter();
+
+    this._pixiApp = pixiApp;
     this._overlay = null;
     this._soundIcon = null;
 
-    this.touchable = true;
+    this._init();
+  }
+
+  onResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this._soundIcon.x = 50;
+    this._soundIcon.y = 50;
+
+    this._overlay.onResize(width, height);
   }
 
   updateSoundIcon() {
     this._soundIcon.updateTexture();
   }
 
-  onAdded() {
+  _init() {
     this._initOverlay();
     this._initSoundIcon();
     this._initSignals();
 
-    this.stage.on(Message.RESIZE, this._handleResize, this);
-    this._handleResize();
+    this.onResize();
   }
 
   _initOverlay() {
     const overlay = this._overlay = new Overlay();
-    this.add(overlay);
+    this.addChild(overlay);
   }
 
   _initSoundIcon() {
     const soundIcon = this._soundIcon = new SoundIcon();
-    this.add(soundIcon);
+    this.addChild(soundIcon);
   }
 
   _initSignals() {
-    this._overlay.on('onPointerMove', (msg, x, y) => this.post('onPointerMove', x, y));
-    this._overlay.on('onPointerDown', (msg, x, y) => this.post('onPointerDown', x, y));
-    this._overlay.on('onPointerUp', (msg, x, y) => this.post('onPointerUp', x, y));
-    this._overlay.on('onWheelScroll', (msg, delta) => this.post('onWheelScroll', delta));
-    this._soundIcon.on('onSoundChanged', () => this.post('onSoundChanged'));
-  }
+    this._overlay.events.on('onPointerMove', (x, y) => this.events.emit('onPointerMove', x, y));
+    this._overlay.events.on('onPointerDown', (x, y) => this.events.emit('onPointerDown', x, y));
+    this._overlay.events.on('onPointerUp', (x, y) => this.events.emit('onPointerUp', x, y));
+    this._pixiApp.canvas.addEventListener('wheel', event => this.events.emit('onWheelScroll', Math.sign(event.deltaY)));
 
-  _handleResize() {
-    const bounds = Black.stage.bounds;
-
-    this._soundIcon.x = bounds.left + 50;
-    this._soundIcon.y = bounds.top + 50;
+    this._soundIcon.events.on('onSoundChanged', () => this.events.emit('onSoundChanged'));
   }
 }

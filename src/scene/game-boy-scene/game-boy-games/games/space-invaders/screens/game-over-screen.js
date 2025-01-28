@@ -1,7 +1,7 @@
 import { Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
-import Delayed from '../../../../../../core/helpers/delayed-call';
+import Timeout from '../../../../../../core/helpers/timeout';
 
 export default class GameOverScreen extends GameScreenAbstract {
   constructor() {
@@ -15,7 +15,7 @@ export default class GameOverScreen extends GameScreenAbstract {
   show() {
     super.show();
 
-    this._timer = Delayed.call(2000, () => {
+    this._timer = Timeout.call(2000, () => {
       this.events.emit('onGameOverEnd');
     });
   }

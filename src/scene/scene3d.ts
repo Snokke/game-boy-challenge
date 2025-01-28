@@ -17,9 +17,9 @@ export default class Scene3D extends THREE.Group {
 
     this.events = new MessageDispatcher();
 
-    this._data = data,
-    this._scene = data.scene,
-    this._camera = data.camera,
+    this._data = data;
+    this._scene = data.scene;
+    this._camera = data.camera;
 
     this._init();
   }

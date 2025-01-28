@@ -3,9 +3,9 @@ import { LEVELS_CONFIG, TETRIS_CONFIG } from '../../../data/tetris-config';
 import Shape from './shape/shape';
 import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import { ROTATE_TYPE, SHAPE_TYPE } from './shape/shape-config';
-import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
+import Timeout from '../../../../../../../../core/helpers/timeout';
 
 export default class Field extends Container {
   constructor() {
@@ -332,7 +332,7 @@ export default class Field extends Container {
 
     const time = debugClear ? TETRIS_CONFIG.linesBlinkTime : TETRIS_CONFIG.linesBlinkTime * TETRIS_CONFIG.linesBlinkCount;
 
-    this._linesBlinkTimer = Delayed.call(time, () => {
+    this._linesBlinkTimer = Timeout.call(time, () => {
       this._filledRowsCount += usedFilledRowAnimationShape.length;
       this.events.emit('onFilledRowsCountChange', this._filledRowsCount);
 
@@ -365,7 +365,7 @@ export default class Field extends Container {
     const count = debugClear ? 1 : TETRIS_CONFIG.linesBlinkCount;
 
     for (let i = 0; i < count; i++) {
-      const timer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * i, () => {
+      const timer = Timeout.call(TETRIS_CONFIG.linesBlinkTime * i, () => {
         filledRowAnimationShapes.forEach((filledRowAnimationShape) => this._blinkFilledRow(filledRowAnimationShape));
       });
 
@@ -374,11 +374,11 @@ export default class Field extends Container {
   }
 
   _blinkFilledRow(filledRowAnimationShape) {
-    this._blinkRowShowTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime * 0.5, () => {
+    this._blinkRowShowTimer = Timeout.call(TETRIS_CONFIG.linesBlinkTime * 0.5, () => {
       filledRowAnimationShape.visible = true;
     });
 
-    this._blinkRowHideTimer = Delayed.call(TETRIS_CONFIG.linesBlinkTime, () => {
+    this._blinkRowHideTimer = Timeout.call(TETRIS_CONFIG.linesBlinkTime, () => {
       filledRowAnimationShape.visible = false;
     });
   }

@@ -1,8 +1,8 @@
 import { Container, EventEmitter } from 'pixi.js';
 import { ENEMY_CONFIG, ENEMY_MOVEMENT_DIRECTION, ENEMY_TYPE } from './data/enemy-config';
 import Enemy from './enemy';
-import Delayed from '../../../../../../../../core/helpers/delayed-call';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
+import Timeout from '../../../../../../../../core/helpers/timeout';
 
 export default class EnemiesController extends Container {
   constructor() {
@@ -83,7 +83,7 @@ export default class EnemiesController extends Container {
   removeEnemy(enemy) {
     enemy.kill();
 
-    const removeEnemyTimer = Delayed.call(300, () => {
+    const removeEnemyTimer = Timeout.call(300, () => {
       const row = this._enemies.findIndex(enemies => enemies.includes(enemy));
       const column = this._enemies[row].findIndex(item => item === enemy);
 
@@ -152,7 +152,7 @@ export default class EnemiesController extends Container {
 
     for (let row = ENEMY_CONFIG.rows - 1; row >= 0; row--) {
       for (let column = ENEMY_CONFIG.columns - 1; column >= 0; column--) {
-        const timer = Delayed.call(delay * index, () => {
+        const timer = Timeout.call(delay * index, () => {
           const enemy = this._enemies[row][column];
           enemy.activate();
           enemy.show();
@@ -164,7 +164,7 @@ export default class EnemiesController extends Container {
       }
     }
 
-    Delayed.call(delay * index, () => {
+    Timeout.call(delay * index, () => {
       this.updateBottomEnemies();
     });
   }

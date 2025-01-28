@@ -2,12 +2,12 @@ import { Sprite, Text, Graphics } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
-import Delayed from '../../../../../../../core/helpers/delayed-call';
 import { TETRIS_SCREEN_TYPE } from '../../data/tetris-data';
 import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
 import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
+import Timeout from '../../../../../../../core/helpers/timeout';
 
 export default class TitleScreen extends GameScreenAbstract {
   constructor() {
@@ -45,7 +45,7 @@ export default class TitleScreen extends GameScreenAbstract {
   }
 
   _blinkArrow() {
-    this._blinkTimer = Delayed.call(700, () => {
+    this._blinkTimer = Timeout.call(700, () => {
       this._arrow.visible = !this._arrow.visible;
       this._blinkArrow();
     });

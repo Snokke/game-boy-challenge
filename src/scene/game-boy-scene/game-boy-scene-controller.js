@@ -1,4 +1,4 @@
-import { Black, MessageDispatcher } from 'black-engine';
+import { MessageDispatcher } from 'black-engine';
 import * as THREE from 'three';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
@@ -51,7 +51,7 @@ export default class GameBoyController {
     const intersect = this._raycasterController.checkIntersection(this._pointerPosition.x, this._pointerPosition.y);
 
     if (intersect === null) {
-      Black.engine.containerElement.style.cursor = 'auto';
+      // Black.engine.containerElement.style.cursor = 'auto';
       this._resetGlow();
     }
 
@@ -126,7 +126,7 @@ export default class GameBoyController {
     const object = intersect.object;
 
     if (object === null || !object.userData.isActive || !object.userData.showOutline) {
-      Black.engine.containerElement.style.cursor = 'auto';
+      // Black.engine.containerElement.style.cursor = 'auto';
       this._resetGlow();
 
       this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].onPointerOut();
@@ -135,7 +135,7 @@ export default class GameBoyController {
     }
 
     if (object.userData.isActive && object.userData.showOutline) {
-      Black.engine.containerElement.style.cursor = 'pointer';
+      // Black.engine.containerElement.style.cursor = 'pointer';
 
       const sceneObjectType = object.userData.sceneObjectType;
       const meshes = this._activeObjects[sceneObjectType].getOutlineMeshes(object);
