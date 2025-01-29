@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import TWEEN from 'three/addons/libs/tween.module.js';
 import Cartridge from './cartridge';
 import { CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
-import { MessageDispatcher } from 'black-engine';
+import { EventEmitter } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
 import Timeout from '../../../core/helpers/timeout';
 
@@ -10,7 +10,7 @@ export default class CartridgesController extends THREE.Group {
   constructor() {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._cartridges = {};
     this._cartridgesArray = [];
@@ -64,18 +64,18 @@ export default class CartridgesController extends THREE.Group {
     const insertedCartridge = this._checkIsCartridgeInserted(cartridge);
 
     if (insertedCartridge !== null) {
-      this.events.post('onCartridgeEjecting');
+      this.events.emit('onCartridgeEjecting');
       this._moveCartridgeFromGameBoy(insertedCartridge, 7, 200);
 
-      this.events.post('onCartridgeInserting');
+      this.events.emit('onCartridgeInserting');
       this._moveCartridgeToGameBoy(cartridge, 3.2);
     } else {
 
       if (!cartridge.isInserted()) {
-        this.events.post('onCartridgeInserting');
+        this.events.emit('onCartridgeInserting');
         this._moveCartridgeToGameBoy(cartridge, 5);
       } else {
-        this.events.post('onCartridgeEjecting');
+        this.events.emit('onCartridgeEjecting');
         this._moveCartridgeFromGameBoy(cartridge, 5, 400);
       }
     }
@@ -154,7 +154,7 @@ export default class CartridgesController extends THREE.Group {
             this._onCartridgeInserted(cartridge);
           });
 
-        Timeout.call(200, () => this.events.post('cartridgeInsertSound'));
+        Timeout.call(200, () => this.events.emit('cartridgeInsertSound'));
       });
 
     new TWEEN.Tween(cartridge.rotation)
@@ -170,9 +170,9 @@ export default class CartridgesController extends THREE.Group {
     this._isEjectingActive = true;
     GAME_BOY_CONFIG.currentCartridge = 'NONE';
     this._insertedCartridge = null;
-    this.events.post('cartridgeTypeChanged');
-    this.events.post('cartridgeEjectSound');
-    this.events.post('cartridgeStartEjecting');
+    this.events.emit('cartridgeTypeChanged');
+    this.events.emit('cartridgeEjectSound');
+    this.events.emit('cartridgeStartEjecting');
 
     const positions = CARTRIDGES_CONFIG.positions.eject;
     const floatingConfig = CARTRIDGES_CONFIG.floating[cartridgeType];
@@ -221,8 +221,8 @@ export default class CartridgesController extends THREE.Group {
     this._isInsertingActive = false;
     const cartridgeType = cartridge.getType();
     GAME_BOY_CONFIG.currentCartridge = cartridgeType;
-    this.events.post('cartridgeTypeChanged');
-    this.events.post('onCartridgeInserted', cartridge);
+    this.events.emit('cartridgeTypeChanged');
+    this.events.emit('onCartridgeInserted', cartridge);
     cartridge.setInPocketTexture();
 
     this._enableCartridges();
@@ -232,7 +232,7 @@ export default class CartridgesController extends THREE.Group {
     this._isEjectingActive = false;
     this._cartridgeDisableFloating[cartridgeType] = false;
     this._enableCartridges();
-    this.events.post('onCartridgeEjected');
+    this.events.emit('onCartridgeEjected');
   }
 
   _disableCartridges() {

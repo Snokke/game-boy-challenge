@@ -1,6 +1,6 @@
 import * as THREE from 'three';
+import { EventEmitter } from 'pixi.js';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
-import { MessageDispatcher } from 'black-engine';
 import Loader from '../../../core/loader';
 import vertexShader from './background-shaders/background-vertex.glsl';
 import fragmentShader from './background-shaders/background-fragment.glsl';
@@ -9,7 +9,7 @@ export default class Background extends THREE.Group {
   constructor() {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._view = null;
     this._sceneObjectType = SCENE_OBJECT_TYPE.Background;
@@ -22,7 +22,7 @@ export default class Background extends THREE.Group {
   }
 
   onPointerDown(object) {
-    this.events.post('onClick');
+    this.events.emit('onClick');
   }
 
   getMesh() {

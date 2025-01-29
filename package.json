@@ -18,7 +18,6 @@
   "dependencies": {
     "@types/three": "^0.172.0",
     "@vercel/analytics": "^1.0.1",
-    "black-engine": "^0.5.16",
     "ismobilejs": "^1.1.1",
     "pixi.js": "^8.7.0",
     "three": "^0.170.0",

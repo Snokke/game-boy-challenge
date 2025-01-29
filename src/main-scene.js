@@ -21,12 +21,6 @@ export default class MainScene {
   }
 
   afterAssetsLoad() {
-
-    // this._data.pixiApp.canvas.addEventListener('wheel', event => {
-    //   const delta = Math.sign(event.deltaY);
-    //   console.log(delta);
-    // });
-
     this._data.pixiApp.stage.addChild(this._ui);
     this._scene.add(this._scene3D);
   }

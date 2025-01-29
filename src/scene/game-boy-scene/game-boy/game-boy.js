@@ -4,7 +4,7 @@ import { GAME_BOY_PART_TYPE, GAME_BOY_ACTIVE_PARTS, GAME_BOY_CROSS_PARTS, BUTTON
 import Loader from '../../../core/loader';
 import { SCENE_OBJECT_TYPE } from '../data/game-boy-scene-data';
 import { GAME_BOY_BUTTONS_CONFIG, GAME_BOY_CONFIG, GAME_BOY_BUTTON_PART_BY_TYPE, CROSS_BUTTONS } from './data/game-boy-config';
-import { MessageDispatcher } from 'black-engine';
+import { EventEmitter } from 'pixi.js';
 import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture-color-vertex.glsl';
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
@@ -16,14 +16,15 @@ import SCENE_CONFIG from '../../../core/configs/scene-config';
 import Timeout from '../../../core/helpers/timeout';
 
 export default class GameBoy extends THREE.Group {
-  constructor(pixiCanvas, gameBoyPixiApp, audioListener) {
+  constructor(pixiCanvas, gameBoyPixiApp, audioListener, pixiApp) {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._pixiCanvas = pixiCanvas;
     this._gameBoyPixiApp = gameBoyPixiApp;
     this._audioListener = audioListener;
+    this._pixiApp = pixiApp;
     this._sceneObjectType = SCENE_OBJECT_TYPE.GameBoy;
 
     this._parts = [];
@@ -93,13 +94,13 @@ export default class GameBoy extends THREE.Group {
 
       if (this._isMobileZoomIn) {
         this._isMobileZoomIn = false;
-        this.events.post('onZoomOut');
+        this.events.emit('onZoomOut');
 
         credits.classList.remove('hide');
         credits.classList.add('show');
       } else {
         this._isMobileZoomIn = true;
-        this.events.post('onZoomIn');
+        this.events.emit('onZoomIn');
 
         credits.classList.remove('show');
         credits.classList.add('hide');
@@ -150,7 +151,7 @@ export default class GameBoy extends THREE.Group {
       }
 
       SOUNDS_CONFIG.gameBoyVolume = (volumeControl.rotation.z + maxAngle) / (maxAngle * 2);
-      this.events.post('onGameBoyVolumeChanged');
+      this.events.emit('onGameBoyVolumeChanged');
     }
 
 
@@ -216,7 +217,7 @@ export default class GameBoy extends THREE.Group {
 
     if ((this._draggableParts.includes(objectPartType) && GAME_BOY_CONFIG.rotation.rotationDragEnabled && GAME_BOY_CONFIG.rotation.debugRotationDragEnabled)
       || (objectPartType === GAME_BOY_PART_TYPE.VolumeControl)) {
-      // Black.engine.containerElement.style.cursor = 'grab';
+        this._pixiApp.canvas.style.cursor = 'grab';
     }
   }
 
@@ -389,7 +390,7 @@ export default class GameBoy extends THREE.Group {
       this._buttonRepeatTime += dt;
 
       if (this._buttonRepeatTime >= GAME_BOY_CONFIG.buttons.repeatTime) {
-        this.events.post('onButtonPress', this._pressedButtonType);
+        this.events.emit('onButtonPress', this._pressedButtonType);
         this._buttonRepeatTime = 0;
       }
     }
@@ -452,7 +453,7 @@ export default class GameBoy extends THREE.Group {
 
   _pressDownButton(buttonType, autoPressUp = false) {
     this._pressedButtonType = buttonType;
-    this.events.post('onButtonPress', buttonType);
+    this.events.emit('onButtonPress', buttonType);
 
     if (GAME_BOY_BUTTONS_CONFIG[buttonType].keyRepeat) {
       this._firstRepeatTimer = Timeout.call(GAME_BOY_CONFIG.buttons.firstRepeatTime, () => {
@@ -486,7 +487,7 @@ export default class GameBoy extends THREE.Group {
   }
 
   _pressUpButton(buttonType) {
-    this.events.post('onButtonUp', buttonType);
+    this.events.emit('onButtonUp', buttonType);
     this._pressedButtonType = null;
     this._buttonRepeatAllowed = false;
     this._stopFirstRepeatTimer();
@@ -532,7 +533,7 @@ export default class GameBoy extends THREE.Group {
 
     this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = true;
-    this.events.post('onPowerOn');
+    this.events.emit('onPowerOn');
 
     const powerIndicator = this._parts[GAME_BOY_PART_TYPE.PowerIndicator];
     const powerButton = this._parts[GAME_BOY_PART_TYPE.PowerButton];
@@ -571,7 +572,7 @@ export default class GameBoy extends THREE.Group {
 
     this._playSound(this._powerSwitchSound);
     GAME_BOY_CONFIG.powerOn = false;
-    this.events.post('onPowerOff');
+    this.events.emit('onPowerOff');
 
     const powerIndicator = this._parts[GAME_BOY_PART_TYPE.PowerIndicator];
     const powerButton = this._parts[GAME_BOY_PART_TYPE.PowerButton];
@@ -856,7 +857,7 @@ export default class GameBoy extends THREE.Group {
 
     powerSwitchSound.setVolume(this._globalVolume);
 
-    document.addEventListener('onLoad', () => {
+    document.addEventListener('onAudioLoaded', () => {
       powerSwitchSound.setBuffer(Loader.assets['power-switch']);
     });
   }
@@ -878,7 +879,7 @@ export default class GameBoy extends THREE.Group {
     insertCartridgeSound.setVolume(this._globalVolume);
     ejectCartridgeSound.setVolume(this._globalVolume);
 
-    document.addEventListener('onLoad', () => {
+    document.addEventListener('onAudioLoaded', () => {
       insertCartridgeSound.setBuffer(Loader.assets['insert-cartridge']);
       ejectCartridgeSound.setBuffer(Loader.assets['eject-cartridge']);
     });

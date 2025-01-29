@@ -1,6 +1,6 @@
 import * as THREE from 'three';
+import { EventEmitter } from 'pixi.js';
 import RaycasterController from './raycaster-controller';
-import { MessageDispatcher } from 'black-engine';
 import GameBoyScene from './game-boy-scene/game-boy-scene';
 
 export default class Scene3D extends THREE.Group {
@@ -10,12 +10,12 @@ export default class Scene3D extends THREE.Group {
   private _raycasterController: RaycasterController;
   private _gameBoyScene: GameBoyScene;
 
-  private events: MessageDispatcher;
+  private events: EventEmitter;
 
   constructor(data) {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._data = data;
     this._scene = data.scene;
@@ -68,7 +68,7 @@ export default class Scene3D extends THREE.Group {
   }
 
   _initSignals() {
-    this._gameBoyScene.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
-    this._gameBoyScene.events.on('onSoundsEnabledChanged', () => this.events.post('onSoundsEnabledChanged'));
+    this._gameBoyScene.events.on('fpsMeterChanged', () => this.events.emit('fpsMeterChanged'));
+    this._gameBoyScene.events.on('onSoundsEnabledChanged', () => this.events.emit('onSoundsEnabledChanged'));
   }
 }

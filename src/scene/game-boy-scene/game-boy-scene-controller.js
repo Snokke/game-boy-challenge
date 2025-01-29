@@ -1,5 +1,5 @@
-import { MessageDispatcher } from 'black-engine';
 import * as THREE from 'three';
+import { EventEmitter } from 'pixi.js';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
@@ -14,7 +14,7 @@ import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/dat
 export default class GameBoyController {
   constructor(data) {
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._scene = data.scene;
     this._camera = data.camera;
@@ -27,6 +27,7 @@ export default class GameBoyController {
     this._games = data.games;
     this._cameraController = data.cameraController;
     this._background = data.background;
+    this._pixiApp = data.pixiApp;
 
     this._pointerPosition = new THREE.Vector2();
     this._pointerPositionOnDown = new THREE.Vector2();
@@ -51,7 +52,7 @@ export default class GameBoyController {
     const intersect = this._raycasterController.checkIntersection(this._pointerPosition.x, this._pointerPosition.y);
 
     if (intersect === null) {
-      // Black.engine.containerElement.style.cursor = 'auto';
+      this._pixiApp.canvas.style.cursor = 'auto';
       this._resetGlow();
     }
 
@@ -126,7 +127,7 @@ export default class GameBoyController {
     const object = intersect.object;
 
     if (object === null || !object.userData.isActive || !object.userData.showOutline) {
-      // Black.engine.containerElement.style.cursor = 'auto';
+      this._pixiApp.canvas.style.cursor = 'auto';
       this._resetGlow();
 
       this._activeObjects[SCENE_OBJECT_TYPE.Cartridges].onPointerOut();
@@ -135,7 +136,7 @@ export default class GameBoyController {
     }
 
     if (object.userData.isActive && object.userData.showOutline) {
-      // Black.engine.containerElement.style.cursor = 'pointer';
+      this._pixiApp.canvas.style.cursor = 'pointer';
 
       const sceneObjectType = object.userData.sceneObjectType;
       const meshes = this._activeObjects[sceneObjectType].getOutlineMeshes(object);
@@ -205,21 +206,21 @@ export default class GameBoyController {
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
     const background = this._activeObjects[SCENE_OBJECT_TYPE.Background];
 
-    gameBoy.events.on('onButtonPress', (msg, buttonType) => this._games.onButtonPress(buttonType));
-    gameBoy.events.on('onButtonUp', (msg, buttonType) => this._games.onButtonUp(buttonType));
+    gameBoy.events.on('onButtonPress', (buttonType) => this._games.onButtonPress(buttonType));
+    gameBoy.events.on('onButtonUp', (buttonType) => this._games.onButtonUp(buttonType));
     gameBoy.events.on('onPowerOn', () => this._onPowerOn());
     gameBoy.events.on('onPowerOff', () => this._onPowerOff());
     gameBoy.events.on('onGameBoyVolumeChanged', () => this._onGameBoyVolumeChanged());
     gameBoy.events.on('onZoomIn', () => this._cameraController.zoomIn());
     gameBoy.events.on('onZoomOut', () => this._cameraController.zoomOut());
     cartridges.events.on('onCartridgeInserting', () => this._onCartridgeInserting());
-    cartridges.events.on('onCartridgeInserted', (msg, cartridge) => this._onCartridgeInserted(cartridge));
+    cartridges.events.on('onCartridgeInserted', (cartridge) => this._onCartridgeInserted(cartridge));
     cartridges.events.on('onCartridgeEjecting', () => this._onCartridgeEjecting());
     cartridges.events.on('onCartridgeEjected', () => this._onCartridgeEjected());
     cartridges.events.on('cartridgeTypeChanged', () => this._onCartridgeTypeChanged());
     cartridges.events.on('cartridgeInsertSound', () => gameBoy.playCartridgeInsertSound());
     cartridges.events.on('cartridgeEjectSound', () => gameBoy.playCartridgeEjectSound());
-    cartridges.events.on('cartridgeStartEjecting', (msg, percent) => gameBoy.setCartridgePocketStandardTexture());
+    cartridges.events.on('cartridgeStartEjecting', (percent) => gameBoy.setCartridgePocketStandardTexture());
     background.events.on('onClick', () => gameBoy.onBackgroundClick());
   }
 
@@ -227,14 +228,14 @@ export default class GameBoyController {
     const cartridges = this._activeObjects[SCENE_OBJECT_TYPE.Cartridges];
 
     this._cameraController.events.on('onRotationDragDisabled', () => this._onRotationDragDisabled());
-    this._cameraController.events.on('onZoom', (msg, zoomPercent) => cartridges.onZoomChanged(zoomPercent));
+    this._cameraController.events.on('onZoom', (zoomPercent) => cartridges.onZoomChanged(zoomPercent));
   }
 
   _initGamesSignals() {
     this._games.events.on('onTetrisBestScoreChange', () => this._onTetrisBestScoreChange());
     this._games.events.on('onSpaceInvadersBestScoreChange', () => this._onSpaceInvadersBestScoreChange());
-    this._games.events.on('gameStarted', (msg, gameType) => this._onGameStarted(gameType));
-    this._games.events.on('gameStopped', (msg, gameType) => this._onGameStopped(gameType));
+    this._games.events.on('gameStarted', (gameType) => this._onGameStarted(gameType));
+    this._games.events.on('gameStopped', (gameType) => this._onGameStopped(gameType));
   }
 
   _initDebugSignals() {
@@ -242,15 +243,15 @@ export default class GameBoyController {
 
     this._gameBoyDebug.events.on('rotationCursorChanged', () => gameBoy.onDebugRotationChanged());
     this._gameBoyDebug.events.on('rotationDragChanged', () => gameBoy.onDebugRotationChanged());
-    this._gameBoyDebug.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
+    this._gameBoyDebug.events.on('fpsMeterChanged', () => this.events.emit('fpsMeterChanged'));
     this._gameBoyDebug.events.on('orbitControlsChanged', () => this._onOrbitControlsChanged());
     this._gameBoyDebug.events.on('turnOnButtonClicked', () => gameBoy.powerButtonSwitch());
     this._gameBoyDebug.events.on('ejectCartridgeButtonClicked', () => this._onEjectCartridgeButtonClicked());
-    this._gameBoyDebug.events.on('insertCartridgeButtonClicked', (msg, cartridgeType) => this._onInsertCartridgeButtonClicked(cartridgeType));
+    this._gameBoyDebug.events.on('insertCartridgeButtonClicked', (cartridgeType) => this._onInsertCartridgeButtonClicked(cartridgeType));
     this._gameBoyDebug.events.on('audioEnabledChanged', () => this._onDebugSoundsEnabledChanged());
     this._gameBoyDebug.events.on('masterVolumeChanged', () => this._onMasterVolumeChanged());
     this._gameBoyDebug.events.on('gameBoyVolumeChanged', () => this._onDebugGameBoyVolumeChanged());
-    this._gameBoyDebug.events.on('restartTetrisButtonClicked', (msg, level) => this._restartTetrisButtonClicked(level));
+    this._gameBoyDebug.events.on('restartTetrisButtonClicked', (level) => this._restartTetrisButtonClicked(level));
     this._gameBoyDebug.events.on('tetrisDisableFalling', () => this._onTetrisDisableFalling());
     this._gameBoyDebug.events.on('tetrisClearBottomLine', () => this._onTetrisClearBottomLine());
   }
@@ -341,7 +342,7 @@ export default class GameBoyController {
 
   _onDebugSoundsEnabledChanged() {
     this._onSoundsEnabledChanged();
-    this.events.post('onSoundsEnabledChanged');
+    this.events.emit('onSoundsEnabledChanged');
   }
 
   _onMasterVolumeChanged() {

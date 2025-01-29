@@ -47,7 +47,7 @@ export default class GameBoyAudio {
     sound.setVolume(this._globalVolume * this._gameBoyVolume);
     sound.setLoop(config.repeat);
 
-    document.addEventListener('onLoad', () => {
+    document.addEventListener('onAudioLoaded', () => {
       sound.setBuffer(Loader.assets[config.fileName]);
     });
   }

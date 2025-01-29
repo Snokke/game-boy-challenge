@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
-import { MessageDispatcher } from 'black-engine';
+import { EventEmitter } from 'pixi.js';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { CAMERA_CONTROLLER_CONFIG } from './camera-controller-config';
 import SCENE_CONFIG from '../../../core/configs/scene-config';
@@ -8,7 +8,7 @@ import SCENE_CONFIG from '../../../core/configs/scene-config';
 export default class CameraController {
   constructor(camera) {
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._camera = camera;
 
@@ -50,7 +50,7 @@ export default class CameraController {
     this._zoomObject.position.y = (-this._zoomObject.position.z + maxDistance - 0.4) * 0.13;
 
     const zoomPercent = 1 - (this._zoomDistance - minDistance) / (maxDistance - minDistance);
-    this.events.post('onZoom', zoomPercent);
+    this.events.emit('onZoom', zoomPercent);
 
     if (cursorRotationCoeff > GAME_BOY_CONFIG.rotation.zoomThresholdToDisableRotation) {
       GAME_BOY_CONFIG.rotation.rotationDragEnabled = false;
@@ -58,7 +58,7 @@ export default class CameraController {
       if (this._rotationDragPreviousState !== GAME_BOY_CONFIG.rotation.rotationDragEnabled) {
         this._rotationDragPreviousState = GAME_BOY_CONFIG.rotation.rotationDragEnabled;
 
-        this.events.post('onRotationDragDisabled');
+        this.events.emit('onRotationDragDisabled');
       }
     } else {
       GAME_BOY_CONFIG.rotation.rotationDragEnabled = true;

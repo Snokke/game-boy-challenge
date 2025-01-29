@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { EventEmitter } from 'pixi.js';
 import GameBoyController from './game-boy-scene-controller';
 import GameBoy from './game-boy/game-boy';
 import CartridgesController from './cartridges/cartridges-controller';
@@ -7,14 +8,13 @@ import GameBoyGames from './game-boy-games/game-boy-games';
 import GameBoyDebug from './game-boy-debug';
 import CameraController from './camera-controller/camera-controller';
 import Background from './background/background';
-import { MessageDispatcher } from 'black-engine';
 import SCENE_CONFIG from '../../core/configs/scene-config';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._data = data;
     this._data.raycasterController = raycasterController;
@@ -76,8 +76,9 @@ export default class GameBoyScene extends THREE.Group {
     const gameBoyPixiCanvas = this._data.gameBoyPixiApp.canvas;
     const gameBoyPixiApp = this._data.gameBoyPixiApp;
     const audioListener = this._data.audioListener;
+    const pixiApp = this._data.pixiApp;
 
-    const gameBoy = new GameBoy(gameBoyPixiCanvas, gameBoyPixiApp, audioListener);
+    const gameBoy = new GameBoy(gameBoyPixiCanvas, gameBoyPixiApp, audioListener, pixiApp);
     this.add(gameBoy);
 
     this._activeObjects[SCENE_OBJECT_TYPE.GameBoy] = gameBoy;
@@ -150,7 +151,7 @@ export default class GameBoyScene extends THREE.Group {
   }
 
   _initSignals() {
-    this._gameBoyController.events.on('fpsMeterChanged', () => this.events.post('fpsMeterChanged'));
-    this._gameBoyController.events.on('onSoundsEnabledChanged', () => this.events.post('onSoundsEnabledChanged'));
+    this._gameBoyController.events.on('fpsMeterChanged', () => this.events.emit('fpsMeterChanged'));
+    this._gameBoyController.events.on('onSoundsEnabledChanged', () => this.events.emit('onSoundsEnabledChanged'));
   }
 }

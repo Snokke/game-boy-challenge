@@ -1,7 +1,7 @@
 import * as THREE from 'three';
+import { EventEmitter } from 'pixi.js';
 import GUIHelper from '../../core/helpers/gui-helper/gui-helper';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
-import { MessageDispatcher } from 'black-engine';
 import { CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
@@ -13,7 +13,7 @@ export default class GameBoyDebug extends THREE.Group {
   constructor() {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._gameBoyPowerStateController = null;
     this._gameBoyTurnOnButton = null;
@@ -113,13 +113,13 @@ export default class GameBoyDebug extends THREE.Group {
     generalFolder.addInput(DEBUG_CONFIG, 'fpsMeter', {
       label: 'FPS meter',
     }).on('change', () => {
-      this.events.post('fpsMeterChanged');
+      this.events.emit('fpsMeterChanged');
     });
 
     generalFolder.addInput(DEBUG_CONFIG, 'orbitControls', {
       label: 'Orbit controls',
     }).on('change', () => {
-      this.events.post('orbitControlsChanged');
+      this.events.emit('orbitControlsChanged');
     });
 
     generalFolder.addSeparator();
@@ -127,7 +127,7 @@ export default class GameBoyDebug extends THREE.Group {
     this._audioEnabledController = generalFolder.addInput(SOUNDS_CONFIG, 'enabled', {
       label: 'Audio',
     }).on('change', () => {
-      this.events.post('audioEnabledChanged');
+      this.events.emit('audioEnabledChanged');
     });
 
     generalFolder.addInput(SOUNDS_CONFIG, 'masterVolume', {
@@ -135,7 +135,7 @@ export default class GameBoyDebug extends THREE.Group {
       min: 0,
       max: 1,
     }).on('change', () => {
-      this.events.post('masterVolumeChanged');
+      this.events.emit('masterVolumeChanged');
     });
 
     this._gameBoyVolumeController = generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
@@ -143,7 +143,7 @@ export default class GameBoyDebug extends THREE.Group {
       min: 0,
       max: 1,
     }).on('change', () => {
-      this.events.post('gameBoyVolumeChanged');
+      this.events.emit('gameBoyVolumeChanged');
     });
 
     generalFolder.addSeparator();
@@ -151,13 +151,13 @@ export default class GameBoyDebug extends THREE.Group {
     generalFolder.addInput(GAME_BOY_CONFIG.rotation, 'debugRotationCursorEnabled', {
       label: 'Rotation by cursor',
     }).on('change', () => {
-      this.events.post('rotationCursorChanged');
+      this.events.emit('rotationCursorChanged');
     });
 
     generalFolder.addInput(GAME_BOY_CONFIG.rotation, 'debugRotationDragEnabled', {
       label: 'Rotation by drag',
     }).on('change', () => {
-      this.events.post('rotationDragChanged');
+      this.events.emit('rotationDragChanged');
     });
   }
 
@@ -176,7 +176,7 @@ export default class GameBoyDebug extends THREE.Group {
     this._gameBoyTurnOnButton = gameBoyFolder.addButton({
       title: 'Turn on',
     }).on('click', () => {
-      this.events.post('turnOnButtonClicked');
+      this.events.emit('turnOnButtonClicked');
     });
 
     gameBoyFolder.addSeparator();
@@ -203,14 +203,14 @@ export default class GameBoyDebug extends THREE.Group {
     gameBoyFolder.addButton({
       title: 'Insert selected cartridge',
     }).on('click', () => {
-      this.events.post('insertCartridgeButtonClicked', selectedCartridge);
+      this.events.emit('insertCartridgeButtonClicked', selectedCartridge);
     });
 
     this._ejectCartridgeButton = gameBoyFolder.addButton({
       title: 'Eject cartridge',
       disabled: true,
     }).on('click', () => {
-      this.events.post('ejectCartridgeButtonClicked');
+      this.events.emit('ejectCartridgeButtonClicked');
     });
   }
 
@@ -269,7 +269,7 @@ export default class GameBoyDebug extends THREE.Group {
       title: 'Restart game',
       disabled: true,
     }).on('click', () => {
-      this.events.post('restartTetrisButtonClicked', selectedLevel);
+      this.events.emit('restartTetrisButtonClicked', selectedLevel);
     });
 
     tetrisFolder.addSeparator();
@@ -295,14 +295,14 @@ export default class GameBoyDebug extends THREE.Group {
         this._disableFallingButton.title = 'Disable falling';
       }
 
-      this.events.post('tetrisDisableFalling');
+      this.events.emit('tetrisDisableFalling');
     });
 
     this._clearBottomLineButton = tetrisCheatsFolder.addButton({
       title: 'Clear bottom line',
       disabled: true,
     }).on('click', () => {
-      this.events.post('tetrisClearBottomLine');
+      this.events.emit('tetrisClearBottomLine');
     });
   }
 

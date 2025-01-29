@@ -3,7 +3,7 @@ import TitleScreen from './screens/title-screen/title-screen';
 import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
 import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
-import { MessageDispatcher } from 'black-engine';
+import { EventEmitter } from 'pixi.js';
 import { TETRIS_CONFIG } from './data/tetris-config';
 import DEBUG_CONFIG from '../../../../../core/configs/debug-config';
 import { GAME_TYPE } from '../../data/games-config';
@@ -12,7 +12,7 @@ export default class Tetris extends GameAbstract {
   constructor() {
     super();
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._screens = {};
     this._currentScreenType = null;
@@ -137,7 +137,7 @@ export default class Tetris extends GameAbstract {
   _initSignals() {
     this._screens[TETRIS_SCREEN_TYPE.License].events.on('onComplete', () => this._onLicenseScreenComplete());
     this._screens[TETRIS_SCREEN_TYPE.Title].events.on('onStartGame', () => this._onStartGame());
-    this._screens[TETRIS_SCREEN_TYPE.Gameplay].events.on('onBestScoreChange', () => this.events.post('onBestScoreChange'));
+    this._screens[TETRIS_SCREEN_TYPE.Gameplay].events.on('onBestScoreChange', () => this.events.emit('onBestScoreChange'));
   }
 
   _onLicenseScreenComplete() {

@@ -9,13 +9,13 @@ import { GAMES_CLASSES } from './data/games-classes';
 import VolumeOverlay from './overlay/volume-overlay';
 import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
 import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
-import { MessageDispatcher } from 'black-engine';
+import { EventEmitter } from 'pixi.js';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 
 export default class GameBoyGames {
   constructor(application) {
 
-    this.events = new MessageDispatcher();
+    this.events = new EventEmitter();
 
     this._application = application;
 
@@ -142,12 +142,12 @@ export default class GameBoyGames {
 
   _showCurrentGame() {
     this._games[this._gameType].show();
-    this.events.post('gameStarted', this._gameType);
+    this.events.emit('gameStarted', this._gameType);
   }
 
   _hideCurrentGame() {
     this._games[this._gameType].hide();
-    this.events.post('gameStopped', this._gameType);
+    this.events.emit('gameStopped', this._gameType);
   }
 
   _hideAllGames() {
@@ -265,8 +265,8 @@ export default class GameBoyGames {
 
   _initSignals() {
     this._loadingScreen.events.on('onComplete', () => this._onLoadingComplete());
-    this._games[GAME_TYPE.Tetris].events.on('onBestScoreChange', () => this.events.post('onTetrisBestScoreChange'));
-    this._games[GAME_TYPE.SpaceInvaders].events.on('onBestScoreChange', () => this.events.post('onSpaceInvadersBestScoreChange'));
+    this._games[GAME_TYPE.Tetris].events.on('onBestScoreChange', () => this.events.emit('onTetrisBestScoreChange'));
+    this._games[GAME_TYPE.SpaceInvaders].events.on('onBestScoreChange', () => this.events.emit('onSpaceInvadersBestScoreChange'));
   }
 
   _onLoadingComplete() {
