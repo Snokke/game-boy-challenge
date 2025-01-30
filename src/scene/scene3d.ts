@@ -4,71 +4,69 @@ import RaycasterController from './raycaster-controller';
 import GameBoyScene from './game-boy-scene/game-boy-scene';
 
 export default class Scene3D extends THREE.Group {
-  private _data: any;
-  private _scene: THREE.Scene;
-  private _camera: THREE.Camera;
-  private _raycasterController: RaycasterController;
-  private _gameBoyScene: GameBoyScene;
+  public events: EventEmitter;
 
-  private events: EventEmitter;
+  private data: any;
+  private camera: THREE.Camera;
+  private raycasterController: RaycasterController;
+  private gameBoyScene: GameBoyScene;
 
-  constructor(data) {
+  constructor(data: any) {
     super();
 
     this.events = new EventEmitter();
 
-    this._data = data;
-    this._scene = data.scene;
-    this._camera = data.camera;
+    this.data = data;
+    this.camera = data.camera;
 
-    this._init();
+    this.init();
   }
 
-  update(dt) {
-    this._gameBoyScene.update(dt);
+  public update(dt: number): void {
+    this.gameBoyScene.update(dt);
   }
 
-  onPointerMove(x, y) {
-    this._gameBoyScene.onPointerMove(x, y);
+  public onPointerMove(x: number, y: number): void {
+    this.gameBoyScene.onPointerMove(x, y);
   }
 
-  onPointerDown(x, y) {
-    this._gameBoyScene.onPointerDown(x, y);
+  public onPointerDown(x: number, y: number): void {
+    this.gameBoyScene.onPointerDown(x, y);
   }
 
-  onPointerUp(x, y) {
-    this._gameBoyScene.onPointerUp(x, y);
+  public onPointerUp(x: number, y: number): void {
+    this.gameBoyScene.onPointerUp(x, y);
   }
 
-  onPointerLeave() {
-    this._gameBoyScene.onPointerLeave();
+  public onPointerLeave(): void {
+    this.gameBoyScene.onPointerLeave();
   }
 
-  onWheelScroll(delta) {
-    this._gameBoyScene.onWheelScroll(delta);
+  public onWheelScroll(delta: number): void {
+    this.gameBoyScene.onWheelScroll(delta);
   }
 
-  onSoundChanged() {
-    this._gameBoyScene.onSoundChanged();
+  public onSoundChanged(): void {
+    this.gameBoyScene.onSoundChanged();
   }
 
-  _init() {
-    this._initRaycaster();
-    this._initGameBoy();
-    this._initSignals();
+  private init(): void {
+    this.initRaycaster();
+    this.initGameBoy();
+    this.initSignals();
   }
 
-  _initRaycaster() {
-    this._raycasterController = new RaycasterController(this._camera);
+  private initRaycaster(): void {
+    this.raycasterController = new RaycasterController(this.camera);
   }
 
-  _initGameBoy() {
-    const gameBoyScene = this._gameBoyScene = new GameBoyScene(this._data, this._raycasterController);
+  private initGameBoy(): void {
+    const gameBoyScene = this.gameBoyScene = new GameBoyScene(this.data, this.raycasterController);
     this.add(gameBoyScene);
   }
 
-  _initSignals() {
-    this._gameBoyScene.events.on('fpsMeterChanged', () => this.events.emit('fpsMeterChanged'));
-    this._gameBoyScene.events.on('onSoundsEnabledChanged', () => this.events.emit('onSoundsEnabledChanged'));
+  private initSignals(): void {
+    this.gameBoyScene.events.on('fpsMeterChanged', () => this.events.emit('fpsMeterChanged'));
+    this.gameBoyScene.events.on('onSoundsEnabledChanged', () => this.events.emit('onSoundsEnabledChanged'));
   }
 }

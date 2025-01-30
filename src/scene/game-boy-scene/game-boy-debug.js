@@ -6,8 +6,8 @@ import { CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { POWER_STATE } from './game-boy/data/game-boy-data';
-import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
 import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/data/space-invaders-config';
+import { SOUNDS_CONFIG } from '../../Data/Configs/Main/sounds-config';
 
 export default class GameBoyDebug extends THREE.Group {
   constructor() {

@@ -8,7 +8,7 @@ import GameBoyGames from './game-boy-games/game-boy-games';
 import GameBoyDebug from './game-boy-debug';
 import CameraController from './camera-controller/camera-controller';
 import Background from './background/background';
-import SCENE_CONFIG from '../../core/configs/scene-config';
+import SCENE_CONFIG from '../../Data/Configs/Main/scene-config';
 
 export default class GameBoyScene extends THREE.Group {
   constructor(data, raycasterController) {

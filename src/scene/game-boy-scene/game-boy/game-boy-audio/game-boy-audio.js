@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GAME_BOY_SOUND_TYPE } from './game-boy-audio-data';
 import { GAME_BOY_SOUNDS_CONFIG } from './game-boy-audio-config';
-import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
+import { SOUNDS_CONFIG } from '../../../../Data/Configs/Main/sounds-config';
 import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
 import Loader from '../../../../core/loader';
 

@@ -8,7 +8,6 @@ import { GAME_TYPE } from './data/games-config';
 import { GAMES_CLASSES } from './data/games-classes';
 import VolumeOverlay from './overlay/volume-overlay';
 import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
-import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
 import { EventEmitter } from 'pixi.js';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 

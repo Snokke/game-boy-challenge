@@ -1,50 +1,51 @@
-import { Container, Sprite, EventEmitter } from "pixi.js";
+import { Container, Sprite, EventEmitter, Texture } from "pixi.js";
 import DEBUG_CONFIG from "../core/configs/debug-config";
-import { SOUNDS_CONFIG } from "../core/configs/sounds-config";
+import { SOUNDS_CONFIG } from "../Data/Configs/Main/sounds-config";
 import Loader from "../core/loader";
 
 export default class SoundIcon extends Container {
+  public events: EventEmitter;
+  private view: Sprite;
+
   constructor() {
     super();
 
     this.events = new EventEmitter();
 
-    this._view = null;
-
-    this._init();
+    this.init();
   }
 
-  updateTexture() {
-    this._view.texture = Loader.assets[this._getTexture()];
+  updateTexture(): void {
+    this.view.texture = Loader.assets[this.getTexture()] as Texture;
   }
 
-  _init() {
-    this._initView();
-    this._initSignals();
+  private init(): void {
+    this.initView();
+    this.initSignals();
 
     if (DEBUG_CONFIG.withoutUIMode) {
       this.visible = false;
     }
   }
 
-  _initView() {
-    const texture = Loader.assets['assets/other/sound-icon'];
-    const view = this._view = new Sprite(texture);
+  private initView(): void {
+    const texture = Loader.assets['assets/other/sound-icon'] as Texture;
+    const view = this.view = new Sprite(texture);
     this.addChild(view);
 
     view.anchor.set(0.5);
     view.eventMode = 'static';
     view.cursor = 'pointer';
 
-    view.scale = 0.4;
+    view.scale.set(0.4);
   }
 
-  _getTexture() {
+  private getTexture(): string {
     return SOUNDS_CONFIG.enabled ? 'assets/other/sound-icon' : 'assets/other/sound-icon-mute';
   }
 
-  _initSignals() {
-    this._view.on('pointerdown', () => {
+  private initSignals(): void {
+    this.view.on('pointerdown', () => {
       SOUNDS_CONFIG.enabled = !SOUNDS_CONFIG.enabled;
       this.updateTexture();
       this.events.emit('onSoundChanged');

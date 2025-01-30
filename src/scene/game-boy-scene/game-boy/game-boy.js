@@ -10,9 +10,9 @@ import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-textu
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
-import { SOUNDS_CONFIG } from '../../../core/configs/sounds-config';
+import { SOUNDS_CONFIG } from '../../../Data/Configs/Main/sounds-config';
 import GameBoyAudio from './game-boy-audio/game-boy-audio';
-import SCENE_CONFIG from '../../../core/configs/scene-config';
+import SCENE_CONFIG from '../../../Data/Configs/Main/scene-config';
 import Timeout from '../../../core/helpers/timeout';
 
 export default class GameBoy extends THREE.Group {

@@ -3,7 +3,7 @@ import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
 import { EventEmitter } from 'pixi.js';
 import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { CAMERA_CONTROLLER_CONFIG } from './camera-controller-config';
-import SCENE_CONFIG from '../../../core/configs/scene-config';
+import SCENE_CONFIG from '../../../Data/Configs/Main/scene-config';
 
 export default class CameraController {
   constructor(camera) {

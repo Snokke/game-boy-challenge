@@ -6,90 +6,90 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
-import SCENE_CONFIG from './configs/scene-config';
+import SCENE_CONFIG from '../Data/Configs/Main/scene-config';
 import MainScene from '../main-scene';
 import LoadingOverlay from './LoadingOverlay';
 import Loader from './loader';
 import Scene3DDebugMenu from './helpers/gui-helper/scene-3d-debug-menu';
 import DEBUG_CONFIG from './configs/debug-config';
-import Materials from './materials';
 import WebGL from 'three/addons/capabilities/WebGL.js';
-import { GLOBAL_LIGHT_CONFIG } from './configs/global-light-config';
 import isMobile from 'ismobilejs';
 import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/game-boy/data/game-boy-config';
+import { GLOBAL_LIGHT_CONFIG } from '../Data/Configs/Main/global-light-config';
 
 export default class BaseScene {
   private pixiApp: Application;
+  private scene: THREE.Scene;
+  private renderer: THREE.WebGLRenderer;
+  private camera: THREE.PerspectiveCamera;
+  private loadingOverlay: LoadingOverlay;
+  private mainScene: MainScene;
+  private scene3DDebugMenu: Scene3DDebugMenu;
+  private effectComposer: EffectComposer;
+  private outlinePass: OutlinePass;
+  private orbitControls: any;
+  private audioListener: THREE.AudioListener;
+  private gameBoyPixiApp: Application;
+  private fxaaPass: ShaderPass;
+
+  private windowSizes: { width: number, height: number };
+  private isAssetsLoaded: boolean;
+
+  private isKeyboardShortcutsShown: boolean;
 
   constructor() {
-    this._scene = null;
-    this._renderer = null;
-    this._camera = null;
-    this._loadingOverlay = null;
-    this._mainScene = null;
-    this._scene3DDebugMenu = null;
-    this._effectComposer = null;
-    this._outlinePass = null;
-    this._orbitControls = null;
-    this._audioListener = null;
-    this._renderPass = null;
-    this._gameBoyPixiApp = null;
-
-    this._windowSizes = {};
-    this._isAssetsLoaded = false;
+    this.isAssetsLoaded = false;
 
     SCENE_CONFIG.isMobile = isMobile(window.navigator).any;
-    this._isKeyboardShortcutsShown = false;
+    this.isKeyboardShortcutsShown = false;
 
-    this._init();
+    this.init();
   }
 
-  createGameScene() {
-    this._initMaterials();
-
+  public createGameScene(): void {
     const data = {
-      scene: this._scene,
-      camera: this._camera,
-      renderer: this._renderer,
-      orbitControls: this._orbitControls,
-      outlinePass: this._outlinePass,
-      audioListener: this._audioListener,
+      scene: this.scene,
+      camera: this.camera,
+      renderer: this.renderer,
+      orbitControls: this.orbitControls,
+      outlinePass: this.outlinePass,
+      audioListener: this.audioListener,
       pixiApp: this.pixiApp,
-      gameBoyPixiApp: this._gameBoyPixiApp,
+      gameBoyPixiApp: this.gameBoyPixiApp,
     };
 
-    this._mainScene = new MainScene(data);
+    this.mainScene = new MainScene(data);
 
-    this._initMainSceneSignals();
+    this.initMainSceneSignals();
   }
 
-  afterAssetsLoaded() {
-    this._isAssetsLoaded = true;
+  public afterAssetsLoaded(): void {
+    this.isAssetsLoaded = true;
 
-    this._loadingOverlay.hide();
-    this._scene3DDebugMenu.showAfterAssetsLoad();
-    this._mainScene.afterAssetsLoad();
-    this._setupBackgroundColor();
+    this.loadingOverlay.hide();
+    this.scene3DDebugMenu.showAfterAssetsLoad();
+    this.mainScene.afterAssetsLoad();
+    this.setupBackgroundColor();
 
-    this._showCopyrights();
-    this._showTextToLandscape();
-    this._keyboardControls();
+    this.showCopyrights();
+    this.showTextToLandscape();
+    this.keyboardControls();
   }
 
-  getOutlinePass() {
-    return this._outlinePass;
+  public getOutlinePass(): OutlinePass {
+    return this.outlinePass;
   }
 
-  _initMainSceneSignals() {
-    this._mainScene.events.on('fpsMeterChanged', () => this._scene3DDebugMenu.onFpsMeterClick());
+  public initMainSceneSignals(): void {
+    this.mainScene.events.on('fpsMeterChanged', () => this.scene3DDebugMenu.onFpsMeterClick());
   }
 
-  async _init() {
+  private async init(): Promise<void> {
     this.initLoader();
     await this.initPixiJS();
-    this._initThreeJS();
-    await this._initGameBoyPixiJS();
-    this._initUpdate();
+    await this.initGameBoyPixiJS();
+    this.initThreeJS();
+    this.initUpdate();
   }
 
   private initLoader(): void {
@@ -113,12 +113,12 @@ export default class BaseScene {
     Ticker.shared.stop();
   }
 
-  async _initGameBoyPixiJS() {
-    const canvas = document.createElement('canvas');
+  private async initGameBoyPixiJS(): Promise<void> {
+    const canvas: HTMLCanvasElement = document.createElement('canvas') as HTMLCanvasElement;
     canvas.width = GAME_BOY_CONFIG.screen.width;
     canvas.height = GAME_BOY_CONFIG.screen.height;
 
-    const gameBoyPixiApp = this._gameBoyPixiApp = new Application();
+    const gameBoyPixiApp = this.gameBoyPixiApp = new Application();
 
     await gameBoyPixiApp.init({
       canvas: canvas,
@@ -132,40 +132,40 @@ export default class BaseScene {
     Ticker.shared.autoStart = false;
     Ticker.shared.stop();
 
-    this._gameBoyPixiApp.renderer.background.alpha = 1;
+    this.gameBoyPixiApp.renderer.background.alpha = 1;
   }
 
-  _initThreeJS() {
-    this._initScene();
-    this._initRenderer();
-    this._initCamera();
-    this._initLights();
-    this._initLoadingOverlay();
-    this._initOnResize();
-    this._initPostProcessing();
-    this._initAudioListener();
+  private initThreeJS(): void {
+    this.initScene();
+    this.initRenderer();
+    this.initCamera();
+    this.initLights();
+    this.initLoadingOverlay();
+    this.initOnResize();
+    this.initPostProcessing();
+    this.initAudioListener();
 
-    this._initScene3DDebugMenu();
+    this.initScene3DDebugMenu();
   }
 
-  _initScene() {
-    this._scene = new THREE.Scene();
+  private initScene(): void {
+    this.scene = new THREE.Scene();
   }
 
-  _initRenderer() {
-    this._windowSizes = {
+  private initRenderer(): void {
+    this.windowSizes = {
       width: window.innerWidth,
       height: window.innerHeight
     };
 
-    const canvas = document.querySelector('.threejs-canvas');
+    const canvas: HTMLCanvasElement = document.querySelector('.threejs-canvas') as HTMLCanvasElement;
 
-    const renderer = this._renderer = new THREE.WebGLRenderer({
+    const renderer = this.renderer = new THREE.WebGLRenderer({
       canvas: canvas,
       antialias: SCENE_CONFIG.antialias,
     });
 
-    renderer.setSize(this._windowSizes.width, this._windowSizes.height);
+    renderer.setSize(this.windowSizes.width, this.windowSizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio));
 
     // renderer.useLegacyLights = false;
@@ -177,101 +177,88 @@ export default class BaseScene {
     // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   }
 
-  _initCamera() {
-    const camera = this._camera = new THREE.PerspectiveCamera(50, this._windowSizes.width / this._windowSizes.height, 0.5, 70);
-    this._scene.add(camera);
+  private initCamera(): void {
+    const camera = this.camera = new THREE.PerspectiveCamera(50, this.windowSizes.width / this.windowSizes.height, 0.5, 70);
+    this.scene.add(camera);
 
     camera.position.set(0, 0, 6);
   }
 
-  _initLights() {
+  private initLights(): void {
     if (GLOBAL_LIGHT_CONFIG.ambient.enabled) {
       const ambientLight = new THREE.AmbientLight(GLOBAL_LIGHT_CONFIG.ambient.color, GLOBAL_LIGHT_CONFIG.ambient.intensity);
-      this._scene.add(ambientLight);
+      this.scene.add(ambientLight);
     }
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    // directionalLight.position.set(0, 5, 5);
-    // this._scene.add(directionalLight);
   }
 
-  _initMaterials() {
-    new Materials();
+  private initLoadingOverlay(): void {
+    const loadingOverlay = this.loadingOverlay = new LoadingOverlay();
+    this.scene.add(loadingOverlay);
   }
 
-  _initLoadingOverlay() {
-    const loadingOverlay = this._loadingOverlay = new LoadingOverlay();
-    this._scene.add(loadingOverlay);
+  private initOnResize(): void {
+    window.addEventListener('resize', () => this.onResize());
   }
 
-  _initOnResize() {
-    window.addEventListener('resize', () => this._onResize());
-  }
-
-  _onResize() {
-    this._windowSizes.width = window.innerWidth;
-    this._windowSizes.height = window.innerHeight;
+  private onResize(): void {
+    this.windowSizes.width = window.innerWidth;
+    this.windowSizes.height = window.innerHeight;
     const pixelRatio = Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio);
 
-    this._camera.aspect = this._windowSizes.width / this._windowSizes.height;
-    this._camera.updateProjectionMatrix();
+    this.camera.aspect = this.windowSizes.width / this.windowSizes.height;
+    this.camera.updateProjectionMatrix();
 
-    this._renderer.setSize(this._windowSizes.width, this._windowSizes.height);
-    this._renderer.setPixelRatio(pixelRatio);
+    this.renderer.setSize(this.windowSizes.width, this.windowSizes.height);
+    this.renderer.setPixelRatio(pixelRatio);
 
-    if (this._effectComposer) {
-      this._effectComposer.setSize(this._windowSizes.width, this._windowSizes.height);
-      this._effectComposer.setPixelRatio(pixelRatio);
+    if (this.effectComposer) {
+      this.effectComposer.setSize(this.windowSizes.width, this.windowSizes.height);
+      this.effectComposer.setPixelRatio(pixelRatio);
     }
 
     if (SCENE_CONFIG.fxaaPass) {
-      this._fxaaPass.material.uniforms['resolution'].value.x = 1 / (this._windowSizes.width * pixelRatio);
-      this._fxaaPass.material.uniforms['resolution'].value.y = 1 / (this._windowSizes.height * pixelRatio);
+      this.fxaaPass.material.uniforms['resolution'].value.x = 1 / (this.windowSizes.width * pixelRatio);
+      this.fxaaPass.material.uniforms['resolution'].value.y = 1 / (this.windowSizes.height * pixelRatio);
     }
 
-    if (this._mainScene) {
-      this._mainScene.onResize();
+    if (this.mainScene) {
+      this.mainScene.onResize();
     }
   }
 
-  _setupBackgroundColor() {
-    this._scene.background = new THREE.Color(SCENE_CONFIG.backgroundColor);
-
-    // const texture = Loader.assets['environment'];
-    // const renderTarget = new THREE.WebGLCubeRenderTarget(texture.image.height);
-    // renderTarget.fromEquirectangularTexture(this._renderer, texture);
-    // this._scene.background = renderTarget.texture;
+  private setupBackgroundColor(): void {
+    this.scene.background = new THREE.Color(SCENE_CONFIG.backgroundColor);
   }
 
-  _initPostProcessing() {
+  private initPostProcessing(): void {
     if (SCENE_CONFIG.isMobile) {
       return;
     }
 
-    this._initEffectsComposer();
-    this._initOutlinePass();
-    this._initAntiAliasingPass();
+    this.initEffectsComposer();
+    this.initOutlinePass();
+    this.initAntiAliasingPass();
   }
 
-  _initEffectsComposer() {
-    const pixelRatio = Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio);
+  private initEffectsComposer(): void {
+    const pixelRatio: number = Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio);
 
     if (WebGL.isWebGL2Available() && pixelRatio === 1) {
-      const size = this._renderer.getDrawingBufferSize(new THREE.Vector2());
-      const target = new THREE.WebGLRenderTarget(size.width, size.height, { samples: 3 });
-      this._effectComposer = new EffectComposer(this._renderer, target);
+      const size: THREE.Vector2 = this.renderer.getDrawingBufferSize(new THREE.Vector2());
+      const target: THREE.WebGLRenderTarget = new THREE.WebGLRenderTarget(size.width, size.height, { samples: 3 });
+      this.effectComposer = new EffectComposer(this.renderer, target);
     } else {
       SCENE_CONFIG.fxaaPass = true;
-      this._effectComposer = new EffectComposer(this._renderer);
+      this.effectComposer = new EffectComposer(this.renderer);
     }
 
-    const renderPass = this._renderPass = new RenderPass(this._scene, this._camera);
-    this._effectComposer.addPass(renderPass);
+    const renderPass: RenderPass = new RenderPass(this.scene, this.camera);
+    this.effectComposer.addPass(renderPass);
   }
 
-  _initOutlinePass() {
-    const outlinePass = this._outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this._scene, this._camera);
-    this._effectComposer.addPass(outlinePass);
+  private initOutlinePass(): void {
+    const outlinePass = this.outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera);
+    this.effectComposer.addPass(outlinePass);
 
     const outlinePassConfig = SCENE_CONFIG.outlinePass;
 
@@ -282,29 +269,29 @@ export default class BaseScene {
     outlinePass.pulsePeriod = outlinePassConfig.pulsePeriod;
   }
 
-  _initAntiAliasingPass() {
+  private initAntiAliasingPass(): void {
     if (SCENE_CONFIG.fxaaPass) {
-      const fxaaPass = this._fxaaPass = new ShaderPass(FXAAShader);
-      this._effectComposer.addPass(fxaaPass);
+      const fxaaPass = this.fxaaPass = new ShaderPass(FXAAShader);
+      this.effectComposer.addPass(fxaaPass);
 
-      const pixelRatio = Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio);
-      fxaaPass.material.uniforms['resolution'].value.x = 1 / (this._windowSizes.width * pixelRatio);
-      fxaaPass.material.uniforms['resolution'].value.y = 1 / (this._windowSizes.height * pixelRatio);
+      const pixelRatio: number = Math.min(window.devicePixelRatio, SCENE_CONFIG.maxPixelRatio);
+      fxaaPass.material.uniforms['resolution'].value.x = 1 / (this.windowSizes.width * pixelRatio);
+      fxaaPass.material.uniforms['resolution'].value.y = 1 / (this.windowSizes.height * pixelRatio);
     }
   }
 
-  _initAudioListener() {
-    const audioListener = this._audioListener = new THREE.AudioListener();
-    this._camera.add(audioListener);
+  private initAudioListener(): void {
+    const audioListener = this.audioListener = new THREE.AudioListener();
+    this.camera.add(audioListener);
   }
 
-  _initScene3DDebugMenu() {
-    this._scene3DDebugMenu = new Scene3DDebugMenu(this._scene, this._camera, this._renderer, this.pixiApp);
-    this._orbitControls = this._scene3DDebugMenu.getOrbitControls();
+  private initScene3DDebugMenu(): void {
+    this.scene3DDebugMenu = new Scene3DDebugMenu(this.camera, this.renderer, this.pixiApp);
+    this.orbitControls = this.scene3DDebugMenu.getOrbitControls();
   }
 
-  _showCopyrights() {
-    const copyrights = document.querySelector('.copyrights');
+  private showCopyrights(): void {
+    const copyrights: HTMLElement = document.querySelector('.copyrights');
     copyrights.innerHTML = `
     Nintendo logo is trademark of Nintendo.
     Tetris logo and Tetriminos are trademarks of Tetris Holding.
@@ -312,7 +299,7 @@ export default class BaseScene {
     `;
 
     if (SCENE_CONFIG.isMobile) {
-      copyrights.style['font-size'] = '5px';
+      copyrights.style['font-size']  = '5px';
       copyrights.style['width'] = '350px';
       copyrights.style['bottom'] = '5px';
     }
@@ -320,9 +307,9 @@ export default class BaseScene {
     copyrights.classList.add('show');
   }
 
-  _showTextToLandscape() {
+  private showTextToLandscape(): void {
     if (SCENE_CONFIG.isMobile && window.innerWidth < window.innerHeight) {
-      const introText = document.querySelector('.rotate-to-landscape');
+      const introText: Element = document.querySelector('.rotate-to-landscape');
       introText.innerHTML = 'To use cartridges rotate to landscape';
 
       introText.classList.add('show');
@@ -339,19 +326,19 @@ export default class BaseScene {
     }
   }
 
-  _keyboardControls() {
+  private keyboardControls(): void {
     if (SCENE_CONFIG.isMobile) {
-      const keyboardIcon = document.querySelector('.keyboard-icon');
+      const keyboardIcon: Element = document.querySelector('.keyboard-icon');
       keyboardIcon.classList.add('hide');
     } else {
-      const keyboardIcon = document.querySelector('.keyboard-icon');
-      const keyboardShortcuts = document.querySelector('.keyboard-shortcuts');
+      const keyboardIcon: Element = document.querySelector('.keyboard-icon');
+      const keyboardShortcuts: Element = document.querySelector('.keyboard-shortcuts');
       keyboardShortcuts.classList.add('fastShow');
 
       keyboardIcon.addEventListener('click', () => {
-        this._isKeyboardShortcutsShown = !this._isKeyboardShortcutsShown;
+        this.isKeyboardShortcutsShown = !this.isKeyboardShortcutsShown;
 
-        if (this._isKeyboardShortcutsShown) {
+        if (this.isKeyboardShortcutsShown) {
           keyboardShortcuts.classList.remove('hide');
           keyboardShortcuts.classList.add('show');
         } else {
@@ -359,10 +346,10 @@ export default class BaseScene {
           keyboardShortcuts.classList.add('hide');
         }
       });
-      const list = document.createElement('ul');
+      const list: HTMLUListElement = document.createElement('ul');
       keyboardShortcuts.appendChild(list);
 
-      const items = [
+      const items: string[] = [
         'Arrows, WASD — D-pad',
         'Z, Space — A button',
         'X — B button',
@@ -371,37 +358,37 @@ export default class BaseScene {
       ];
 
       items.forEach(item => {
-        const listItem = document.createElement('li');
+        const listItem: HTMLLIElement = document.createElement('li');
         listItem.innerHTML = `${item}`;
         list.appendChild(listItem);
       });
     }
   }
 
-  _initUpdate() {
+  private initUpdate(): void {
     const clock = new THREE.Clock(true);
 
     const update = () => {
-      this._scene3DDebugMenu.preUpdate();
+      this.scene3DDebugMenu.preUpdate();
 
       const deltaTime = clock.getDelta();
 
-      if (this._isAssetsLoaded) {
+      if (this.isAssetsLoaded) {
         TWEEN.update();
-        this._scene3DDebugMenu.update();
+        this.scene3DDebugMenu.update();
 
-        if (this._mainScene) {
-          this._mainScene.update(deltaTime);
+        if (this.mainScene) {
+          this.mainScene.update(deltaTime);
         }
 
         if (SCENE_CONFIG.isMobile || DEBUG_CONFIG.rendererStats) {
-          this._renderer.render(this._scene, this._camera);
+          this.renderer.render(this.scene, this.camera);
         } else {
-          this._effectComposer.render();
+          this.effectComposer.render();
         }
       }
 
-      this._scene3DDebugMenu.postUpdate();
+      this.scene3DDebugMenu.postUpdate();
       window.requestAnimationFrame(update);
     }
 

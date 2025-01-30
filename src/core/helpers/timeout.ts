@@ -6,8 +6,8 @@ export default class Timeout {
   }
 
   static call(delay: number, callback: () => void): { stop: () => void } {
-    const start = performance.now();
-    const id = Symbol("timeoutId");
+    const start: number = performance.now();
+    const id: symbol = Symbol("timeoutId");
 
     const tick = (now: number) => {
       if (now - start >= delay) {
@@ -21,7 +21,7 @@ export default class Timeout {
     this.timeouts.set(id, requestAnimationFrame(tick));
 
     return {
-      stop: () => this.clearTimeout(id),
+      stop: (): void => this.clearTimeout(id),
     };
   }
 

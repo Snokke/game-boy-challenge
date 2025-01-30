@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
-import { SOUNDS_CONFIG } from '../../../../core/configs/sounds-config';
 import Timeout from '../../../../core/helpers/timeout';
+import { SOUNDS_CONFIG } from '../../../../Data/Configs/Main/sounds-config';
 
 export default class VolumeOverlay extends Container {
   constructor() {

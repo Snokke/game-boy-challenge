@@ -4,12 +4,12 @@ import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGES_BY_TYPE_CONFIG, CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
 import DEBUG_CONFIG from '../../core/configs/debug-config';
-import { SOUNDS_CONFIG } from '../../core/configs/sounds-config';
-import SCENE_CONFIG from '../../core/configs/scene-config';
+import SCENE_CONFIG from '../../Data/Configs/Main/scene-config';
 import { CARTRIDGE_STATE } from './game-boy/data/game-boy-data';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { GAME_TYPE } from './game-boy-games/data/games-config';
 import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/data/space-invaders-config';
+import { SOUNDS_CONFIG } from '../../Data/Configs/Main/sounds-config';
 
 export default class GameBoyController {
   constructor(data) {
