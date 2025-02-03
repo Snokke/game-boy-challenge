@@ -54,9 +54,9 @@ const BUTTON_TYPE = {
   CrossDown: 'CROSS_DOWN',
 }
 
-const POWER_STATE = {
-  On: 'ON',
-  Off: 'OFF',
+enum POWER_STATE {
+  On = 'ON',
+  Off = 'OFF',
 }
 
 const CARTRIDGE_STATE = {

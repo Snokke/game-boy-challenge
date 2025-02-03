@@ -9,11 +9,11 @@ import mixTextureColorVertexShader from './mix-texture-color-shaders/mix-texture
 import mixTextureColorFragmentShader from './mix-texture-color-shaders/mix-texture-color-fragment.glsl';
 import mixTextureBitmapVertexShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-vertex.glsl';
 import mixTextureBitmapFragmentShader from './mix-texture-bitmap-shaders/mix-texture-bitmap-fragment.glsl';
-import DEBUG_CONFIG from '../../../core/configs/debug-config';
 import { SOUNDS_CONFIG } from '../../../Data/Configs/Main/sounds-config';
 import GameBoyAudio from './game-boy-audio/game-boy-audio';
 import SCENE_CONFIG from '../../../Data/Configs/Main/scene-config';
 import Timeout from '../../../core/helpers/timeout';
+import DEBUG_CONFIG from '../../../Data/Configs/Main/debug-config';
 
 export default class GameBoy extends THREE.Group {
   constructor(pixiCanvas, gameBoyPixiApp, audioListener, pixiApp) {

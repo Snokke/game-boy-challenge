@@ -3,109 +3,116 @@ import { EventEmitter } from 'pixi.js';
 import GUIHelper from '../../core/helpers/gui-helper/gui-helper';
 import { GAME_BOY_CONFIG } from './game-boy/data/game-boy-config';
 import { CARTRIDGE_TYPE } from './cartridges/data/cartridges-config';
-import DEBUG_CONFIG from '../../core/configs/debug-config';
 import { TETRIS_CONFIG } from './game-boy-games/games/tetris/data/tetris-config';
 import { POWER_STATE } from './game-boy/data/game-boy-data';
 import { SPACE_INVADERS_CONFIG } from './game-boy-games/games/space-invaders/data/space-invaders-config';
 import { SOUNDS_CONFIG } from '../../Data/Configs/Main/sounds-config';
+import DEBUG_CONFIG from '../../Data/Configs/Main/debug-config';
 
 export default class GameBoyDebug extends THREE.Group {
+  public events: EventEmitter;
+
+  private gameBoyPowerStateController: any;
+  private gameBoyTurnOnButton: any;
+  private cartridgeTypeController: any;
+  private ejectCartridgeButton: any;
+  private audioEnabledController: any;
+  private gameBoyVolumeController: any;
+  private tetrisCartridgeStateController: any;
+  private tetrisBestScoreController: any;
+  private restartTetrisButton: any;
+  private disableFallingButton: any;
+  private clearBottomLineButton: any;
+  private spaceInvadersBestScoreController: any;
+  private spaceInvadersInvincibilityButton: any;
+  private tetrisBestScoreObject: any;
+  private spaceInvadersBestScoreObject: any;
+  private isTetrisFallingDisabled: boolean;
+  private powerState: { value: POWER_STATE };
+
   constructor() {
     super();
 
     this.events = new EventEmitter();
 
-    this._gameBoyPowerStateController = null;
-    this._gameBoyTurnOnButton = null;
-    this._cartridgeTypeController = null;
-    this._ejectCartridgeButton = null;
-    this._audioEnabledController = null;
-    this._gameBoyVolumeController = null;
-    this._tetrisCartridgeStateController = null;
-    this._tetrisBestScoreController = null;
-    this._restartTetrisButton = null;
-    this._disableFallingButton = null;
-    this._clearBottomLineButton = null;
-    this._spaceInvadersBestScoreController = null;
+    this.isTetrisFallingDisabled = false;
 
-    this._isTetrisFallingDisabled = false;
-
-    this._init();
+    this.init();
   }
 
-  updateGameBoyPowerState() {
+  public updateGameBoyPowerState(): void {
     if (GAME_BOY_CONFIG.powerOn) {
-      this._powerState.value = POWER_STATE.On;
+      this.powerState.value = POWER_STATE.On;
     } else {
-      this._powerState.value = POWER_STATE.Off;
+      this.powerState.value = POWER_STATE.Off;
     }
 
-    this._gameBoyPowerStateController.refresh();
+    this.gameBoyPowerStateController.refresh();
   }
 
-  updateGameBoyTurnOnButton() {
+  public updateGameBoyTurnOnButton(): void {
     if (GAME_BOY_CONFIG.powerOn) {
-      this._gameBoyTurnOnButton.title = 'Turn off';
+      this.gameBoyTurnOnButton.title = 'Turn off';
     } else {
-      this._gameBoyTurnOnButton.title = 'Turn on';
+      this.gameBoyTurnOnButton.title = 'Turn on';
     }
   }
 
-  updateCartridgeType() {
-    this._cartridgeTypeController.refresh();
+  public updateCartridgeType(): void {
+    this.cartridgeTypeController.refresh();
   }
 
-  enableEjectCartridgeButton() {
-    this._ejectCartridgeButton.disabled = false;
+  public enableEjectCartridgeButton(): void {
+    this.ejectCartridgeButton.disabled = false;
   }
 
-  disableEjectCartridgeButton() {
-    this._ejectCartridgeButton.disabled = true;
+  public disableEjectCartridgeButton(): void {
+    this.ejectCartridgeButton.disabled = true;
   }
 
-  updateSoundsEnabledController() {
-    this._audioEnabledController.refresh();
+  public updateSoundsEnabledController(): void {
+    this.audioEnabledController.refresh();
   }
 
-  updateGameBoyVolume() {
-    this._gameBoyVolumeController.refresh();
+  public updateGameBoyVolume(): void {
+    this.gameBoyVolumeController.refresh();
   }
 
-  updateTetrisCartridgeState() {
-    this._tetrisCartridgeStateController.refresh();
+  public updateTetrisCartridgeState(): void {
+    this.tetrisCartridgeStateController.refresh();
   }
 
-  updateTetrisBestScore(score) {
-    this._tetrisBestScoreObject.value = score.toString();
-    this._tetrisBestScoreController.refresh();
+  public updateTetrisBestScore(score: number): void {
+    this.tetrisBestScoreObject.value = score.toString();
+    this.tetrisBestScoreController.refresh();
   }
 
-  enableTetrisButtons() {
-    this._restartTetrisButton.disabled = false;
-    this._disableFallingButton.disabled = false;
-    this._clearBottomLineButton.disabled = false;
+  public enableTetrisButtons(): void {
+    this.restartTetrisButton.disabled = false;
+    this.disableFallingButton.disabled = false;
+    this.clearBottomLineButton.disabled = false;
   }
 
-  disableTetrisButtons() {
-    this._restartTetrisButton.disabled = true;
-    this._disableFallingButton.disabled = true;
-    this._clearBottomLineButton.disabled = true;
+  public disableTetrisButtons(): void {
+    this.restartTetrisButton.disabled = true;
+    this.disableFallingButton.disabled = true;
+    this.clearBottomLineButton.disabled = true;
   }
 
-  updateSpaceInvadersBestScore(score) {
-    this._spaceInvadersBestScoreObject.value = score.toString();
-    this._spaceInvadersBestScoreController.refresh();
+  public updateSpaceInvadersBestScore(score: number): void {
+    this.spaceInvadersBestScoreObject.value = score.toString();
+    this.spaceInvadersBestScoreController.refresh();
   }
 
-  _init() {
-    this._initGeneralFolder();
-    this._initGameBoyFolder();
-    this._initTetrisFolder();
-    this._initSpaceInvadersFolder();
+  private init(): void {
+    this.initGeneralFolder();
+    this.initGameBoyFolder();
+    this.initTetrisFolder();
+    this.initSpaceInvadersFolder();
   }
 
-  _initGeneralFolder() {
-    const generalFolder = GUIHelper.getGui().addFolder({
+  private initGeneralFolder(): void {
+    const generalFolder = (<any>GUIHelper.getGui()).addFolder({
       title: 'General',
       expanded: false,
     });
@@ -124,7 +131,7 @@ export default class GameBoyDebug extends THREE.Group {
 
     generalFolder.addSeparator();
 
-    this._audioEnabledController = generalFolder.addInput(SOUNDS_CONFIG, 'enabled', {
+    this.audioEnabledController = generalFolder.addInput(SOUNDS_CONFIG, 'enabled', {
       label: 'Audio',
     }).on('change', () => {
       this.events.emit('audioEnabledChanged');
@@ -138,7 +145,7 @@ export default class GameBoyDebug extends THREE.Group {
       this.events.emit('masterVolumeChanged');
     });
 
-    this._gameBoyVolumeController = generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
+    this.gameBoyVolumeController = generalFolder.addInput(SOUNDS_CONFIG, 'gameBoyVolume', {
       label: 'Game Boy volume',
       min: 0,
       max: 1,
@@ -161,19 +168,19 @@ export default class GameBoyDebug extends THREE.Group {
     });
   }
 
-  _initGameBoyFolder() {
-    const gameBoyFolder = GUIHelper.getGui().addFolder({
+  private initGameBoyFolder(): void {
+    const gameBoyFolder = (<any>GUIHelper.getGui()).addFolder({
       title: 'Game Boy',
       expanded: false,
     });
 
-    this._powerState = { value: POWER_STATE.Off };
-    this._gameBoyPowerStateController = gameBoyFolder.addInput(this._powerState, 'value', {
+    this.powerState = { value: POWER_STATE.Off };
+    this.gameBoyPowerStateController = gameBoyFolder.addInput(this.powerState, 'value', {
       label: 'Power status',
       disabled: true,
     });
 
-    this._gameBoyTurnOnButton = gameBoyFolder.addButton({
+    this.gameBoyTurnOnButton = gameBoyFolder.addButton({
       title: 'Turn on',
     }).on('click', () => {
       this.events.emit('turnOnButtonClicked');
@@ -181,12 +188,12 @@ export default class GameBoyDebug extends THREE.Group {
 
     gameBoyFolder.addSeparator();
 
-    this._cartridgeTypeController = gameBoyFolder.addInput(GAME_BOY_CONFIG, 'currentCartridge', {
+    this.cartridgeTypeController = gameBoyFolder.addInput(GAME_BOY_CONFIG, 'currentCartridge', {
       label: 'Current cartridge',
       disabled: true,
     });
 
-    let selectedCartridge = CARTRIDGE_TYPE.Tetris;
+    let selectedCartridge: CARTRIDGE_TYPE = CARTRIDGE_TYPE.Tetris;
     gameBoyFolder.addBlade({
       view: 'list',
       label: 'Cartridge',
@@ -206,7 +213,7 @@ export default class GameBoyDebug extends THREE.Group {
       this.events.emit('insertCartridgeButtonClicked', selectedCartridge);
     });
 
-    this._ejectCartridgeButton = gameBoyFolder.addButton({
+    this.ejectCartridgeButton = gameBoyFolder.addButton({
       title: 'Eject cartridge',
       disabled: true,
     }).on('click', () => {
@@ -214,19 +221,19 @@ export default class GameBoyDebug extends THREE.Group {
     });
   }
 
-  _initTetrisFolder() {
-    const tetrisFolder = GUIHelper.getGui().addFolder({
+  private initTetrisFolder(): void {
+    const tetrisFolder = (<any>GUIHelper.getGui()).addFolder({
       title: 'Tetris',
       expanded: false,
     });
 
-    this._tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
+    this.tetrisCartridgeStateController = tetrisFolder.addInput(TETRIS_CONFIG, 'cartridgeState', {
       label: 'Cartridge state',
       disabled: true,
     });
 
-    this._tetrisBestScoreObject = { value: '0' };
-    this._tetrisBestScoreController = tetrisFolder.addInput(this._tetrisBestScoreObject, 'value', {
+    this.tetrisBestScoreObject = { value: '0' };
+    this.tetrisBestScoreController = tetrisFolder.addInput(this.tetrisBestScoreObject, 'value', {
       label: 'Best score',
       disabled: true,
     });
@@ -265,7 +272,7 @@ export default class GameBoyDebug extends THREE.Group {
       selectedLevel = level.value;
     });
 
-    this._restartTetrisButton = tetrisFolder.addButton({
+    this.restartTetrisButton = tetrisFolder.addButton({
       title: 'Restart game',
       disabled: true,
     }).on('click', () => {
@@ -283,22 +290,22 @@ export default class GameBoyDebug extends THREE.Group {
       expanded: false,
     });
 
-    this._disableFallingButton = tetrisCheatsFolder.addButton({
+    this.disableFallingButton = tetrisCheatsFolder.addButton({
       title: 'Disable falling',
       disabled: true,
     }).on('click', () => {
-      this._isTetrisFallingDisabled = !this._isTetrisFallingDisabled;
+      this.isTetrisFallingDisabled = !this.isTetrisFallingDisabled;
 
-      if (this._isTetrisFallingDisabled) {
-        this._disableFallingButton.title = 'Enable falling';
+      if (this.isTetrisFallingDisabled) {
+        this.disableFallingButton.title = 'Enable falling';
       } else {
-        this._disableFallingButton.title = 'Disable falling';
+        this.disableFallingButton.title = 'Disable falling';
       }
 
       this.events.emit('tetrisDisableFalling');
     });
 
-    this._clearBottomLineButton = tetrisCheatsFolder.addButton({
+    this.clearBottomLineButton = tetrisCheatsFolder.addButton({
       title: 'Clear bottom line',
       disabled: true,
     }).on('click', () => {
@@ -306,19 +313,19 @@ export default class GameBoyDebug extends THREE.Group {
     });
   }
 
-  _initSpaceInvadersFolder() {
-    const spaceInvadersFolder = GUIHelper.getGui().addFolder({
+  private initSpaceInvadersFolder(): void {
+    const spaceInvadersFolder = (<any>GUIHelper.getGui()).addFolder({
       title: 'Space Invaders',
       expanded: false,
     });
 
-    this._spaceInvadersStateController = spaceInvadersFolder.addInput(SPACE_INVADERS_CONFIG, 'cartridgeState', {
+    spaceInvadersFolder.addInput(SPACE_INVADERS_CONFIG, 'cartridgeState', {
       label: 'Cartridge state',
       disabled: true,
     });
 
-    this._spaceInvadersBestScoreObject = { value: '0' };
-    this._spaceInvadersBestScoreController = spaceInvadersFolder.addInput(this._spaceInvadersBestScoreObject, 'value', {
+    this.spaceInvadersBestScoreObject = { value: '0' };
+    this.spaceInvadersBestScoreController = spaceInvadersFolder.addInput(this.spaceInvadersBestScoreObject, 'value', {
       label: 'Best score',
       disabled: true,
     });
@@ -328,15 +335,15 @@ export default class GameBoyDebug extends THREE.Group {
       expanded: false,
     });
 
-    this._spaceInvadersInvincibilityButton = spaceInvadersCheatsFolder.addButton({
+    this.spaceInvadersInvincibilityButton = spaceInvadersCheatsFolder.addButton({
       title: 'Make invincible',
     }).on('click', () => {
       SPACE_INVADERS_CONFIG.playerInvincible = !SPACE_INVADERS_CONFIG.playerInvincible;
 
       if (SPACE_INVADERS_CONFIG.playerInvincible) {
-        this._spaceInvadersInvincibilityButton.title = 'Make vulnerable';
+        this.spaceInvadersInvincibilityButton.title = 'Make vulnerable';
       } else {
-        this._spaceInvadersInvincibilityButton.title = 'Make invincible';
+        this.spaceInvadersInvincibilityButton.title = 'Make invincible';
       }
     });
 

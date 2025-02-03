@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { GAME_TYPE } from '../../game-boy-games/data/games-config';
 
-const CARTRIDGE_TYPE = {
-  Tetris: 'TETRIS',
-  Zelda: 'ZELDA',
-  SpaceInvaders: 'SPACE_INVADERS',
+enum CARTRIDGE_TYPE {
+  Tetris = 'TETRIS',
+  Zelda = 'ZELDA',
+  SpaceInvaders = 'SPACE_INVADERS',
 }
 
 const CARTRIDGES_CONFIG = {

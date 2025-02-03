@@ -1,5 +1,5 @@
 import { Container, Sprite, EventEmitter, Texture } from "pixi.js";
-import DEBUG_CONFIG from "../core/configs/debug-config";
+import DEBUG_CONFIG from "../Data/Configs/Main/debug-config";
 import { SOUNDS_CONFIG } from "../Data/Configs/Main/sounds-config";
 import Loader from "../core/loader";
 

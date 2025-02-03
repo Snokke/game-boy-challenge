@@ -1,5 +1,4 @@
 import { EventEmitter } from 'pixi.js';
-import DEBUG_CONFIG from "../../../../../core/configs/debug-config";
 import { GAME_TYPE } from "../../data/games-config";
 import GameAbstract from "../game-abstract";
 import { SPACE_INVADERS_CONFIG } from "./data/space-invaders-config";
@@ -8,6 +7,7 @@ import GameOverScreen from "./screens/game-over-screen";
 import GameplayScreen from "./screens/gameplay-screen/gameplay-screen";
 import RoundScreen from "./screens/round-screen";
 import TitleScreen from "./screens/title-screen";
+import DEBUG_CONFIG from '../../../../../Data/Configs/Main/debug-config';
 
 export default class SpaceInvaders extends GameAbstract {
   constructor() {

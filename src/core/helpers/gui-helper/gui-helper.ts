@@ -1,6 +1,6 @@
 import { Pane, FolderApi, TpChangeEvent } from 'tweakpane';
 // import isMobile from 'ismobilejs';
-import DEBUG_CONFIG from '../../configs/debug-config';
+import DEBUG_CONFIG from '../../../Data/Configs/Main/debug-config';
 
 export default class GUIHelper {
   public static instance: GUIHelper | null = null;

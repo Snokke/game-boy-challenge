@@ -5,8 +5,8 @@ import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
 import { EventEmitter } from 'pixi.js';
 import { TETRIS_CONFIG } from './data/tetris-config';
-import DEBUG_CONFIG from '../../../../../core/configs/debug-config';
 import { GAME_TYPE } from '../../data/games-config';
+import DEBUG_CONFIG from '../../../../../Data/Configs/Main/debug-config';
 
 export default class Tetris extends GameAbstract {
   constructor() {

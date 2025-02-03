@@ -11,7 +11,7 @@ import MainScene from '../main-scene';
 import LoadingOverlay from './LoadingOverlay';
 import Loader from './loader';
 import Scene3DDebugMenu from './helpers/gui-helper/scene-3d-debug-menu';
-import DEBUG_CONFIG from './configs/debug-config';
+import DEBUG_CONFIG from '../Data/Configs/Main/debug-config';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import isMobile from 'ismobilejs';
 import { GAME_BOY_CONFIG } from '../scene/game-boy-scene/game-boy/data/game-boy-config';

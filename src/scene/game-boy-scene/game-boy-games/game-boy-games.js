@@ -9,7 +9,8 @@ import { GAMES_CLASSES } from './data/games-classes';
 import VolumeOverlay from './overlay/volume-overlay';
 import GameBoyAudio from '../game-boy/game-boy-audio/game-boy-audio';
 import { EventEmitter } from 'pixi.js';
-import DEBUG_CONFIG from '../../../core/configs/debug-config';
+import DEBUG_CONFIG from '../../../Data/Configs/Main/debug-config';
+import { SOUNDS_CONFIG } from '../../../Data/Configs/Main/sounds-config';
 
 export default class GameBoyGames {
   constructor(application) {
