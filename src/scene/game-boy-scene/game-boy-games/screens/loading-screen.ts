@@ -1,71 +1,77 @@
-import { Sprite, EventEmitter } from 'pixi.js';
+import { Sprite, EventEmitter, Texture } from 'pixi.js';
 import Loader from '../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import TWEEN from 'three/addons/libs/tween.module.js';
 import ScreenAbstract from './screen-abstract';
 import GameBoyAudio from '../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../game-boy/game-boy-audio/game-boy-audio-data';
-import Timeout from '../../../../core/helpers/timeout';
+import { Timeout, TimeoutInstance } from '../../../../core/helpers/timeout';
 
 export default class LoadingScreen extends ScreenAbstract {
+  public events: EventEmitter;
+
+  private logo: Sprite;
+  private movingTween: any;
+  private delayToStart: TimeoutInstance;
+
   constructor() {
     super();
 
     this.events = new EventEmitter();
 
-    this._logo = null;
-    this._movingTween = null;
-    this._delayToStart = null;
+    this.logo = null;
+    this.movingTween = null;
+    this.delayToStart = null;
 
-    this._init();
+    this.init();
   }
 
-  show() {
+  public show(): void {
     this.visible = true;
 
     this.stopTweens();
-    this._logo.y = -15;
+    this.logo.y = -15;
 
-    this._movingTween = new TWEEN.Tween(this._logo)
+    this.movingTween = new TWEEN.Tween(this.logo)
       .to({ y: GAME_BOY_CONFIG.screen.height * 0.5 }, 2500)
       .easing(TWEEN.Easing.Linear.None)
       .start()
-      .onComplete(() => {
+      .onComplete((): void => {
         GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.GameBoyLoad);
 
-        this._delayToStart = Timeout.call(1000, () => {
+        this.delayToStart = Timeout.call(1000, (): void => {
           this.hide();
           this.events.emit('onComplete');
         });
       });
   }
 
-  hide() {
+  public hide(): void {
     this.visible = false;
 
     this.stopTweens();
   }
 
-  stopTweens() {
-    if (this._movingTween) {
-      this._movingTween.stop();
+  public stopTweens(): void {
+    if (this.movingTween) {
+      this.movingTween.stop();
     }
 
-    if (this._delayToStart) {
-      this._delayToStart.stop();
+    if (this.delayToStart) {
+      this.delayToStart.stop();
     }
   }
 
-  _init() {
-    this._initLogo();
+  private init(): void {
+    this.initLogo();
 
     this.hide();
   }
 
-  _initLogo() {
-    const texture = Loader.assets['assets/other/nintendo-logo-screen'];
+  private initLogo(): void {
+    const texture = Loader.assets['assets/other/nintendo-logo-screen'] as Texture;
 
-    const logo = this._logo = new Sprite(texture);
+    const logo: Sprite = this.logo = new Sprite(texture);
     logo.anchor.set(0.5);
     this.addChild(logo);
 

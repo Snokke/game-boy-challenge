@@ -11,9 +11,9 @@ const DEBUG_CONFIG = {
     disableIntro: false,
     zoomIn: false,
     enableGameBoy: false,
-    // loadGame: GAME_TYPE.Tetris,
+    loadGame: null, // GAME_TYPE.Tetris
     // loadGame: GAME_TYPE.SpaceInvaders,
-    // startScreen: SPACE_INVADERS_SCREEN_TYPE.Round,
+    startScreen: null, // SPACE_INVADERS_SCREEN_TYPE.Round
     // startScreen: TETRIS_SCREEN_TYPE.Gameplay,
   },
 };

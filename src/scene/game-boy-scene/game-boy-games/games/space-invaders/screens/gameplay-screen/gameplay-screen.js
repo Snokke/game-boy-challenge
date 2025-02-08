@@ -14,7 +14,7 @@ import Score from "./ui-elements/score";
 import EnemyMissile from "./missile/enemy-missile";
 import { GAME_BOY_SOUND_TYPE } from "../../../../../game-boy/game-boy-audio/game-boy-audio-data";
 import GameBoyAudio from "../../../../../game-boy/game-boy-audio/game-boy-audio";
-import Timeout from "../../../../../../../core/helpers/timeout";
+import { Timeout } from "../../../../../../../core/helpers/timeout";
 
 export default class GameplayScreen extends GameScreenAbstract {
   constructor() {

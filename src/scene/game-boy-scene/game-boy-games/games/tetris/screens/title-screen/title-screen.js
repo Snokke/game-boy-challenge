@@ -7,7 +7,7 @@ import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
 import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
-import Timeout from '../../../../../../../core/helpers/timeout';
+import { Timeout } from '../../../../../../../core/helpers/timeout';
 
 export default class TitleScreen extends GameScreenAbstract {
   constructor() {

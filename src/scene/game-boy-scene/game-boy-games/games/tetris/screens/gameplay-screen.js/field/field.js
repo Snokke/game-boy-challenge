@@ -5,7 +5,7 @@ import { BUTTON_TYPE } from '../../../../../../game-boy/data/game-boy-data';
 import { ROTATE_TYPE, SHAPE_TYPE } from './shape/shape-config';
 import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
-import Timeout from '../../../../../../../../core/helpers/timeout';
+import { Timeout } from '../../../../../../../../core/helpers/timeout';
 
 export default class Field extends Container {
   constructor() {

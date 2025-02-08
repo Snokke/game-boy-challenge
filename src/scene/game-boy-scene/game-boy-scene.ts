@@ -4,7 +4,7 @@ import GameBoyController from './game-boy-scene-controller';
 import GameBoy from './game-boy/game-boy';
 import CartridgesController from './cartridges/cartridges-controller';
 import { SCENE_OBJECT_TYPE } from './data/game-boy-scene-data';
-import GameBoyGames from './game-boy-games/game-boy-games';
+import GameBoyGames from './game-boy-games/game-boy-games.ts';
 import GameBoyDebug from './game-boy-debug';
 import CameraController from './camera-controller/camera-controller';
 import Background from './background/background';
@@ -54,8 +54,8 @@ export default class GameBoyScene extends THREE.Group {
     this.gameBoyController.onPointerDown(x, y);
   }
 
-  public onPointerUp(x: number, y: number): void {
-    this.gameBoyController.onPointerUp(x, y);
+  public onPointerUp(): void {
+    this.gameBoyController.onPointerUp();
   }
 
   public onWheelScroll(delta: number): void {
@@ -125,7 +125,7 @@ export default class GameBoyScene extends THREE.Group {
     const gameBoy: GameBoy = this.activeObjects[SCENE_OBJECT_TYPE.GameBoy] as GameBoy;
     const cartridges: CartridgesController = this.activeObjects[SCENE_OBJECT_TYPE.Cartridges] as CartridgesController;
 
-    allMeshes.push(...gameBoy.getAllMeshes());
+    allMeshes.push(...gameBoy.getAllMeshes() as THREE.Mesh[]);
     allMeshes.push(...cartridges.getAllMeshes());
     allMeshes.push(this.background.getMesh());
 

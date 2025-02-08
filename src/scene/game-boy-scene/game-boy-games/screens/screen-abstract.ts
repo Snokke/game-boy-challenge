@@ -5,19 +5,19 @@ export default class ScreenAbstract extends Container {
     super();
   }
 
-  update(dt) { }
+  public update(): void { }
 
-  show() {
+  public show(): void {
     this.visible = true;
   }
 
-  hide() {
+  public hide(): void {
     this.visible = false;
   }
 
-  stopTweens() { }
+  public stopTweens(): void { }
 
-  onButtonPress(buttonType) { }
+  public onButtonPress(): void { }
 
-  onButtonUp(buttonType) { }
+  public onButtonUp(): void { }
 }

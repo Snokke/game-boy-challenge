@@ -4,7 +4,7 @@ import Cartridge from './cartridge';
 import { CARTRIDGES_CONFIG, CARTRIDGE_TYPE } from './data/cartridges-config';
 import { EventEmitter } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config';
-import Timeout from '../../../core/helpers/timeout';
+import { Timeout } from '../../../core/helpers/timeout';
 
 export default class CartridgesController extends THREE.Group {
   public events: EventEmitter;

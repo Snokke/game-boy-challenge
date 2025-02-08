@@ -1,4 +1,4 @@
-import { Sprite, Container, Text } from 'pixi.js';
+import { Sprite, Container, Text, Texture } from 'pixi.js';
 import { GAME_BOY_CONFIG } from '../../game-boy/data/game-boy-config';
 import Loader from '../../../../core/loader';
 import ScreenAbstract from './screen-abstract';
@@ -7,20 +7,20 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
   constructor() {
     super();
 
-    this._init();
+    this.init();
   }
 
-  _init() {
-    this._initStopSign();
-    this._initText();
+  private init(): void {
+    this.initStopSign();
+    this.initText();
 
     this.visible = false;
   }
 
-  _initStopSign() {
-    const texture = Loader.assets['assets/other/stop-sign'];
+  private initStopSign(): void {
+    const texture: Texture = Loader.assets['assets/other/stop-sign'] as Texture;
 
-    const stopSign = new Sprite(texture);
+    const stopSign: Sprite = new Sprite(texture);
     this.addChild(stopSign);
 
     stopSign.anchor.set(0.5);
@@ -29,12 +29,12 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
     stopSign.y = GAME_BOY_CONFIG.screen.height * 0.5 - 20;
   }
 
-  _initText() {
-    const textContainer = new Container();
+  private initText(): void {
+    const textContainer: Container = new Container();
     this.addChild(textContainer);
 
-    const textLine01 = this._createTextLine('The cartridge');
-    const textLine02 = this._createTextLine('is not working');
+    const textLine01: Text = this.createTextLine('The cartridge');
+    const textLine02: Text = this.createTextLine('is not working');
     textContainer.addChild(textLine01, textLine02);
 
     textLine01.y = -5;
@@ -44,14 +44,14 @@ export default class DamagedCartridgeScreen extends ScreenAbstract {
     textContainer.y = GAME_BOY_CONFIG.screen.height * 0.5 + 30;
   }
 
-  _createTextLine(string) {
+  private createTextLine(string: string): Text {
     const text = new Text({
-        text: string,
-        style: {
-            fontFamily: 'dogicapixel',
-            fontSize: 8,
-            fill: 0x000000,
-        },
+      text: string,
+      style: {
+        fontFamily: 'dogicapixel',
+        fontSize: 8,
+        fill: 0x000000,
+      },
     });
 
     text.anchor.set(0.5, 0);

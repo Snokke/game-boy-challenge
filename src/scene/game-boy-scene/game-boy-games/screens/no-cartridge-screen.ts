@@ -6,23 +6,23 @@ export default class NoCartridgeScreen extends ScreenAbstract {
   constructor() {
     super();
 
-    this._init();
+    this.init();
   }
 
-  _init() {
-    this._initText();
+  private init(): void {
+    this.initText();
 
     this.visible = false;
   }
 
-  _initText() {
-    const text = new Text({
-        text: 'insert cartridge',
-        style: {
-            fontFamily: 'tetris',
-            fontSize: 8,
-            fill: 0x00000,
-        },
+  private initText(): void {
+    const text: Text = new Text({
+      text: 'insert cartridge',
+      style: {
+        fontFamily: 'tetris',
+        fontSize: 8,
+        fill: 0x00000,
+      },
     });
 
     this.addChild(text);

@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { Assets, Texture, Sprite } from 'pixi.js';
+import { Assets, Texture, Sprite, Spritesheet } from 'pixi.js';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { AudioAssets, ModelAssets, PixiAssets, TextureAssets } from '../Data/Configs/Assets/Assets';
 
-type Asset = THREE.Texture | THREE.Audio | THREE.Object3D | Texture | Sprite | GLTF | AudioBuffer;
+type Asset = THREE.Texture | THREE.Audio | THREE.Object3D | Texture | Sprite | GLTF | AudioBuffer | Spritesheet;
 
 const loadingPercentElement: Element = document.querySelector('.loading-percent');
 

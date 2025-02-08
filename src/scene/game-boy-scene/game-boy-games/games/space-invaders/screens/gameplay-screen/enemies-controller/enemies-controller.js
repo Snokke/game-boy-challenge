@@ -2,7 +2,7 @@ import { Container, EventEmitter } from 'pixi.js';
 import { ENEMY_CONFIG, ENEMY_MOVEMENT_DIRECTION, ENEMY_TYPE } from './data/enemy-config';
 import Enemy from './enemy';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
-import Timeout from '../../../../../../../../core/helpers/timeout';
+import { Timeout } from '../../../../../../../../core/helpers/timeout';
 
 export default class EnemiesController extends Container {
   constructor() {

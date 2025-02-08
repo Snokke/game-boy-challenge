@@ -1,19 +1,19 @@
-const GAME_BOY_PART_TYPE = {
-  Body: 'body',
-  ButtonA: 'button-a',
-  ButtonB: 'button-b',
-  ButtonCrossLeft: 'button-cross-left',
-  ButtonCrossRight: 'button-cross-right',
-  ButtonCrossUp: 'button-cross-up',
-  ButtonCrossDown: 'button-cross-down',
-  ButtonSelect: 'button-select',
-  ButtonStart: 'button-start',
-  PowerButton: 'power-button',
-  PowerButtonFrame: 'power-button-frame',
-  PowerIndicator: 'power-indicator',
-  Screen: 'screen',
-  VolumeControl: 'volume-control',
-  CartridgePocket: 'cartridge-pocket',
+enum GAME_BOY_PART_TYPE {
+  Body = 'body',
+  ButtonA = 'button-a',
+  ButtonB = 'button-b',
+  ButtonCrossLeft = 'button-cross-left',
+  ButtonCrossRight = 'button-cross-right',
+  ButtonCrossUp = 'button-cross-up',
+  ButtonCrossDown = 'button-cross-down',
+  ButtonSelect = 'button-select',
+  ButtonStart = 'button-start',
+  PowerButton = 'power-button',
+  PowerButtonFrame = 'power-button-frame',
+  PowerIndicator = 'power-indicator',
+  Screen = 'screen',
+  VolumeControl = 'volume-control',
+  CartridgePocket = 'cartridge-pocket',
 }
 
 const GAME_BOY_ACTIVE_PARTS = [
@@ -43,15 +43,15 @@ const GAME_BOY_CROSS_PARTS = [
   GAME_BOY_PART_TYPE.ButtonCrossDown,
 ]
 
-const BUTTON_TYPE = {
-  A: 'A',
-  B: 'B',
-  Start: 'START',
-  Select: 'SELECT',
-  CrossLeft: 'CROSS_LEFT',
-  CrossRight: 'CROSS_RIGHT',
-  CrossUp: 'CROSS_UP',
-  CrossDown: 'CROSS_DOWN',
+enum BUTTON_TYPE {
+  A = 'A',
+  B = 'B',
+  Start = 'START',
+  Select = 'SELECT',
+  CrossLeft = 'CROSS_LEFT',
+  CrossRight = 'CROSS_RIGHT',
+  CrossUp = 'CROSS_UP',
+  CrossDown = 'CROSS_DOWN',
 }
 
 enum POWER_STATE {

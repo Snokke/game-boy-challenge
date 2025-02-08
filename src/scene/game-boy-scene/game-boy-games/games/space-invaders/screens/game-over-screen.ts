@@ -1,39 +1,45 @@
 import { Text } from 'pixi.js';
 import { GAME_BOY_CONFIG } from "../../../../game-boy/data/game-boy-config";
 import GameScreenAbstract from "../../shared/game-screen-abstract";
-import Timeout from '../../../../../../core/helpers/timeout';
+import { Timeout, TimeoutInstance } from '../../../../../../core/helpers/timeout';
 
 export default class GameOverScreen extends GameScreenAbstract {
+  private timer: TimeoutInstance;
+
   constructor() {
     super();
 
-    this._timer = null;
+    this.timer = null;
 
-    this._init();
+    this.init();
   }
 
-  show() {
+  public show(): void {
     super.show();
 
-    this._timer = Timeout.call(2000, () => {
+    this.timer = Timeout.call(2000, () => {
       this.events.emit('onGameOverEnd');
     });
   }
 
-  stopTweens() {
-    if (this._timer) {
-      this._timer.stop();
+  public stopTweens(): void {
+    if (this.timer) {
+      this.timer.stop();
     }
   }
 
-  _init() {
+  public onButtonPress(): void {
+
+  }
+
+  private init(): void {
     const text = new Text({
-        text: 'GAME OVER',
-        style: {
-            fontFamily: 'dogicapixel',
-            fontSize: 8,
-            fill: 0x000000,
-        },
+      text: 'GAME OVER',
+      style: {
+        fontFamily: 'dogicapixel',
+        fontSize: 8,
+        fill: 0x000000,
+      },
     });
 
     this.addChild(text);

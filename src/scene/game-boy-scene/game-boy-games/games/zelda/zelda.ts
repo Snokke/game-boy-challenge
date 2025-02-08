@@ -4,6 +4,8 @@ import GameBoyAudio from '../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../game-boy/game-boy-audio/game-boy-audio-data';
 
 export default class Zelda extends GameAbstract {
+  public events: EventEmitter;
+
   constructor() {
     super();
 

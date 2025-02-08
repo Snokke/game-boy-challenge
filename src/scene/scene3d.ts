@@ -34,12 +34,12 @@ export default class Scene3D extends THREE.Group {
     this.gameBoyScene.onPointerDown(x, y);
   }
 
-  public onPointerUp(x: number, y: number): void {
-    this.gameBoyScene.onPointerUp(x, y);
+  public onPointerUp(): void {
+    this.gameBoyScene.onPointerUp();
   }
 
   public onPointerLeave(): void {
-    this.gameBoyScene.onPointerLeave();
+    // this.gameBoyScene.onPointerLeave();
   }
 
   public onWheelScroll(delta: number): void {
