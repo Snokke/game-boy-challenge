@@ -37,6 +37,14 @@ export default class RoundScreen extends GameScreenAbstract {
 
   }
 
+  public onButtonUp(): void {
+
+  }
+
+  public update(): void {
+
+  }
+
   private init(): void {
     this.initRoundText();
 

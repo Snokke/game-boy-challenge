@@ -4,7 +4,7 @@ import { BUTTON_TYPE } from "../../../game-boy/data/game-boy-data";
 export default abstract class GameScreenAbstract extends Container {
   public events: EventEmitter;
 
-  private screenType: string;
+  protected screenType: string;
 
   constructor() {
     super();
@@ -28,11 +28,11 @@ export default abstract class GameScreenAbstract extends Container {
     return this.screenType;
   }
 
-  public update(): void { }
+  public abstract update(dt: number): void;
 
   public abstract onButtonPress(buttonType: BUTTON_TYPE): void;
 
-  public onButtonUp(): void { }
+  public abstract onButtonUp(buttonType: BUTTON_TYPE): void;
 
   public reset(): void { }
 

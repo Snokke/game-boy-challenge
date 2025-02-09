@@ -1,4 +1,4 @@
-import { Sprite, Text, Graphics } from 'pixi.js';
+import { Sprite, Text, Graphics, Spritesheet, Texture } from 'pixi.js';
 import Loader from '../../../../../../../core/loader';
 import { GAME_BOY_CONFIG } from '../../../../../game-boy/data/game-boy-config';
 import GameScreenAbstract from '../../../shared/game-screen-abstract';
@@ -7,27 +7,30 @@ import { BUTTON_TYPE } from '../../../../../game-boy/data/game-boy-data';
 import GameBoyAudio from '../../../../../game-boy/game-boy-audio/game-boy-audio';
 import { GAME_BOY_SOUND_TYPE } from '../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 import { TETRIS_CONFIG } from '../../data/tetris-config';
-import { Timeout } from '../../../../../../../core/helpers/timeout';
+import { Timeout, TimeoutInstance } from '../../../../../../../core/helpers/timeout';
 
 export default class TitleScreen extends GameScreenAbstract {
+  protected screenType: string = TETRIS_SCREEN_TYPE.Title;
+  private arrow: Graphics;
+  private blinkTimer: TimeoutInstance;
+
   constructor() {
     super();
 
-    this._screenType = TETRIS_SCREEN_TYPE.Title;
-    this._arrow = null;
-    this._blinkTimer = null;
+    this.arrow = null;
+    this.blinkTimer = null;
 
-    this._init();
+    this.init();
   }
 
-  show() {
+  public show(): void {
     super.show();
 
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisMusic);
-    this._blinkArrow();
+    this.blinkArrow();
   }
 
-  onButtonPress(buttonType) {
+  public onButtonPress(buttonType: BUTTON_TYPE): void {
     if (buttonType === BUTTON_TYPE.Start || buttonType === BUTTON_TYPE.A || buttonType === BUTTON_TYPE.B) {
       this.events.emit('onStartGame');
     }
@@ -38,40 +41,46 @@ export default class TitleScreen extends GameScreenAbstract {
     }
   }
 
-  stopTweens() {
-    if (this._blinkTimer) {
-      this._blinkTimer.stop();
+  public stopTweens(): void {
+    if (this.blinkTimer) {
+      this.blinkTimer.stop();
     }
   }
 
-  _blinkArrow() {
-    this._blinkTimer = Timeout.call(700, () => {
-      this._arrow.visible = !this._arrow.visible;
-      this._blinkArrow();
+  public update(): void { }
+
+  public onButtonUp(): void {
+    
+  }
+
+  private blinkArrow(): void {
+    this.blinkTimer = Timeout.call(700, () => {
+      this.arrow.visible = !this.arrow.visible;
+      this.blinkArrow();
     });
   }
 
-  _init() {
-    this._initBackground();
-    this._initStartText();
-    this._initArrow();
+  private init(): void {
+    this.initBackground();
+    this.initStartText();
+    this.initArrow();
   }
 
-  _initBackground() {
-    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'];
-    const texture = spriteSheet.textures['title-screen.png'];
+  private initBackground(): void {
+    const spriteSheet = Loader.assets['assets/spritesheets/tetris-sheet'] as Spritesheet;
+    const texture = spriteSheet.textures['title-screen.png'] as Texture;
 
     const screen = new Sprite(texture);
     this.addChild(screen);
   }
 
-  _initStartText() {
+  private initStartText(): void {
     const text = new Text({
-        text: 'Start game',
-        style: {
-            fontFamily: 'tetris',
-            fontSize: 8,
-        },
+      text: 'Start game',
+      style: {
+        fontFamily: 'tetris',
+        fontSize: 8,
+      },
     });
 
     this.addChild(text);
@@ -82,8 +91,8 @@ export default class TitleScreen extends GameScreenAbstract {
     text.y = 113;
   }
 
-  _initArrow() {
-    const arrow = this._arrow = new Graphics();
+  private initArrow(): void {
+    const arrow = this.arrow = new Graphics();
     this.addChild(arrow);
 
     arrow.fill(0x000000);

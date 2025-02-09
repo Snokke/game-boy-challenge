@@ -1,14 +1,14 @@
-const SPACE_INVADERS_SCREEN_TYPE = {
-  Title: 'TITLE',
-  Gameplay: 'GAMEPLAY',
-  Round: 'ROUND',
-  GameOver: 'GAME_OVER',
+enum SPACE_INVADERS_SCREEN_TYPE {
+  Title = 'TITLE',
+  Gameplay = 'GAMEPLAY',
+  Round = 'ROUND',
+  GameOver = 'GAME_OVER',
 }
 
-const PLAYER_MOVEMENT_STATE = {
-  Left: 'LEFT',
-  Right: 'RIGHT',
-  None: 'NONE',
+enum PLAYER_MOVEMENT_STATE {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  None = 'NONE',
 }
 
 export {

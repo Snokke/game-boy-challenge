@@ -148,7 +148,7 @@ export default class GameOverPopup extends Container {
     this._initGameOverFrame();
     this._initTryAgainText();
 
-    gameOverContainer.cacheAsTexture = true;
+    gameOverContainer.cacheAsTexture(true);
     gameOverContainer.visible = false;
   }
 
@@ -218,7 +218,7 @@ export default class GameOverPopup extends Container {
       block.x = i * TETRIS_CONFIG.blockSize;
     }
 
-    blockLineContainer.cacheAsTexture = true;
+    blockLineContainer.cacheAsTexture(true);
 
     return blockLineContainer;
   }

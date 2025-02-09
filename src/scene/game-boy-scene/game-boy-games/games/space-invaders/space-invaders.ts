@@ -12,8 +12,8 @@ import DEBUG_CONFIG from '../../../../../Data/Configs/Main/debug-config';
 export default class SpaceInvaders extends GameAbstract {
   public events: EventEmitter;
 
-  private screens: Record<string, any>;
-  private currentScreenType: string;
+  private screens: { [key in SPACE_INVADERS_SCREEN_TYPE]?: any };
+  private currentScreenType: SPACE_INVADERS_SCREEN_TYPE;
 
   constructor() {
     super();
@@ -82,7 +82,7 @@ export default class SpaceInvaders extends GameAbstract {
     }
   }
 
-  private showScreen(screenType: string): void {
+  private showScreen(screenType: SPACE_INVADERS_SCREEN_TYPE): void {
     this.currentScreenType = screenType;
     this.screens[screenType].show();
   }

@@ -160,7 +160,7 @@ export default class Field extends Container {
       filledRows.push(value);
     }
 
-    this._fieldMapContainer.cacheAsTexture = false;
+    this._fieldMapContainer.cacheAsTexture(true);
     this._showFilledRowsAnimation(filledRows, true);
   }
 
@@ -416,7 +416,7 @@ export default class Field extends Container {
     }
 
     this._shapeFallInterval = this._calculateFallInterval();
-    this._fieldMapContainer.cacheAsTexture = true;
+    this._fieldMapContainer.cacheAsTexture(true);
   }
 
   _removeRow(row) {
@@ -527,7 +527,7 @@ export default class Field extends Container {
   }
 
   _addShapeToFieldMap() {
-    this._fieldMapContainer.cacheAsTexture = false;
+    this._fieldMapContainer.cacheAsTexture(true);
 
     const shapePosition = this._currentShape.getBlockPosition();
     const shapeBlocksView = this._currentShape.getBlocksView();
@@ -676,7 +676,7 @@ export default class Field extends Container {
   }
 
   _clearFieldMap() {
-    this._fieldMapContainer.cacheAsTexture = false;
+    this._fieldMapContainer.cacheAsTexture(true);
 
     for (let row = 0; row < this._fieldMap.length; row++) {
       for (let column = 0; column < this._fieldMap[0].length; column++) {
@@ -689,6 +689,6 @@ export default class Field extends Container {
       }
     }
 
-    this._fieldMapContainer.cacheAsTexture = true;
+    this._fieldMapContainer.cacheAsTexture(true);
   }
 }

@@ -233,14 +233,14 @@ export default class Shape extends Container {
     this._updateShapeBlocksPosition();
 
     if (this._type === SHAPE_TYPE.Invisible) {
-      this.alpha = 0.7;
+      this.alpha = 0.5;
 
-      this._blinkTween = new TWEEN.Tween(this)
-        .to({ alpha: 0.3 }, 700)
-        .easing(TWEEN.Easing.Sinusoidal.InOut)
-        .yoyo(true)
-        .repeat(Infinity)
-        .start()
+      // this._blinkTween = new TWEEN.Tween(this)
+      //   .to({ alpha: 0.3 }, 700)
+      //   .easing(TWEEN.Easing.Sinusoidal.InOut)
+      //   .yoyo(true)
+      //   .repeat(Infinity)
+      //   .start()
     }
   }
 

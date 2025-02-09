@@ -1,4 +1,4 @@
-import { Container, ColorMatrixFilter, Application } from 'pixi.js';
+import { Container, Application } from 'pixi.js';
 import LoadingScreen from './screens/loading-screen.ts';
 import { GAME_BOY_CONFIG } from '../game-boy/data/game-boy-config.ts';
 import TWEEN from 'three/addons/libs/tween.module.js';
@@ -214,23 +214,23 @@ export default class GameBoyGames {
   }
 
   private addColorMatrixFilter(): void {
-    const brightness = 0.2;
+    // const brightness = 0.2;
 
-    const tint = 0x646e3c;
-    const r = tint >> 16 & 0xFF;
-    const g = tint >> 8 & 0xFF;
-    const b = tint & 0xFF;
+    // const tint = 0x646e3c;
+    // const r = tint >> 16 & 0xFF;
+    // const g = tint >> 8 & 0xFF;
+    // const b = tint & 0xFF;
 
-    const colorMatrix = [
-      r / 255, 0, 0, 0, brightness,
-      0, g / 255, 0, 0, brightness,
-      0, 0, b / 255, 0, brightness,
-      0, 0, 0, 1, 0
-    ];
+    // const colorMatrix = [
+    //   r / 255, 0, 0, 0, brightness,
+    //   0, g / 255, 0, 0, brightness,
+    //   0, 0, b / 255, 0, brightness,
+    //   0, 0, 0, 1, 0
+    // ];
 
-    const filter = new ColorMatrixFilter();
-    (<any>filter).matrix = colorMatrix;
-    this.container.filters = [filter];
+    // const filter = new ColorMatrixFilter();
+    // (<any>filter).matrix = colorMatrix;
+    // this.container.filters = [filter];
   }
 
   private initVolumeOverlay(): void {

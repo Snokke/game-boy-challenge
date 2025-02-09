@@ -52,6 +52,8 @@ export default class TitleScreen extends GameScreenAbstract {
     }
   }
 
+  public onButtonUp(): void { }
+
   public stopTweens(): void {
     if (this.logoTween) {
       this.logoTween.stop();
@@ -68,6 +70,8 @@ export default class TitleScreen extends GameScreenAbstract {
     this.startText.visible = false;
     this.isButtonsEnabled = false;
   }
+
+  public update(): void { }
 
   private showLogo(): void {
     this.logoTween = new TWEEN.Tween(this.logo)

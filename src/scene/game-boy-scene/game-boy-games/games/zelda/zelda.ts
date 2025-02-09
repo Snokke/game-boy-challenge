@@ -12,9 +12,21 @@ export default class Zelda extends GameAbstract {
     this.events = new EventEmitter();
   }
 
-  show() {
+  public show(): void {
     super.show();
 
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.ZeldaIntro);
+  }
+
+  public update(): void {
+    
+  }
+
+  public onButtonPress(): void {
+    
+  }
+
+  public onButtonUp(): void {
+    
   }
 }

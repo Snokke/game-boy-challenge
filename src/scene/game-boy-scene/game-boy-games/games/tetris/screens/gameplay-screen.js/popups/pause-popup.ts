@@ -32,7 +32,7 @@ export default class PausePopup extends Container {
     this._createTextLine('START TO', 92);
     this._createTextLine('CONTINUE', 104);
 
-    this.cacheAsTexture = true;
+    this.cacheAsTexture(true);
 
     this.visible = false;
   }

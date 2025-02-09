@@ -32,6 +32,14 @@ export default class GameOverScreen extends GameScreenAbstract {
 
   }
 
+  public onButtonUp(): void {
+
+  }
+
+  public update(): void {
+
+  }
+
   private init(): void {
     const text = new Text({
       text: 'GAME OVER',

@@ -2,33 +2,38 @@ import { Container, Text, EventEmitter } from 'pixi.js';
 import { SPACE_INVADERS_CONFIG } from '../../../data/space-invaders-config';
 
 export default class Score extends Container {
+  public events: EventEmitter;
+
+  private scoreText: Text;
+  private score: number;
+
   constructor() {
     super();
 
     this.events = new EventEmitter();
 
-    this._scoreText = null;
-    this._score = 0;
+    this.scoreText = null;
+    this.score = 0;
 
-    this._init();
+    this.init();
   }
 
-  addScore(score) {
-    this._score += score;
-    this._scoreText.text = this._score.toString().padStart(5, '0');
+  public addScore(score: number): void {
+    this.score += score;
+    this.scoreText.text = this.score.toString().padStart(5, '0');
 
-    if (this._score > SPACE_INVADERS_CONFIG.bestScore) {
-      SPACE_INVADERS_CONFIG.bestScore = this._score;
+    if (this.score > SPACE_INVADERS_CONFIG.bestScore) {
+      SPACE_INVADERS_CONFIG.bestScore = this.score;
       this.events.emit('onBestScoreChange');
     }
   }
 
-  reset() {
-    this._score = 0;
-    this._scoreText.text = '00000';
+  public reset(): void {
+    this.score = 0;
+    this.scoreText.text = '00000';
   }
 
-  _init() {
+  private init(): void {
     const caption = new Text({
         text: 'SCORE',
         style: {
@@ -39,7 +44,7 @@ export default class Score extends Container {
     });
     this.addChild(caption);
 
-    const scoreText = this._scoreText = new Text({
+    const scoreText = this.scoreText = new Text({
         text: '00000',
         style: {
             fontFamily: 'dogicapixel',
