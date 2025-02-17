@@ -25,9 +25,9 @@ const ENEMIES_CONFIG = {
   },
 }
 
-const ENEMY_MOVEMENT_DIRECTION = {
-  Left: 'LEFT',
-  Right: 'RIGHT',
+enum ENEMY_MOVEMENT_DIRECTION {
+  Left = 'LEFT',
+  Right = 'RIGHT',
 }
 
 export {

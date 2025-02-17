@@ -4,53 +4,54 @@ import GameBoyAudio from '../../../../../../game-boy/game-boy-audio/game-boy-aud
 import { GAME_BOY_SOUND_TYPE } from '../../../../../../game-boy/game-boy-audio/game-boy-audio-data';
 
 export default class PausePopup extends Container {
+  private popupWidth: number;
+
   constructor() {
     super();
 
-    this._width = TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize;
-    this._height = TETRIS_CONFIG.field.height * TETRIS_CONFIG.blockSize;
+    this.popupWidth = TETRIS_CONFIG.field.width * TETRIS_CONFIG.blockSize;
 
-    this._init();
+    this.init();
   }
 
-  show() {
+  public show(): void {
     this.visible = true;
     GameBoyAudio.playSound(GAME_BOY_SOUND_TYPE.TetrisPause);
   }
 
-  hide() {
+  public hide(): void {
     this.visible = false;
   }
 
-  reset() {
+  public reset(): void {
     this.visible = false;
   }
 
-  _init() {
-    this._createTextLine('PAUSE', 32);
-    this._createTextLine('PRESS', 80);
-    this._createTextLine('START TO', 92);
-    this._createTextLine('CONTINUE', 104);
+  private init(): void {
+    this.createTextLine('PAUSE', 32);
+    this.createTextLine('PRESS', 80);
+    this.createTextLine('START TO', 92);
+    this.createTextLine('CONTINUE', 104);
 
     this.cacheAsTexture(true);
 
     this.visible = false;
   }
 
-  _createTextLine(string, y) {
+  private createTextLine(string: string, y: number): void {
     const text = new Text({
-        text: string,
-        style: {
-            fontFamily: 'tetris',
-            fontSize: 8,
-            fill: 0x000000,
-        },
+      text: string,
+      style: {
+        fontFamily: 'tetris',
+        fontSize: 8,
+        fill: 0x000000,
+      },
     });
 
     this.addChild(text);
     text.anchor.set(0.5, 0);
 
-    text.x = this._width * 0.5;
+    text.x = this.popupWidth * 0.5;
     text.y = y;
   }
 }
