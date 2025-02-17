@@ -1,6 +1,6 @@
 import LicenseScreen from './screens/license-screen/license-screen';
 import TitleScreen from './screens/title-screen/title-screen';
-import GameplayScreen from './screens/gameplay-screen.js/gameplay-screen';
+import GameplayScreen from './screens/gameplay-screen/gameplay-screen';
 import GameAbstract from '../game-abstract';
 import { TETRIS_SCREEN_TYPE } from './data/tetris-data';
 import { EventEmitter } from 'pixi.js';

@@ -1,6 +1,6 @@
-const MISSILE_TYPE = {
-  Player: 'PLAYER',
-  Electric: 'ELECTRIC',
+enum MISSILE_TYPE {
+  Player = 'PLAYER',
+  Electric = 'ELECTRIC',
 }
 
 const MISSILES_CONFIG = {

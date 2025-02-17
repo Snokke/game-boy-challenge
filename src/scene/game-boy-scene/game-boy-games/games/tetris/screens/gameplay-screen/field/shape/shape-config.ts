@@ -1,21 +1,21 @@
 import { Point } from 'pixi.js';
 
-const SHAPE_TYPE = {
-  I: 'I',
-  J: 'J',
-  L: 'L',
-  O: 'O',
-  S: 'S',
-  T: 'T',
-  Z: 'Z',
-  Invisible: 'INVISIBLE',
+enum SHAPE_TYPE {
+  I = 'I',
+  J = 'J',
+  L = 'L',
+  O = 'O',
+  S = 'S',
+  T = 'T',
+  Z = 'Z',
+  Invisible = 'INVISIBLE',
 }
 
-const SHAPE_DIRECTION = {
-  Up: 'UP',
-  Right: 'RIGHT',
-  Down: 'DOWN',
-  Left: 'LEFT',
+enum SHAPE_DIRECTION {
+  Up = 'UP',
+  Right = 'RIGHT',
+  Down = 'DOWN',
+  Left = 'LEFT',
 }
 
 const DIRECTION_SEQUENCE = [
@@ -25,9 +25,9 @@ const DIRECTION_SEQUENCE = [
   SHAPE_DIRECTION.Left,
 ];
 
-const ROTATE_TYPE = {
-  Clockwise: 'CLOCKWISE',
-  CounterClockwise: 'COUNTER_CLOCKWISE',
+enum ROTATE_TYPE {
+  Clockwise = 'CLOCKWISE',
+  CounterClockwise = 'COUNTER_CLOCKWISE',
 }
 
 const SHAPE_CONFIG = {
