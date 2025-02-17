@@ -43,7 +43,7 @@ export default class MainScene {
   private initSignals() {
     this.ui.events.on('onPointerMove', (x: number, y: number) => this.scene3D.onPointerMove(x, y));
     this.ui.events.on('onPointerDown', (x: number, y: number) => this.scene3D.onPointerDown(x, y));
-    this.ui.events.on('onPointerUp', (x: number, y: number) => this.scene3D.onPointerUp(x, y));
+    this.ui.events.on('onPointerUp', () => this.scene3D.onPointerUp());
     this.ui.events.on('onWheelScroll', (delta: number) => this.scene3D.onWheelScroll(delta));
     this.ui.events.on('onSoundChanged', () => this.scene3D.onSoundChanged());
 
