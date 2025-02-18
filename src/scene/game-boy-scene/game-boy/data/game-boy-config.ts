@@ -8,7 +8,7 @@ const GAME_BOY_CONFIG = {
     width: 160 * 1,
     height: 144 * 1,
     scale: 1,
-    tint: '#96a06e',
+    tint: '#ffffff', // #96a06e
   },
   powerButton: {
     moveDistance: 0.114,

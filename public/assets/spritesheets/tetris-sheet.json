@@ -82,7 +82,7 @@
 },
 "gameplay-screen.png":
 {
-	"frame": {"x":1,"y":57,"w":160,"h":144},
+	"frame": {"x":1,"y":188,"w":160,"h":144},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":144},
@@ -90,15 +90,15 @@
 },
 "license-screen.png":
 {
-	"frame": {"x":1,"y":203,"w":160,"h":144},
+	"frame": {"x":1,"y":57,"w":160,"h":129},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":144},
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":7,"w":160,"h":129},
 	"sourceSize": {"w":160,"h":144}
 },
 "title-screen.png":
 {
-	"frame": {"x":1,"y":349,"w":160,"h":144},
+	"frame": {"x":1,"y":334,"w":160,"h":144},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":144},
@@ -109,8 +109,8 @@
 	"version": "1.0",
 	"image": "tetris-sheet.png",
 	"format": "RGBA8888",
-	"size": {"w":162,"h":494},
+	"size": {"w":162,"h":479},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0d16ae2ed823dc0a32d6a0a87747a10e:bdb92aac0fccc6005838fed748ba20d4:30dfe819d18eb464f80ec5afa0c11fd4$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d8e80e0346e4e1989432b886e514082a:020ae1aa79f8c6e2d64554948e69881b:30dfe819d18eb464f80ec5afa0c11fd4$"
 }
 }

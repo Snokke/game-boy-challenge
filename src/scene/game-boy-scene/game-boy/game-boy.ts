@@ -404,6 +404,9 @@ export default class GameBoy extends THREE.Group {
     this.isZeldaIntroPlaying = true;
     this.gameBoyPixiApp.renderer.background.alpha = 0;
 
+    const colorMatrix = this.getColorMatrix(0xffffff);
+    this.parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uColorMatrix.value = colorMatrix;
+    
     this.zeldaIntroVideo.play();
   }
 
@@ -666,6 +669,9 @@ export default class GameBoy extends THREE.Group {
     this.isZeldaIntroPlaying = false;
     this.gameBoyPixiApp.renderer.background.alpha = 1;
 
+    const colorMatrix = this.getColorMatrix(0x96a06e);
+    this.parts[GAME_BOY_PART_TYPE.Screen].material.uniforms.uColorMatrix.value = colorMatrix;
+
     this.zeldaIntroVideo.pause();
     this.zeldaIntroVideo.currentTime = 0;
   }
@@ -805,11 +811,14 @@ export default class GameBoy extends THREE.Group {
     const bakedTexture: THREE.Texture = Loader.assets['baked-screen-shadow'] as THREE.Texture;
     bakedTexture.flipY = false;
 
+    const colorMatrix = this.getColorMatrix(0x96a06e);
+
     const material: THREE.ShaderMaterial = new THREE.ShaderMaterial({
       uniforms: {
         uVideoTexture: { value: this.zeldaVideoTexture },
         uBitmapTexture: { value: canvasTexture },
         uTexture: { value: bakedTexture },
+        uColorMatrix: { value: colorMatrix },
       },
       vertexShader: mixTextureBitmapVertexShader,
       fragmentShader: mixTextureBitmapFragmentShader,
@@ -817,6 +826,19 @@ export default class GameBoy extends THREE.Group {
 
     const screen: THREE.Mesh = this.parts[GAME_BOY_PART_TYPE.Screen] as THREE.Mesh;
     screen.material = material;
+  }
+
+  private getColorMatrix(tint: number): THREE.Matrix4 {
+    const r = (tint >> 16 & 0xFF) / 255;
+    const g = (tint >> 8 & 0xFF) / 255;
+    const b = (tint & 0xFF) / 255;
+
+    return new THREE.Matrix4().set(
+      r, 0, 0, 0,
+      0, g, 0, 0,
+      0, 0, b, 0,
+      0, 0, 0, 1,
+    );
   }
 
   private initZeldaIntroVideo(): void {

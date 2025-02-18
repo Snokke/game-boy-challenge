@@ -1,6 +1,7 @@
 uniform sampler2D uVideoTexture;
 uniform sampler2D uBitmapTexture;
 uniform sampler2D uTexture;
+uniform mat4 uColorMatrix;
 
 varying vec2 vUv;
 
@@ -13,5 +14,7 @@ void main()
     vec3 mixVideo = mix(videoColor.rgb, bitmapColor.rgb, bitmapColor.a);
     vec3 mixColor = mix(mixVideo.rgb, textureColor.rgb, textureColor.a);
 
-    gl_FragColor = vec4(mixColor, 1.0);
+    vec4 finalColor = vec4(mixColor, 1.0);
+
+    gl_FragColor = uColorMatrix * finalColor;
 }
